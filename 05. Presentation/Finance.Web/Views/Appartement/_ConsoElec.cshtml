@@ -1,0 +1,428 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+
+        //champs année
+        $("#chp_elec_annee").text((new Date).getFullYear());
+        GetDonneesConsoElec();
+        GetDonneesConsoElecAnnee();
+
+    });
+
+    //Modification année
+    function ChangerAnneeViaImage(plusOuMoins) {
+        var champ = document.getElementById('chp_elec_annee');
+        var annee = parseInt(champ.innerText);
+        if (plusOuMoins == 1) {
+            champ.innerText = (annee + 1);
+        }
+        else {
+            champ.innerText = (annee - 1);
+        }
+
+        //showGif();
+        GetDonneesConsoElecAnnee();
+        //hideGif();
+    }
+
+
+    //Get Donnees Conso Elec TOTALE
+    function GetDonneesConsoElec() {
+        var baseUrl = '@Url.Content("~/Appartement/GetDonneesConsoElec/")';
+        var tab_Annee = new Array();
+        var tab_Conso= new Array();
+        var tab_Montant = new Array();
+
+        $('#tab_consoElec_total > tbody').empty();
+
+        $.ajax({
+            url: baseUrl, type: "POST", async: true, dataType: "json",
+            success: function (result) {
+                $.each(result, function (index, itemData) {
+                   var Annee = itemData.Annee;
+                    var Consommation = itemData.Consommation;
+                    var Montant = itemData.Montant;
+                    
+                    var rowM = "<tr>";
+                    rowM += "<td><strong>" + Annee + "</strong></td>";
+                    rowM += "<td>" + Consommation + " kwh</td>";
+                    rowM += "<td>" + Montant + " €</td>";
+                    rowM += "</tr>";
+
+                    $('#tab_consoElec_total > tbody').append(rowM);
+
+                    tab_Annee.push(Annee);
+                    tab_Conso.push(Consommation);
+                    tab_Montant.push(Montant);
+                    
+                });
+            },
+            fail: function () {
+
+            },
+            complete: function () {
+                var graph = document.getElementById("ch_ConsoElecTotal").getContext('2d');
+                DisplayGraphConsoElecTotal(graph, tab_Annee, tab_Conso, tab_Montant);
+            }
+        });
+
+    };
+
+    //Get Donnees Conso Elec ANNEE
+    function GetDonneesConsoElecAnnee() {
+        var baseUrl = '@Url.Content("~/Appartement/GetDonneesConsoElecAnnee/")';
+        var tab_Mois = new Array();
+        var tab_MoisStr = new Array();
+        var tab_Conso= new Array();
+        var tab_Montant = new Array();
+        var an = parseInt($("#chp_elec_annee").text());
+
+        $.ajax({
+            url: baseUrl, type: "POST", async: true, dataType: "json",
+            data: { annee: an },
+            success: function (result) {
+                $.each(result, function (index, itemData) {
+                    var Mois = itemData.Mois;
+                    var MoisStr = itemData.MoisStr;
+                    var Consommation = itemData.Consommation;
+                    var Montant = itemData.Montant;
+                   
+                    tab_Mois.push(Mois);
+                    tab_MoisStr.push(MoisStr);
+                    tab_Conso.push(Consommation);
+                    tab_Montant.push(Montant);
+                    
+                });
+            },
+            fail: function () {
+
+            },
+            complete: function () {
+                var graph = document.getElementById("ch_ConsoElecAnnee").getContext('2d');
+                DisplayGraphConsoElecTotal(graph, tab_MoisStr, tab_Conso, tab_Montant);
+            }
+        });
+
+    };
+
+    //Get Donnees Conso Elec ANNEE pour POP UP
+     function GetDonneesConsoElecAnneePopUp() {
+        var baseUrl = '@Url.Content("~/Appartement/GetDonneesConsoElecAnnee/")';
+        var an = parseInt($("#chp_consoElec_Annee").val());
+        var mois = 1;
+
+        $.ajax({
+            url: baseUrl, type: "POST", async: true, dataType: "json",
+            data: { annee: an },
+            success: function (result) {
+                $.each(result, function (index, itemData) {
+                    var Mois = itemData.Mois;
+                    var MoisStr = itemData.MoisStr;
+                    var Consommation = itemData.Consommation;
+                    var Montant = itemData.Montant;
+
+                    if (mois == Mois) {
+                        var chConso = 'chp_consoElec_C'+mois;
+                        var chMontant = 'chp_consoElec_M' + mois;
+
+                        if (Consommation != "" && Consommation != 0) {
+                            $('#' + chConso).val(Consommation);
+                        }
+
+                        if (Montant != "" && Montant != 0) {
+                            $('#' + chMontant).val(Montant);
+                        } 
+                    }
+                    mois++;
+                });
+            },
+            fail: function () {
+
+            },
+            complete: function () {
+                
+            }
+        });
+
+    };
+
+    //DisplayGraphConsoEauTotal
+    function DisplayGraphConsoElecTotal (chart, tab_Annee, tab_Conso, tab_Montant) {
+        //var ctx = document.getElementById("ch_ConsoElec").getContext('2d');
+        var chart = new Chart(chart, {
+            // The type of chart we want to create
+            type: 'line',
+            // The data for our dataset
+            data: {
+                labels: tab_Annee,
+                datasets: [
+                    { label: "Consommation (kwh)", borderDash: [5,5], borderColor: '#FF5722', data: tab_Conso, yAxisID:'y-axis-1', },
+                    { label: "Montant (€)", borderColor: '#3F51B5', data: tab_Montant, yAxisID:'y-axis-2' }
+                ]
+            },
+
+            // Configuration options go here
+            options: {
+                responsive: true,
+                hoverMode:'index',
+                scales: {
+                    yAxes: [{
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        id:'y-axis-1',
+                    }, {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        id: 'y-axis-2',
+                        gridlines: {
+                            drawOnChartArea:false,
+                        },
+                    }],
+                }
+            }
+        });
+
+    }
+
+    //POP UP ajout conso annuelle
+    function PopUpAddNewConsoEau() {
+        var modal = document.getElementById('modal_addConsoElecAnnee');
+        var span = document.getElementById("closePopUp");
+
+        $('#modal_addConsoElecAnnee').show();
+       
+        //modal.style.display = "block";
+
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    }
+
+    // Ajout conso Annuel AJAX
+    function AjouterConsoElecAnnuelle() {
+    
+        var data = {};
+        $('input, select').each(
+            function(index){  
+                var input = $(this);
+                data[input.attr('id')] = input.val();
+            });
+        data['Annee'] = $('#chp_consoElec_Annee').val();
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/Appartement/PostConsommationElec")',
+            data: data, dataType: "json",
+            success: function () {
+
+            },
+            fail: function () {
+                //$('#consoEau_txt_popup').html("Echec lors de l'enregistrement");
+            },
+            complete: function () {
+                $('#modal_addConsoElecAnnee').hide();
+                GetDonneesConsoElec();
+                GetDonneesConsoElecAnnee();     
+            }
+        });
+
+    }
+
+
+
+</script>
+
+
+
+
+
+
+    <!--ANNEE COURANTE-->
+    <h4 class="col-sm-12 titre-bloc">Année courante</h4>
+    <div class="sous-partie">
+        <div class="row">
+
+            <!--Graph Année-->
+            <div class="col-sm-8">
+                <canvas id="ch_ConsoElecAnnee"></canvas>
+            </div>
+
+            <!--tab Année-->
+            <div class="col-sm-4">
+                <center>
+                    <img onClick="ChangerAnneeViaImage(-1)" src='@Url.Content("~/Content/Previous_Violet_50.png")' />
+                    <span id="chp_elec_annee">2019</span>
+                    <img onClick="ChangerAnneeViaImage(1)" src='@Url.Content("~/Content/Next_Violet_50.png")' />
+                    <br /><br />
+                    <button class="mdl-button mdl-js-button mdl-button--accent" onclick="PopUpAddNewConsoEau()">Ajouter une consommation mensuelle</button>
+                </center>
+            </div>
+
+        </div>
+    </div><br />
+
+
+    <!--TOTALE-->
+    <h4 class="col-sm-12 titre-bloc">Evolution</h4>
+    <div class="sous-partie">
+        <div class="row">
+
+            <!--Graph total-->
+            <div class="col-sm-8">
+                <canvas id="ch_ConsoElecTotal"></canvas>
+            </div>
+
+            <!--Tab total-->
+            <div class="col-sm-4 center">
+                <center>
+                    <button class="mdl-button mdl-js-button mdl-button--accent" onclick="PopUpAddNewConsoEau()">Ajouter une consommation annuelle</button>
+                    <br /><br />
+                    <table id="tab_consoElec_total"class="mdl-data-table mdl-js-data-table">
+                        <thead>
+                            <tr>
+                                <th>Année</th>
+                                <th>Consommation</th>
+                                <th>Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </center>
+            </div>
+        </div>
+    </div><br />
+
+
+
+
+
+
+
+<!--POP UP AJOUTER CONSO EAU-->
+
+<div id="modal_addConsoElecAnnee" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <div class="col-sm-10 form-group">
+                <h2 id="modalTitle">Ajouter une nouvelle consommation annuelle</h2>
+            </div>
+
+            <div class="col-sm-2 form-group">
+                <span id="closePopUp" class="close">&times;</span>
+            </div>
+
+
+            <!--Année-->
+            <div class="col-sm-3 form-group">
+                <input id="chp_consoElec_Annee" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$" onchange="GetDonneesConsoElecAnneePopUp();" placeholder="Année">
+            </div>
+            <div class="col-sm-9"><i><span id="consoEau_txt_popup"></span></i></div>
+
+            <div class="col-sm-1">Janvier</div>
+            <div class="col-sm-1">Février</div>
+            <div class="col-sm-1">Mars</div>
+            <div class="col-sm-1">Avril</div>
+            <div class="col-sm-1">Mai</div>
+            <div class="col-sm-1">Juin</div>
+            <div class="col-sm-1">Juillet</div>
+            <div class="col-sm-1">Aout</div>
+            <div class="col-sm-1">Septembre</div>
+            <div class="col-sm-1">Octobre</div>
+            <div class="col-sm-1">Novembre</div>
+            <div class="col-sm-1">Décembre</div>
+
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_C1" placeholder="Consommation" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_C2" placeholder="Consommation" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_C3" placeholder="Consommation" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_C4" placeholder="Consommation" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_C5" placeholder="Consommation" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_C6" placeholder="Consommation" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_C7" placeholder="Consommation" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_C8" placeholder="Consommation" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_C9" placeholder="Consommation" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_C10" placeholder="Consommation" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_C11" placeholder="Consommation" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_C12" placeholder="Consommation" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+
+            
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_M1" placeholder="Montant" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_M2" placeholder="Montant" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_M3" placeholder="Montant" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_M4" placeholder="Montant" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_M5" placeholder="Montant" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_M6" placeholder="Montant" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_M7" placeholder="Montant" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_M8" placeholder="Montant" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_M9" placeholder="Montant" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_M10" placeholder="Montant" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_M11" placeholder="Montant" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+            <div class="col-sm-1 form-group">
+                <input id="chp_consoElec_M12" placeholder="Montant" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$">
+            </div>
+
+
+            <!--Btn add-->
+            <div class="col-sm-12 form-group">
+                <center>
+                    <button class="mdl-button mdl-js-button mdl-button--accent" onClick="AjouterConsoElecAnnuelle()">
+                        Ajouter
+                    </button>
+                </center>
+            </div>
+
+        </div>
+    </div>
+</div>

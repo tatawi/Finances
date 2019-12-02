@@ -1,0 +1,475 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+
+        GetDonneesConsoEau();
+
+
+
+    });
+
+    function majDonneesConsoAnnee(){
+
+        GetDonneesConsoEauAnnee($('#chp_consoEau_Annee').val());
+    }
+
+    //Get Donnees conso eau année
+    function GetDonneesConsoEauAnnee(an) {
+        var baseUrl = '@Url.Content("~/Appartement/GetDonneesConsoEauAnnee/")';
+        $('#consoEau_txt_popup').html('');
+        $.ajax({
+            url: baseUrl, type: "POST", async: true, // Mode synchrone
+            data: { annee: an }, dataType: "json",
+            success: function (result) {
+                $.each(result, function (index, itemData) {
+                    var Annee = itemData.Annee;
+                    var ConsoCuisineChaud = itemData.ConsoCuisineChaud;
+                    var MontantCuisineChaud = itemData.MontantCuisineChaud;
+                    var ConsoCuisineFroid = itemData.ConsoCuisineFroid;
+                    var MontantCuisineFroid = itemData.MontantCuisineFroid;
+                    var ConsoSdbChaud = itemData.ConsoSdbChaud;
+                    var MontantSdbChaud = itemData.MontantSdbChaud;
+                    var ConsoSdbFroid = itemData.ConsoSdbFroid;
+                    var MontantSdbFroid = itemData.MontantSdbFroid;
+                    var ConsoWcFroid = itemData.ConsoWcFroid;
+                    var MontantWcFroid = itemData.MontantWcFroid;
+
+                    if (an == Annee) {
+                        $('#ConsoCuisineChaud').val(ConsoCuisineChaud);
+                        $('#MontantCuisineChaud').val(MontantCuisineChaud);
+                        $('#ConsoCuisineFroid').val(ConsoCuisineFroid);
+                        $('#MontantCuisineFroid').val(MontantCuisineFroid);
+                        $('#ConsoSdbChaud').val(ConsoSdbChaud);
+                        $('#MontantSdbChaud').val(MontantSdbChaud);
+                        $('#ConsoSdbFroid').val(ConsoSdbFroid);
+                        $('#MontantSdbFroid').val(MontantSdbFroid);
+                        $('#ConsoWcFroid').val(ConsoWcFroid);
+                        $('#MontantWcFroid').val(MontantWcFroid);
+                        $('#consoEau_txt_popup').html('Données mise à jour avec les consommation de '+an);
+                    }
+                });
+            },
+            fail: function () {
+                $('#consoEau_txt_popup').html('Pas de données en base pour cette année');
+            },
+            complete: function () {
+                //var modal = document.getElementById('modal_addConsoEau');
+                //modal.style.display = "none";
+            }
+        });
+    };
+
+    //Get Donnees Conso Eau
+    function GetDonneesConsoEau() {
+        var baseUrl = '@Url.Content("~/Appartement/GetDonneesConsoEau/")';
+        var tab_Annee = new Array();
+        var tab_ConsoCuisineChaud = new Array();
+        var tab_MontantCuisineChaud = new Array();
+        var tab_ConsoCuisineFroid = new Array();
+        var tab_MontantCuisineFroid = new Array();
+        var tab_ConsoSdbChaud = new Array();
+        var tab_MontantSdbChaud = new Array();
+        var tab_ConsoSdbFroid = new Array();
+        var tab_MontantSdbFroid = new Array();
+        var tab_ConsoWcFroid = new Array();
+        var tab_MontantWcFroid = new Array();
+        var tab_ConsoTOTAL = new Array();
+        var tab_MontantTOTAL = new Array();
+
+        $('#tab_consoEau_montant > tbody').empty();
+        $('#tab_consoEau_conso > tbody').empty();
+
+
+        $.ajax({
+            url: baseUrl, type: "POST", async: true, dataType: "json",
+            success: function (result) {
+                $.each(result, function (index, itemData) {
+                   var Annee = itemData.Annee;
+                    var ConsoCuisineChaud = itemData.ConsoCuisineChaud;
+                    var MontantCuisineChaud = itemData.MontantCuisineChaud;
+                    var ConsoCuisineFroid = itemData.ConsoCuisineFroid;
+                    var MontantCuisineFroid = itemData.MontantCuisineFroid;
+                    var ConsoSdbChaud = itemData.ConsoSdbChaud;
+                    var MontantSdbChaud = itemData.MontantSdbChaud;
+                    var ConsoSdbFroid = itemData.ConsoSdbFroid;
+                    var MontantSdbFroid = itemData.MontantSdbFroid;
+                    var ConsoWcFroid = itemData.ConsoWcFroid;
+                    var MontantWcFroid = itemData.MontantWcFroid;
+                    var ConsoTOTAL = itemData.ConsoTOTAL;
+                    var MontantTOTAL = itemData.MontantTOTAL;
+
+                    var rowM = "<tr>";
+                    rowM += "<td><strong>" + Annee + "</strong></td>";
+                    rowM += "<td>" + MontantCuisineChaud + " €</td>";
+                    rowM += "<td>" + MontantCuisineFroid + " €</td>";
+                    rowM += "<td>" + MontantSdbChaud + " €</td>";
+                    rowM += "<td>" + MontantSdbFroid + " €</td>";
+                    rowM += "<td>" + MontantWcFroid + " €</td>";
+                    rowM += "<td><strong>" + MontantTOTAL + " €</strong></td>";
+                    rowM += "</tr>";
+
+                    var rowC = "<tr>";
+                    rowC += "<td><strong>" + Annee + "</strong></td>";
+                    rowC += "<td>" + ConsoCuisineChaud + " m<sup>3</sup></td>";
+                    rowC += "<td>" + ConsoCuisineFroid + " m<sup>3</sup></td>";
+                    rowC += "<td>" + ConsoSdbChaud + " m<sup>3</sup></td>";
+                    rowC += "<td>" + ConsoSdbFroid + " m<sup>3</sup></td>";
+                    rowC += "<td>" + ConsoWcFroid + " m<sup>3</sup></td>";
+                    rowC += "<td><strong>" + ConsoTOTAL + " m<sup>3</sup></strong></td>";
+                    rowC += "</tr>";
+
+                    $('#tab_consoEau_montant > tbody').append(rowM);
+                    $('#tab_consoEau_conso > tbody').append(rowC);
+
+
+                    tab_Annee.push(Annee);
+                    tab_ConsoCuisineChaud.push(ConsoCuisineChaud);
+                    tab_MontantCuisineChaud.push(MontantCuisineChaud);
+                    tab_ConsoCuisineFroid.push(ConsoCuisineFroid);
+                    tab_MontantCuisineFroid.push(MontantCuisineFroid);
+                    tab_ConsoSdbChaud.push(ConsoSdbChaud);
+                    tab_MontantSdbChaud.push(MontantSdbChaud);
+                    tab_ConsoSdbFroid.push(ConsoSdbFroid);
+                    tab_MontantSdbFroid.push(MontantSdbFroid);
+                    tab_ConsoWcFroid.push(ConsoWcFroid);
+                    tab_MontantWcFroid.push(MontantWcFroid);
+                    tab_ConsoTOTAL.push(ConsoTOTAL);
+                    tab_MontantTOTAL.push(MontantTOTAL); 
+                });
+            },
+            fail: function () {
+
+            },
+            complete: function () {
+
+                var EauGen = document.getElementById("ch_ConsoEauGen").getContext('2d');
+                var EauDetailMontant = document.getElementById("ch_ConsoEauDetailM").getContext('2d');
+                var EauDetailConso = document.getElementById("ch_ConsoEauDetailC").getContext('2d');
+                DisplayGraphConsoEauTotal(EauGen, tab_Annee, tab_ConsoTOTAL, tab_MontantTOTAL);
+                DisplayGraphConsoEauMontants(EauDetailMontant, tab_Annee, tab_MontantCuisineChaud, tab_MontantCuisineFroid, tab_MontantSdbChaud, tab_MontantSdbFroid, tab_MontantWcFroid);
+                DisplayGraphConsoEauConso(EauDetailConso, tab_Annee, tab_ConsoCuisineChaud, tab_ConsoCuisineFroid, tab_ConsoSdbChaud, tab_ConsoSdbFroid, tab_ConsoWcFroid );
+            }
+        });
+
+    };
+
+    //DisplayGraphConsoEauTotal
+    function DisplayGraphConsoEauTotal (chart, tab_Annee, tab_ConsoTOTAL, tab_MontantTOTAL) {
+        //var ctx = document.getElementById("ch_ConsoElec").getContext('2d');
+        var chart = new Chart(chart, {
+            // The type of chart we want to create
+            type: 'line',
+            // The data for our dataset
+            data: {
+                labels: tab_Annee,
+                datasets: [
+                    { label: "Consommation (m3)", borderColor: '#2196F3', data: tab_ConsoTOTAL, },
+                    { label: "Montant (€)", borderColor: '#BBDEFB', data: tab_MontantTOTAL, }
+
+                ]
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+
+    }
+
+    //DisplayGraphConsoEauMontants
+    function DisplayGraphConsoEauMontants (chart, tab_Annee, tab_MontantCuisineChaud, tab_MontantCuisineFroid, tab_MontantSdbChaud, tab_MontantSdbFroid, tab_MontantWcFroid) {
+        //var ctx = document.getElementById("ch_ConsoEauDetailM").getContext('2d');
+        var chart = new Chart(chart, {
+            // The type of chart we want to create
+            type: 'line',
+            // The data for our dataset
+            data: {
+                labels: tab_Annee,
+                datasets: [
+                        { label: "Cuisine - chaud", borderDash: [5,5], fill: false, borderColor: '#EF9A9A', data: tab_MontantCuisineChaud, },
+                        { label: "Cuisine - froid", borderDash: [5,5], fill: false, borderColor: '#B39DDB', data: tab_MontantCuisineFroid, },
+                        { label: "Sdb - chaud", fill: false, borderColor: '#FF5722', data: tab_MontantSdbChaud, },
+                        { label: "Sdb - froid", fill: false, borderColor: '#3F51B5', data: tab_MontantSdbFroid, },
+                        { label: "WC", fill: false, borderColor: '#00BCD4', data: tab_MontantWcFroid, }
+                    ]
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+
+    }
+
+    //DisplayGraphConsoEauConso
+    function DisplayGraphConsoEauConso (chart, tab_Annee, tab_ConsoCuisineChaud, tab_ConsoCuisineFroid, tab_ConsoSdbChaud, tab_ConsoSdbFroid, tab_ConsoWcFroid ) {
+       // var ctx = document.getElementById("ch_ConsoEauDetailC").getContext('2d');
+        var chart = new Chart(chart, {
+            // The type of chart we want to create
+            type: 'line',
+            // The data for our dataset
+            data: {
+                labels: tab_Annee,
+                datasets: [
+                        { label: "Cuisine - chaud", borderDash: [5,5], fill: false, borderColor: '#EF9A9A', data: tab_ConsoCuisineChaud, },
+                        { label: "Cuisine - froid", borderDash: [5,5], fill: false, borderColor: '#B39DDB', data: tab_ConsoCuisineFroid, },
+                        { label: "Sdb - chaud", fill: false, borderColor: '#FF5722', data: tab_ConsoSdbChaud, },
+                        { label: "Sdb - froid", fill: false, borderColor: '#3F51B5', data: tab_ConsoSdbFroid, },
+                        { label: "WC", fill: false, borderColor: '#00BCD4', data: tab_ConsoWcFroid, }
+                    ]
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+
+    }
+
+
+
+    //Ajout consommation eau pour une année
+    function PopUpAddNewConsoEau() {
+        var modal = document.getElementById('modal_addConsoEau');
+        var span = document.getElementById("closePopUp");
+
+        $('#modal_addConsoEau').show();
+       
+        //modal.style.display = "block";
+
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    }
+
+    //Ajout consommation eau (POST AJAX)
+    function AjouterConsoEauAjax() {
+
+        var data = {};
+        $('input, select').each(
+            function(index){  
+                var input = $(this);
+                data[input.attr('id')] = input.val();
+            });
+        data['Annee'] = $('#chp_consoEau_Annee').val();
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/Appartement/PostConsommationEau")',
+            data: data, dataType: "json",
+            success: function () {
+
+            },
+            fail: function () {
+             
+                $('#consoEau_txt_popup').html("Echec lors de l'enregistrement");
+            },
+            complete: function () {
+                $('#modal_addConsoEau').hide();
+                GetDonneesConsoEau();
+            }
+        });
+
+    }
+
+</script>
+<br />
+
+
+
+<h4 class="col-sm-12 titre-bloc">Totale</h4>
+<div class="sous-partie">
+    <div class="row">
+
+        <!--Graph total-->
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+            <canvas id="ch_ConsoEauGen"></canvas>
+        </div>
+        <div class="col-sm-2"></div>
+
+        <div class="col-sm-12">
+            <center><button class="mdl-button mdl-js-button mdl-button--accent" onclick="PopUpAddNewConsoEau()">Ajouter une consommation</button></center>
+        </div>
+    </div>
+</div><br />
+
+<h4 class="col-sm-12 titre-bloc">Annuelle</h4>
+<div class="sous-partie">
+    <div class="row">
+
+        <div class="col-sm-6">
+            <h3>Consommation</h3>
+            <canvas id="ch_ConsoEauDetailC"></canvas>
+            <center>  
+            <table id="tab_consoEau_conso" class="mdl-data-table mdl-js-data-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="vertical-align: middle" class="mdl-data-table__cell--non-numeric">Année</th>
+                        <th colspan="2" style="text-align: center"class="mdl-data-table__cell--non-numeric">Cuisine</th>
+                        <th colspan="2" style="text-align: center"class="mdl-data-table__cell--non-numeric">Salle de bain</th>
+                        <th style="text-align: center" class="mdl-data-table__cell--non-numeric">WC</th>
+                        <th rowspan="2" style="vertical-align: middle" class="mdl-data-table__cell--non-numeric">Total</th>
+                    </tr>
+                    <tr>
+                        <th class="mdl-data-table__cell--non-numeric">Chaud</th>
+                        <th class="mdl-data-table__cell--non-numeric">Froid</th>
+                        <th class="mdl-data-table__cell--non-numeric">Chaud</th>
+                        <th class="mdl-data-table__cell--non-numeric">Froid</th>
+                        <th class="mdl-data-table__cell--non-numeric">Froid</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+            </center>  
+        </div>
+
+        <div class="col-sm-6">
+            <h3>Montants</h3>
+            <canvas id="ch_ConsoEauDetailM"></canvas>
+            <center>
+            <table id="tab_consoEau_montant" class="mdl-data-table mdl-js-data-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="vertical-align: middle" class="mdl-data-table__cell--non-numeric">Année</th>
+                        <th colspan="2" style="text-align: center" class="mdl-data-table__cell--non-numeric">Cuisine</th>
+                        <th colspan="2" style="text-align: center"class="mdl-data-table__cell--non-numeric">Salle de bain</th>
+                        <th style="text-align: center"class="mdl-data-table__cell--non-numeric">WC</th>
+                        <th rowspan="2" style="vertical-align: middle" class="mdl-data-table__cell--non-numeric">Total</th>
+                    </tr>
+                    <tr>
+                        <th class="mdl-data-table__cell--non-numeric">Chaud</th>
+                        <th class="mdl-data-table__cell--non-numeric">Froid</th>
+                        <th class="mdl-data-table__cell--non-numeric">Chaud</th>
+                        <th class="mdl-data-table__cell--non-numeric">Froid</th>
+                        <th class="mdl-data-table__cell--non-numeric">Froid</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+            </center> 
+        </div>
+
+
+        
+    </div>
+</div><br />
+
+
+
+
+
+
+<!--POP UP AJOUTER CONSO EAU-->
+
+<div id="modal_addConsoEau" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <div class="col-sm-10 form-group">
+                <h2 id="modalTitle">Ajouter une nouvelle consommation</h2>
+            </div>
+
+            <div class="col-sm-2 form-group">
+                <span id="closePopUp" class="close">&times;</span>
+            </div>
+
+
+            <!--Année-->
+            <div class="col-sm-3 form-group">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input id="chp_consoEau_Annee" name="chp_consoEau_Annee" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$" onchange="majDonneesConsoAnnee();">
+                    <label class="mdl-textfield__label" for="chp_consoEau_Annee">Année (€)</label>
+                    <span class="mdl-textfield__error">Montant non valide</span>
+                </div>
+            </div>
+            <div class="col-sm-9"><i><span id="consoEau_txt_popup"></span></i></div>
+            
+            <!--Titre-->
+            <div class="col-sm-2"></div>
+            <div class="col-sm-4 form-group"><center><h4>Consommation (m3) </h4></center></div>
+            <div class="col-sm-4 form-group"><center><h4>Montant (€) </h4></center></div>
+            <div class="col-sm-2"></div>
+
+            <!--Chaud / froid-->
+            <div class="col-sm-2"></div>
+            <div class="col-sm-2 form-group"><center><h5><span class="mdl-button mdl-js-button mdl-button--accent">Chaud</span></h5></center></div>
+            <div class="col-sm-2 form-group"><center><h5><span class="mdl-button mdl-js-button mdl-button--primary">Froid</span></h5></center></div>
+            <div class="col-sm-2 form-group"><center><h5><span class="mdl-button mdl-js-button mdl-button--accent">Chaud</span></h5></center></div>
+            <div class="col-sm-2 form-group"><center><h5><span class="mdl-button mdl-js-button mdl-button--primary">Froid</span></h5></center></div>
+            <div class="col-sm-2"></div>
+
+            <!--Cuisine-->
+            <div class="col-sm-2 form-group"><h5>Cuisine :</h5></div>
+            <div class="col-sm-2 form-group"> <!--Cuisine conso chaud-->
+                    <input id="ConsoCuisineChaud" class="mdl-textfield__input" name="ConsoCuisineChaud" placeholder="Cuisine (m3)">
+                    <label class="mdl-textfield__label" for="ConsoCuisineChaud"></label>
+            </div>
+            <div class="col-sm-2 form-group"><!--Cuisine conso froid-->
+                    <input id="ConsoCuisineFroid" class="mdl-textfield__input" name="ConsoCuisineFroid" placeholder="Cuisine (m3)">
+                    <label class="mdl-textfield__label" for="ConsoCuisineFroid"></label>
+            </div>
+            <div class="col-sm-2 form-group"><!--Cuisine montant chaud-->
+                    <input id="MontantCuisineChaud" class="mdl-textfield__input" name="MontantCuisineChaud" placeholder="Cuisine (€)">
+                    <label class="mdl-textfield__label" for="MontantCuisineChaud"></label>
+            </div>
+            <div class="col-sm-2 form-group"><!--Cuisine montant froid-->
+                    <input id="MontantCuisineFroid" class="mdl-textfield__input" name="MontantCuisineFroid" placeholder="Cuisine (€)">
+                    <label class="mdl-textfield__label" for="MontantCuisineFroid"></label>
+            </div>
+            <div class="col-sm-2"></div>
+
+            <!--Sdb-->
+            <div class="col-sm-2 form-group"><h5>Sdb :</h5></div>
+            <div class="col-sm-2 form-group"><!--Sdb conso chaud-->
+                    <input id="ConsoSdbChaud" class="mdl-textfield__input" name="ConsoSdbChaud" placeholder="Sdb (m3)">
+                    <label class="mdl-textfield__label" for="ConsoSdbChaud"></label>
+            </div>
+            <div class="col-sm-2 form-group"><!--Sdb conso froid-->
+                    <input id="ConsoSdbFroid" class="mdl-textfield__input" name="ConsoSdbFroid" placeholder="Sdb (m3)">
+                    <label class="mdl-textfield__label" for="ConsoSdbFroid"></label>
+            </div>
+            <div class="col-sm-2 form-group"><!--Sdb montant chaud-->
+                    <input id="MontantSdbChaud" class="mdl-textfield__input" name="MontantSdbChaud" placeholder="Sdb (€)">
+                    <label class="mdl-textfield__label" for="MontantSdbChaud"></label>
+            </div>
+            <div class="col-sm-2 form-group"><!--Sdb montant froid-->
+                    <input id="MontantSdbFroid" class="mdl-textfield__input" name="MontantSdbFroid" placeholder="Sdb (€)">
+                    <label class="mdl-textfield__label" for="MontantSdbFroid"></label>
+            </div>
+            <div class="col-sm-2"></div>
+
+            <!--WC-->
+            <div class="col-sm-2 form-group"><h5>WC :</h5></div>
+            <div class="col-sm-2 form-group"> </div>
+            <div class="col-sm-2 form-group"><!--wc conso froid-->
+                    <input id="ConsoWcFroid" class="mdl-textfield__input" name="ConsoWcFroid" placeholder="WC (m3)">
+                    <label class="mdl-textfield__label" for="ConsoWcFroid"></label>
+            </div>
+
+            <div class="col-sm-2 form-group">  </div>
+            <div class="col-sm-2 form-group"><!--wc montant froid-->
+                    <input id="MontantWcFroid" class="mdl-textfield__input" name="MontantWcFroid" placeholder="WC (€)">
+                    <label class="mdl-textfield__label" for="MontantWcFroid"></label>
+            </div>
+            <div class="col-sm-2"></div>
+
+
+
+            <!--Btn add-->
+            <div class="col-sm-12 form-group">
+                <center>
+                    <button class="mdl-button mdl-js-button mdl-button--accent" onClick="AjouterConsoEauAjax()">
+                        Ajouter
+                    </button>
+                </center>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,419 @@
+﻿<script type="text/javascript">
+
+
+    var _totalPret1 = 7783;
+    var _totalPret2 = 13035;
+    var _totalPret2remb1 = 6637;
+    var _fraisDeVente = 31960;
+
+    var _locationMois = 1500;
+
+    $(document).ready(function () {
+
+        $('#infoG_totalpret1').text(thousandSeparator(_totalPret1) + ' €');
+        $('#infoG_totalpret2').text(thousandSeparator(_totalPret2) + ' €');
+        $('#_totalPret2remb1').text(thousandSeparator(_totalPret2) + ' €');
+        $('#infoG_LocationMois').text(thousandSeparator(_locationMois) + ' €');
+        $('#infoG_LocationAnnee').text(thousandSeparator(_locationMois*12) + ' €');
+        
+
+
+        var coutTotalPret = _totalPret1 + _totalPret2remb1;
+        $('#infoG_CoutTotalPret').text(thousandSeparator(coutTotalPret) + ' €');
+        
+        var totalDepenses = coutTotalPret + _fraisDeVente;
+        $('#infoG_TotalDepenses').text(thousandSeparator(totalDepenses) + ' €');
+        
+
+        var dateAchat = new Date(2017,01,01);
+        var dateActuelle = new Date();
+        var differenceEnMois = monthDiff(dateAchat, dateActuelle);
+        var differenceEnAnnees = (dateActuelle.getFullYear() - dateAchat.getFullYear());
+
+
+        //retour sur investissements
+        var anneesRetourInvest = Math.trunc(totalDepenses / (_locationMois * 12));
+        var moisRetourInvest = Math.trunc((totalDepenses - (anneesRetourInvest * _locationMois * 12)) / _locationMois);
+        $('#infoG_RetourInvestissement').text(anneesRetourInvest + ' ans et ' + moisRetourInvest + ' mois');
+        
+        //Gains ou pertes
+        var montantLocEstime = _locationMois * differenceEnMois;
+        var gainsOuPertes = montantLocEstime - totalDepenses;
+        $('#infoG_gainsOuPertes').text(thousandSeparator(gainsOuPertes) + ' €');
+
+        //durée achat
+        $('#infoG_dureeAchat').text(differenceEnAnnees + ' ans et ' + (differenceEnMois - (differenceEnAnnees * 12)) + ' mois');
+
+
+
+
+    });
+
+    function monthDiff(d1, d2) {
+        var months;
+        months = (d2.getFullYear() - d1.getFullYear()) * 12;
+        months += d2.getMonth();
+        return months <= 0 ? 0 : months;
+    }
+
+    function thousandSeparator(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
+
+</script>
+
+
+        <br />
+        <h4 class="col-sm-12 titre-bloc">Résidence</h4>
+        <div class="sous-partie">
+            <div class="row">
+                <!--Ligne 1-->
+                <div class="col-sm-4 form-group">
+                    Adresse :
+                    <div class="valeur">
+                        25/29 rue des Lilas, 75019 PARIS
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Nombre de lots :
+                    <div class="valeur">
+                        212
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Lots secondaires :
+                    <div class="valeur">
+                        371
+                    </div>
+                </div>
+
+                <!--Ligne 2-->
+                <div class="col-sm-4 form-group">
+                    Année construction :
+                    <div class="valeur">
+                        1977
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Architecte :
+                    <div class="valeur">
+                        Jean DUBUISSON
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Hauteur :
+                    <div class="valeur">
+                        51m
+                    </div>
+                </div>
+
+                <!--Ligne 3-->
+                <div class="col-sm-4 form-group">
+                    Syndic :
+                    <div class="valeur">
+                        Cabinet CLD Immobilier
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Adresse Syndic:
+                    <div class="valeur">
+                        7 avenue de l'orme à Martin, 91023 Evry
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Téléphone Syndic:
+                    <div class="valeur">
+                        01 60 79 09 80
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <br />
+        <h4 class="col-sm-12 titre-bloc">Achat</h4>
+        <div class="sous-partie">
+            <div class="row">
+
+                <!--Ligne 4-->
+                <div class="col-sm-4 form-group">
+                    Date :
+                    <div class="valeur">
+                        mer 4 Janvier 2017
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Prix de vente :
+                    <div class="valeur">
+                        439 000 €
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Prix Total :
+                    <div class="valeur">
+                        472 110 €
+                    </div>
+                </div>
+
+                <!--Ligne 5-->
+                <div class="col-sm-4 form-group">
+                    Frais de la vente :
+                    <div class="valeur">
+                        31 960 €
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Frais de garanties :
+                    <div class="valeur">
+                        1 150 €
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Fonds empruntés :
+                    <div class="valeur">
+                        200 000 €
+                    </div>
+                </div>
+
+                <!--Ligne 6-->
+                <div class="col-sm-4 form-group">
+                    Numéro de lot :
+                    <div class="valeur">
+                        2016
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Superficie :
+                    <div class="valeur">
+                        90,22 m²
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Millièmes :
+                    <div class="valeur">
+                        56 /10 000
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+
+
+        <br />
+        <h4 class="col-sm-12 titre-bloc">Prêts</h4>
+        <div class="sous-partie">
+            <div class="row">
+
+                <!--Ligne 7-->
+                <div class="col-sm-4 form-group">
+                    Montant empruntés:
+                    <div class="valeur">
+                        200 000€
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Durée totale:
+                    <div class="valeur">
+                        15 ans
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    T.A.E.G :
+                    <div class="valeur">
+                        1,37 % (1,27 % + 1,56 %)
+                    </div>
+                </div>
+
+                <!--Ligne 8-->
+                <div class="col-sm-2 form-group">
+                    Prêt 1 :
+                    <div class="valeur">
+                        130 000 €
+                    </div>
+                </div>
+                <div class="col-sm-2 form-group">
+                    Durée :
+                    <div class="valeur">
+                        10 ans
+                    </div>
+                </div>
+                <div class="col-sm-2 form-group">
+                    Taux :
+                    <div class="valeur">
+                        0,80 %
+                    </div>
+                </div>
+                <div class="col-sm-2 form-group">
+                    Assurance :
+                    <div class="valeur">
+                        1 129€
+                    </div>
+                </div>
+                <div class="col-sm-2 form-group">
+                    Coût :
+                    <div class="valeur">
+                        6 654€
+                    </div>
+                </div>
+                <div class="col-sm-2 form-group">
+                    Total :
+                    <div class="valeur">
+                        <span id="infoG_totalpret1"></span>
+                    </div>
+                </div>
+
+                <!--Ligne 9-->
+                <div class="col-sm-2 form-group">
+                    Prêt 2 :
+                    <div class="valeur">
+                        70 000 €
+                    </div>
+                </div>
+                <div class="col-sm-2 form-group">
+                    Durée :
+                    <div class="valeur">
+                        5 ans
+                    </div>
+                </div>
+                <div class="col-sm-2 form-group">
+                    Taux :
+                    <div class="valeur">
+                        1,10 %
+                    </div>
+                </div>
+                <div class="col-sm-2 form-group">
+                    Assurance :
+                    <div class="valeur">
+                        1 567€
+                    </div>
+                </div>
+                <div class="col-sm-2 form-group">
+                    Coût :
+                    <div class="valeur">
+                        11 468€
+                    </div>
+                </div>
+                <div class="col-sm-2 form-group">
+                    Total :
+                    <div class="valeur">
+                        <span id="infoG_totalpret2"></span>
+                    </div>
+                </div>
+
+                <!--Ligne 10-->
+                <div class="col-sm-2 form-group">
+                    Prêt 2 avec remb :
+                    <div class="valeur">
+                        50 000 € (-20 000)
+                    </div>
+                </div>
+                <div class="col-sm-2 form-group">
+                    Durée :
+                    <div class="valeur">
+                        3,5 ans (-1,5)
+                    </div>
+                </div>
+                <div class="col-sm-2 form-group">
+                    Taux :
+                    <div class="valeur">
+                        1,10 %
+                    </div>
+                </div>
+                <div class="col-sm-2 form-group">
+                    Assurance :
+                    <div class="valeur">
+                        (1 567 €)
+                    </div>
+                </div>
+                <div class="col-sm-2 form-group">
+                    Coût :
+                    <div class="valeur">
+                        5 070€
+                    </div>
+                </div>
+                <div class="col-sm-2 form-group">
+                    Total :
+                    <div class="valeur">
+                        <span id="infoG_totalpret2r1"></span>
+                        6 637€
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <br />
+        <h4 class="col-sm-12 titre-bloc">Retour sur investissement</h4>
+        <div class="sous-partie">
+            <div class="row">
+
+                <!--Ligne 11-->
+                <div class="col-sm-4 form-group">
+                    Frais de vente:
+                    <div class="valeur">
+                        31 960 €
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Coût total du prêt:
+                    <div class="valeur">
+                        <span id="infoG_CoutTotalPret"></span>
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Total dépensé non récupérable:
+                    <div class="valeur">
+                        <span id="infoG_TotalDepenses"></span>
+                    </div>
+                </div>
+
+                <!--Ligne 12-->
+                <div class="col-sm-4 form-group">
+                    Montant location estimé :
+                    <div class="valeur">
+                        <span id="infoG_LocationMois"></span>
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Montant locatif annuel estimé :
+                    <div class="valeur">
+                        <span id="infoG_LocationAnnee"></span>
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Retour sur investissement :
+                    <div class="valeur">
+                       <span id="infoG_RetourInvestissement"></span>
+                    </div>
+                </div>
+
+
+                <!--Ligne 13-->
+                <div class="col-sm-4 form-group">
+                    Durée achat :
+                    <div class="valeur">
+                       <span id="infoG_dureeAchat"></span>
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    Gains / pertes actuels :
+                    <div class="valeur">
+                        <span id="infoG_gainsOuPertes"></span>
+                    </div>
+                </div>
+
+
+
+
+
+
+            </div>
+        </div>
+
+

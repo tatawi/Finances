@@ -1,0 +1,101 @@
+﻿
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        RefreshEpargneAnnee();
+        //RefreshEpargneTotal();
+
+
+    });
+
+    function ChangerAnneeViaImage(plusOuMoins) {
+        var champ = document.getElementById('chp_annee');
+        var annee = parseInt(champ.innerText);
+        if (plusOuMoins == 1) {
+            champ.innerText = (annee + 1);
+        }
+        else {
+            champ.innerText = (annee - 1);
+        }
+
+        showGif();
+        RefreshEpargneAnnee();
+        hideGif();
+    }
+
+
+
+ //---------------------------------------------------------------------------------------------------------------------
+ // EPARGNE ANNEE
+
+    function RefreshEpargneAnnee() {
+        var baseUrl = '@Url.Content("~/Epargne/GetMontantEpargneAnnee/")';
+        var tab_Date = new Array();
+        var tab_Epargne = new Array();
+        var champ = document.getElementById('chp_annee');
+        var annee = parseInt(champ.innerText);
+
+
+        $.getJSON(baseUrl, { Annee: annee }, function (result) {
+                $.each(result, function (index, itemData) {
+                    var Mois = itemData.Mois;
+                    var Epargne = itemData.Montant;
+
+                    tab_Date.push(Mois);
+                    tab_Epargne.push(Epargne);
+                });
+
+                DisplayGraphEpargneAnnee(tab_Date, tab_Epargne);
+        });
+    };
+
+
+    function DisplayGraphEpargneAnnee(tab_Date, tab_Epargne) {
+        var ctx = document.getElementById("ch_EpargneAnnee").getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                labels: tab_Date,
+                datasets: [
+                    { label: "Epargne", fill: false, borderColor: '#E1BEE7', data: tab_Epargne, }
+
+                ]
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+    }
+    
+
+
+</script>
+
+
+
+
+<!-- Valeur -->
+<h4 class="col-sm-12 titre-bloc">Courant</h4>
+<div class="sous-partie">
+    <div class="row">
+        <div class="col-sm-2"><br />
+            <h4>
+                <img onClick="ChangerAnneeViaImage(-1)" src='@Url.Content("~/Content/Previous_Violet_50.png")' />
+                <span id="chp_annee">2019</span>
+                <img onClick="ChangerAnneeViaImage(1)" src='@Url.Content("~/Content/Next_Violet_50.png")' />
+            </h4>
+        </div>
+        <div class="col-sm-8">
+            <canvas id="ch_EpargneAnnee"></canvas>
+        </div>
+        <div class="col-sm-2"></div>
+    </div>
+</div>
+
+
+

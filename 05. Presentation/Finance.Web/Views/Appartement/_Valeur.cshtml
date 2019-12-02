@@ -1,0 +1,260 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+
+        RefreshTableauEstimations();
+
+    });
+
+
+
+
+    //---------------------------------------------------------------------------------------------------------
+    //-------------PAGE ESTIMATION-----------------------
+
+    //POP-UP Estimation
+    function addNewEstimation() {
+        var modal = document.getElementById('modal_addEstimation');
+        var span = document.getElementById("closePopUp");
+
+        modal.style.display = "block";
+
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    }
+
+    //AJAX - Get valeurs estimation
+    function RefreshTableauEstimations() {
+        var baseUrl = '@Url.Content("~/Appartement/GetListValeursAppartement/")';
+        var tab_Date = new Array();
+        var tab_Montant = new Array();
+
+        var tab_LastDate = new Array();
+        var tab_LastMontant = new Array();
+        var tab_LastDescription = new Array();
+
+        $('#tab_valAppt > tbody').empty();
+
+
+            $.getJSON(baseUrl, function (result) {
+                $.each(result, function (index, itemData) {
+                    var Montant = itemData.Montant;
+                    var MontantVal = itemData.MontantVal;
+                    var Date = itemData.Date;
+                    var Description = itemData.Description;
+                    var DateStr = itemData.DateStr;
+
+                    tab_Date.push(Date);
+                    tab_Montant.push(MontantVal);
+
+                    tab_LastDate.push(DateStr);
+                    tab_LastMontant.push(Montant);
+                    tab_LastDescription.push(Description);
+
+                   /* var row = "<tr>";
+                    row += "<td class='mdl-data-table__cell--non-numeric'>" + DateStr + "</td>";
+                    row += "<td>" + Montant + "</td>";
+                    row += "<td class='mdl-data-table__cell--non-numeric'>" + Description + "</td>";
+                    row += "</tr";
+
+
+                    $('#tab_valAppt > tbody').append(row);*/
+
+                });
+                DisplayGraphValeurAppt(tab_Date, tab_Montant);
+
+
+                // Display texte total
+                var premierMontant = tab_Montant[0];
+                var dernierMontant = tab_Montant[tab_Montant.length - 1];
+                var isMontantPositif = false;
+                if ((dernierMontant - premierMontant) > 0) {
+                    isMontantPositif = true;
+                }
+                var evolution = (dernierMontant - premierMontant).toLocaleString();
+                var evolutionPct = Math.round(((dernierMontant / premierMontant) - 1) * 100);
+                var champEstimation = document.getElementById("evolEstimation");
+                var champEstimationPct = document.getElementById("evolEstimationPct");
+
+
+
+                //Gestion couleurs
+                if (isMontantPositif) {
+                    champEstimation.innerText = '+ ' + evolution + ' €';
+                    champEstimationPct.innerText = '+ ' + evolutionPct + ' %';
+                    champEstimation.classList.add("GreenText");
+                    champEstimationPct.classList.add("GreenText");
+                }
+                else {
+                    champEstimation.innerText = '- ' + evolution + ' €';
+                    champEstimationPct.innerText = '- ' + evolutionPct + ' %';
+                    champEstimation.classList.add("RedText");
+                    champEstimationPct.classList.add("RedText");
+                }
+
+                //Affichage tableau
+                var nbEstimations = tab_LastDate.length;
+                for (var i = 1; i <= 5; i++) {
+                    var row = "<tr>";
+                    row += "<td class='mdl-data-table__cell--non-numeric'>" + tab_LastDate[nbEstimations-i] + "</td>";
+                    row += "<td>" + tab_LastMontant[nbEstimations-i]  + "</td>";
+                    row += "<td class='mdl-data-table__cell--non-numeric'>" + tab_LastDescription[nbEstimations-i]  + "</td>";
+                    row += "</tr";
+                    $('#tab_valAppt > tbody').append(row);
+                }
+                $('#tab_valAppt > tbody').append("<tr><td colspan='3'><center>...</center></td></tr>");
+        });
+
+    };
+
+
+    function DisplayGraphValeurAppt(tbAnnees, tab_Montant) {
+        var ctx = document.getElementById("ch_ValeurAppt").getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                labels: tbAnnees,
+                datasets: [
+                    { label: "Valeur", borderColor: '#4CAF50', data: tab_Montant, }
+                ]
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+
+    }
+
+    //AJAX - Ajout estimation
+    function AjouterEstimationAjax() {
+         var Montant = $('#chp_Montant').val();
+         var Source = $('#chp_source').val();
+         var data = {'paramMontant': Montant,
+                'paramSource': Source,};
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/Appartement/AjouterEstimation")',
+                data: data,
+                success: function () {
+                    var modal = document.getElementById('modal_addEstimation');
+                    modal.style.display = "none";
+                    RefreshTableauEstimations();
+                    AfficherMessage();
+                }
+            });
+    }
+
+
+    //---------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+<div class="row">
+
+    <!--Graph revenus-->
+    <div class="col-sm-8 form-group">
+        <canvas id="ch_ValeurAppt"></canvas>
+    </div>
+
+    <!--Tableau-->
+    <div class="col-sm-4 form-group">
+        <br />
+        <div class="row">
+            <div class="col-sm-6">Evolution de l'estimation :</div>
+            <div id="evolEstimation" class="col-sm-6"> + 70 800€</div>
+            <div class="col-sm-6"></div>
+            <div id="evolEstimationPct" class="col-sm-6"> + 16.5%</div>
+        </div>
+        <hr />
+
+        <center>
+            <table id="tab_valAppt" class="mdl-data-table mdl-js-data-table">
+                <thead>
+                    <tr>
+                        <th class="mdl-data-table__cell--non-numeric">Date</th>
+                        <th>Estimation</th>
+                        <th class="mdl-data-table__cell--non-numeric">Source</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+
+            </table>
+            <hr />
+            <button class="mdl-button mdl-js-button mdl-button--primary" onclick="addNewEstimation()">
+                Ajouter une estimation
+            </button>
+        </center>
+    </div>
+
+</div>
+
+
+
+
+
+
+<!--POP UP AJOUTER ESTIMATION-->
+<!-- The Modal -->
+
+<div id="modal_addEstimation" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <div class="col-sm-10 form-group">
+                <h2 id="modalTitle">Ajouter une nouvelle estimation</h2>
+            </div>
+
+            <div class="col-sm-2 form-group">
+                <span id="closePopUp" class="close">&times;</span>
+            </div>
+
+
+            <!--Montant-->
+            <div class="col-sm-4 form-group">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input id="chp_Montant" class="mdl-textfield__input" name="Estimation">
+                    <label class="mdl-textfield__label" for="chp_Montant">Estimation</label>
+                    <span class="mdl-textfield__error">Montant non valide</span>
+                </div>
+            </div>
+
+
+            <!--Libellé-->
+            <div class="col-sm-4 form-group">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input id="chp_source" class="mdl-textfield__input" name="Source">
+                    <label class="mdl-textfield__label" for="chp_libelle">Source</label>
+                    <span class="mdl-textfield__error">Texte non valide</span>
+                </div>
+            </div>
+
+
+            <!--Btn add-->
+            <div class="col-sm-4 form-group">
+                <button class="mdl-button mdl-js-button mdl-button--accent" onClick="AjouterEstimationAjax()">
+                    Ajouter
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

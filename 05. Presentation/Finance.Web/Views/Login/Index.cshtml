@@ -1,0 +1,67 @@
+﻿@model ViewModels.Login.LoginVM
+
+
+
+
+<script>
+    $(document).ready(function () {
+
+            var navLiens = document.getElementById('nav_liens');
+            navLiens.style.display = 'none';
+
+            var navMenu = document.getElementById('nav_menu'); 
+            navMenu.style.display = 'none';
+
+            var navSelecteurCompte = document.getElementById('lbSelectComptes');
+            navSelecteurCompte.style.display = 'none';
+
+        });
+
+</script>
+
+
+
+
+@{
+    ViewBag.Title = "Connexion";
+}
+
+<h1 class="display-4">Connexion</h1><hr /><br />
+
+
+
+@if (Model.Authentifie)
+{
+    <h3>
+        Vous êtes déjà authentifié avec le login :
+        @Model.Utilisateur
+    </h3>
+    @Html.ActionLink("Voulez-vous vous déconnecter ?", "Deconnexion")
+}
+else
+{
+    <p>
+        Veuillez vous authentifier :
+    </p>
+    using (Html.BeginForm())
+    {
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            @Html.TextBoxFor(m => m.Utilisateur, new { @class = "mdl-textfield__input" })
+
+            <label class="mdl-textfield__label" for="sample2">Utilisateur :</label>
+            <span class="mdl-textfield__error">Texte non valide</span>
+        </div>
+
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            @Html.PasswordFor(m => m.mdp, new { @class = "mdl-textfield__input" })
+
+            <label class="mdl-textfield__label" for="sample2">Mot de passe :</label>
+            <span class="mdl-textfield__error">Texte non valide</span>
+        </div>
+
+
+        <input type="submit" value="Se connecter" class="mdl-button mdl-js-button mdl-button--primary" />
+        <br />
+
+    }
+}

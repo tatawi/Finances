@@ -1,0 +1,304 @@
+﻿
+
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+        //EffectuerRecherche();
+        RefreshTableauCatDepenses();
+
+    });
+
+
+    function Ajouter() {
+        var modal = document.getElementById('myModal');
+        var span = document.getElementById("closePopUp");
+        modal.style.display = "block";
+
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    }
+
+
+
+     function selectionnerCategorie(object, trieMainPage) {
+        var arraySrc = object.src.split('/');
+        var nbSplit = arraySrc.length;
+        var changeSrc = arraySrc[nbSplit - 1];
+        var workingArray = changeSrc.split('_');
+
+        var selectedCat = workingArray[0];
+        var typeCat = workingArray[1].replace(".png", "");
+
+        //on met les images des cat a plat pour pas en avoir plusieurs selectionnées
+            var listeImgCat = document.getElementsByClassName("popUp_Cat");
+            for (x = 0; x < listeImgCat.length; x++) {
+                listeImgCat[x].src = listeImgCat[x].src.replace("full", "empty");
+                listeImgCat[x].classList.remove("selectedCat");
+            }
+
+
+        if (typeCat == "empty") {
+            object.src = object.src.replace("empty", "full");
+            object.classList.add("selectedCat");
+            SendSelectedCat = selectedCat;
+        }
+        else {
+            object.src = object.src.replace("full", "empty");
+            //CATHEGORIE = 'All';
+            }
+       RefreshListSousCat(selectedCat);
+    }
+
+
+    function RefreshListSousCat(categorie)
+    {
+        var baseUrl = '@Url.Content("~/Home/GetSousCategorie/")';
+        var nb = 1;
+
+        for (i = 1; i < 8; i++) {
+            var strLabelSousCatId = "SousCatPopUp" + i;
+            var LabelSousCatId = document.getElementById(strLabelSousCatId);
+            LabelSousCatId.style.display = 'none';
+        }
+
+            $.getJSON(baseUrl, { paramCat: categorie}, function (result) {
+                $.each(result, function (index, itemData) {
+
+                    var strLabelSousCatId = "SousCatPopUp" + nb;
+                    var LabelSousCatId = document.getElementById(strLabelSousCatId);
+                    LabelSousCatId.innerText = itemData.ssCat;
+                    LabelSousCatId.style.display = 'inline-block';
+                    nb++;
+                });
+            });
+    };
+
+    //Changer la couleur lors de la selection d'une reconductibilité
+    function selectionnerSousCatPopUp(object) {
+        //alert('in');
+        var tb_recon = document.getElementsByClassName("SousCatPopUp");
+        for (x = 0; x < tb_recon.length; x++) {
+            tb_recon[x].classList.remove("SousCatPopUpSelect");
+            tb_recon[x].classList.add("SousCatPopUpUnselect");
+        }
+
+        object.classList.remove("SousCatPopUpUnselect");
+        object.classList.add("SousCatPopUpSelect");
+    }
+
+
+
+     //---------------------------------------------------------------------------------------------------------
+    //-------------AJAX-----------------------
+    function RefreshTableauCatDepenses() {
+        var baseUrl = '@Url.Content("~/Administration/GetListeAllCatDep/")';
+        var baseUrlImg = '@Url.Content("~/Content/Icones/")';
+
+        $('#tab_catDepenses > tbody').empty();
+            $.getJSON(baseUrl, function (result) {
+                $.each(result, function (index, itemData) {
+                    var Libelle = itemData.Libelle;
+                    var Categorie = itemData.categorie;
+                    var SousCategorie = itemData.ssCategorie;
+
+                    var row = "<tr class='color" + Categorie + "'><td class='mdl-data - table__cell--non-numeric'>" + Libelle + "</td>";
+                    row += "<td class='mdl-data-table__cell--non-numeric'><center><img src='" + baseUrlImg + Categorie + "_full.png' width='50%'/></center></td>";
+                    row += "<td class='color" + Categorie + "'>" + SousCategorie + "</td>";
+                    row += "</tr>";
+
+                    $('#tab_catDepenses > tbody').append(row);
+
+                });
+            });
+    };
+
+
+
+
+
+    function AjouterCorrespondance() {
+        var chp_cat = document.getElementsByClassName("selectedCat")[0];
+
+        var arraySrc = chp_cat.src.split('/');
+        var nbSplit = arraySrc.length;
+        var changeSrc = arraySrc[nbSplit - 1];
+        var workingArray = changeSrc.split('_');
+        var chp_ssCat = document.getElementsByClassName("SousCatPopUpSelect")[0];
+
+        var selectedCat = workingArray[0];
+        var selectedSsCat = chp_ssCat.innerText
+        var lib = document.getElementById("chp_texte").value;
+
+        var data = {
+            'paramLib': lib,
+            'paramCat': selectedCat,
+            'paramSsCat': selectedSsCat
+       };
+
+         $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/Administration/AjouterCorrespondance")',
+                data: data,
+                success: function () {
+                    document.getElementById('myModal').style.display = "none";
+                    RefreshTableauCatDepenses();
+                    AfficherMessageAjoutCorrespondance();
+                }
+        });
+    }
+
+
+
+
+    function AfficherMessageAjoutCorrespondance()
+    {
+        var baseUrl = '@Url.Content("~/Administration/GetMessageAjoutCorrespondance/")';
+            $.getJSON(baseUrl, { paramCat: ""}, function (result) {
+                $.each(result, function (index, itemData) {
+                    var message = itemData.msg;
+                    displayMessage(message)
+                });
+            });
+    }
+
+
+</script>
+
+
+
+
+<!--TITRE-->
+<div>
+    <h1 id="titre" class="display-4">Correspondance catégories / dépenses</h1>
+</div>
+
+
+
+
+<div class="clear cf collapsible open">
+    <br /><br />
+    <center>
+        <input class="mdl-button mdl-js-button mdl-button--primary" id="btn_Rechercher" type="button" value="Ajouter une entrée" onClick="Ajouter();" style="margin-top:10px" />
+    </center>
+    <br />
+    <center>
+        <table id="tab_catDepenses" class="mdl-data-table mdl-js-data-table">
+            <thead>
+                <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Texte</th>
+                    <th>Catégorie</th>
+                    <th>Sous-catégorie</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+
+        </table>
+    </center>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--POP UP AJOUTER DEPENSE-->
+<!-- The Modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+
+
+        <div class="row">
+            <div class="col-sm-10 form-group">
+                <h2 id="modalTitle">Ajouter une correspondance</h2>
+            </div>
+
+            <div class="col-sm-2 form-group">
+                <span id="closePopUp" class="close">&times;</span>
+            </div>
+
+
+
+            <!--Texte-->
+            <div class="col-sm-4 form-group">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input id="chp_texte" class="mdl-textfield__input" name="Source">
+                    <label class="mdl-textfield__label" for="chp_texte">Texte</label>
+                    <span class="mdl-textfield__error">Texte non valide</span>
+                </div>
+            </div>
+
+            <!--Texte-->
+            <div class="col-sm-8 ">
+                <img width='30px' onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Logement_empty.png")' />
+                <img width='30px' onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Alimentaire_empty.png")' />
+                <img width='30px' onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Voiture_empty.png")' />
+                <img width='30px' onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Transport_empty.png")' />
+                <img width='30px' onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Loisirs_empty.png")' />
+                <img width='30px' onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Voyages_empty.png")' />
+                <img width='30px' onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Cadeaux_empty.png")' />
+                <img width='30px' onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Achats_empty.png")' />
+                <img width='30px' onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Vetements_empty.png")' />
+                <img width='30px' onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Sante_empty.png")' />
+                <img width='30px' onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Impots_empty.png")' />
+                <img width='30px' onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/FraisBancaires_empty.png")' />
+                <img width='30px' onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Emprunt_empty.png")' />
+                <img width='30px' onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Revenus_empty.png")' />
+            </div>
+
+
+
+
+
+            <!--Sous-Cat-->
+            <div class="col-sm-4 "></div>
+            <div class="col-sm-8 ">
+                <span id="SousCatPopUp1" class="SousCatPopUpSelect SousCatPopUp" onClick="selectionnerSousCatPopUp(this)" style="display: none">ssCat1</span>
+                <span id="SousCatPopUp2" class="SousCatPopUpUnselect SousCatPopUp" onClick="selectionnerSousCatPopUp(this)" style="display: none">ssCat2</span>
+                <span id="SousCatPopUp3" class="SousCatPopUpUnselect SousCatPopUp" onClick="selectionnerSousCatPopUp(this)" style="display: none">ssCat3</span>
+                <span id="SousCatPopUp4" class="SousCatPopUpUnselect SousCatPopUp" onClick="selectionnerSousCatPopUp(this)" style="display: none">ssCat4</span>
+                <span id="SousCatPopUp5" class="SousCatPopUpUnselect SousCatPopUp" onClick="selectionnerSousCatPopUp(this)" style="display: none">ssCat5</span>
+                <span id="SousCatPopUp6" class="SousCatPopUpUnselect SousCatPopUp" onClick="selectionnerSousCatPopUp(this)" style="display: none">ssCat6</span>
+                <span id="SousCatPopUp7" class="SousCatPopUpUnselect SousCatPopUp" onClick="selectionnerSousCatPopUp(this)" style="display: none">ssCat7</span>
+            </div>
+
+        </div>
+
+        <center>
+            <input class="mdl-button mdl-js-button mdl-button--accent" id="btn_Rechercher" type="button" value="Ajouter" onClick="AjouterCorrespondance();" style="margin-top:10px" />
+        </center>
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+

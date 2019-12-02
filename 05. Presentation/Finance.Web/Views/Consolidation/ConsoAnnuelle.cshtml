@@ -1,0 +1,188 @@
+﻿@model ViewModels.Consolidation.ConsoAnnuelleVM
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        EffectuerRecherche();
+
+
+
+    });
+
+    //---------------------------------------------------------------------------------------------------------
+    //-------------ACTIONS-----------------------
+
+    //LANCER LA RECHERCHE
+    function EffectuerRecherche() {
+
+        var annee = document.getElementById('chp_annee').value;
+        RefreshTableauDepenses(annee);
+    }
+
+
+
+    //---------------------------------------------------------------------------------------------------------
+    //-------------FONCTIONS-----------------------
+
+    //changer année via image
+    function ChangerAnneeViaImage(plusOuMoins) {
+        if (plusOuMoins == 1) {
+            document.getElementById('chp_annee').value = parseInt(document.getElementById('chp_annee').value) + 1;
+        }
+        else {
+            document.getElementById('chp_annee').value = document.getElementById('chp_annee').value - 1;
+
+        }
+
+        EffectuerRecherche();
+    }
+
+    function thousandSeparator(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")+" €";
+    }
+
+
+
+
+    //---------------------------------------------------------------------------------------------------------
+    //-------------AJAX-----------------------
+     function RefreshTableauDepenses(annee) {
+        var baseUrl = '@Url.Content("~/Consolidation/GetDepensesConsolidesAnnuel/")';
+        var catEnCours = "";
+        $('#tabDepenses > tbody').empty();
+
+
+            $.getJSON(baseUrl, { paramAnnee: annee }, function (result) {
+                $.each(result, function (index, itemData) {
+                    var Libelle = itemData.Libelle;
+                    var isCat = itemData.isCat;
+                    var MontantJanvier = thousandSeparator(itemData.MontantJanvier);
+                    var MontantFevrier = thousandSeparator(itemData.MontantFevrier);
+                    var MontantMars = thousandSeparator(itemData.MontantMars);
+                    var MontantAvril = thousandSeparator(itemData.MontantAvril);
+                    var MontantMai = thousandSeparator(itemData.MontantMai);
+                    var MontantJuin = thousandSeparator(itemData.MontantJuin);
+                    var MontantJuillet = thousandSeparator(itemData.MontantJuillet);
+                    var MontantAout = thousandSeparator(itemData.MontantAout);
+                    var MontantSeptembre = thousandSeparator(itemData.MontantSeptembre);
+                    var MontantOctobre = thousandSeparator(itemData.MontantOctobre);
+                    var MontantNovembre = thousandSeparator(itemData.MontantNovembre);
+                    var MontantDecembre = thousandSeparator(itemData.MontantDecembre);
+
+                    var row = "<tr>";
+
+                    if (isCat) {
+                        catEnCours = Libelle;
+                        row += "<td class='tableListDepensesLib tableCat Fond_" + catEnCours + "'>" + Libelle + "</td>";
+                        row += "<td class='tableListDepensesMontant tableCat Janvier Fond_" + catEnCours + "' >" + MontantJanvier + "</td>";
+                        row += "<td class='tableListDepensesMontant tableCat Fevrier Fond_" + catEnCours + "' >" + MontantFevrier + "</td>";
+                        row += "<td class='tableListDepensesMontant tableCat Mars Fond_" + catEnCours + "' >" + MontantMars + "</td>";
+                        row += "<td class='tableListDepensesMontant tableCat Avril Fond_" + catEnCours + "' >" + MontantAvril + "</td>";
+                        row += "<td class='tableListDepensesMontant tableCat Mai Fond_" + catEnCours + "' >" + MontantMai + "</td>";
+                        row += "<td class='tableListDepensesMontant tableCat Juin Fond_" + catEnCours + "' >" + MontantJuin + "</td>";
+                        row += "<td class='tableListDepensesMontant tableCat Juillet Fond_" + catEnCours + "' >" + MontantJuillet + "</td>";
+                        row += "<td class='tableListDepensesMontant tableCat Aout Fond_" + catEnCours + "' >" + MontantAout + "</td>";
+                        row += "<td class='tableListDepensesMontant tableCat Septembre Fond_" + catEnCours + "' >" + MontantSeptembre + "</td>";
+                        row += "<td class='tableListDepensesMontant tableCat Octobre Fond_" + catEnCours + "' >" + MontantOctobre + "</td>";
+                        row += "<td class='tableListDepensesMontant tableCat Novembre Fond_" + catEnCours + "' >" + MontantNovembre + "</td>";
+                        row += "<td class='tableListDepensesMontant tableCat Decembre Fond_" + catEnCours + "' >" + MontantDecembre + "</td>";
+                    }
+                    else {
+                        row += "<td class='tableListDepensesLib tableSsCat FondTransparent_" + catEnCours + "'>" + Libelle + "</td>";
+                        row += "<td class='tableListDepensesMontant tableSsCat FondTransparent_" + catEnCours + "' >" + MontantJanvier + "</td>";
+                        row += "<td class='tableListDepensesMontant tableSsCat FondTransparent_" + catEnCours + "' >" + MontantFevrier + "</td>";
+                        row += "<td class='tableListDepensesMontant tableSsCat FondTransparent_" + catEnCours + "' >" + MontantMars + "</td>";
+                        row += "<td class='tableListDepensesMontant tableSsCat FondTransparent_" + catEnCours + "' >" + MontantAvril + "</td>";
+                        row += "<td class='tableListDepensesMontant tableSsCat FondTransparent_" + catEnCours + "' >" + MontantMai + "</td>";
+                        row += "<td class='tableListDepensesMontant tableSsCat FondTransparent_" + catEnCours + "' >" + MontantJuin + "</td>";
+                        row += "<td class='tableListDepensesMontant tableSsCat FondTransparent_" + catEnCours + "' >" + MontantJuillet + "</td>";
+                        row += "<td class='tableListDepensesMontant tableSsCat FondTransparent_" + catEnCours + "' >" + MontantAout + "</td>";
+                        row += "<td class='tableListDepensesMontant tableSsCat FondTransparent_" + catEnCours + "' >" + MontantSeptembre + "</td>";
+                        row += "<td class='tableListDepensesMontant tableSsCat FondTransparent_" + catEnCours + "' >" + MontantOctobre + "</td>";
+                        row += "<td class='tableListDepensesMontant tableSsCat FondTransparent_" + catEnCours + "' >" + MontantNovembre + "</td>";
+                        row += "<td class='tableListDepensesMontant tableSsCat FondTransparent_" + catEnCours + "' >" + MontantDecembre + "</td>";
+                    }
+
+                    row += "</tr";
+                    $('#tabDepenses > tbody').append(row);
+
+                });
+        });
+
+    };
+
+
+</script>
+
+
+
+
+
+<!--TITRE-->
+<div>
+    <h1 id="titre" class="display-4">Récapitulatif Annuel [perso]</h1><hr />
+</div>
+
+<!--CONTROLES-->
+<h2 class="titre-bloc collapse">
+    Titre bloc
+</h2>
+<div class="clear cf collapsible open">
+    <div class="row">
+        <div class="col-sm-3 form-group"></div>
+        <!--Année-->
+        <div class="col-sm-1 form-group">
+            <img class="hvr-grow" onClick="ChangerAnneeViaImage(-1)" src='@Url.Content("~/Content/Previous_Violet_50.png")' />
+        </div>
+
+        <div class="col-sm-2 form-group">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                @Html.TextBoxFor(m => m.Annee, new { @id = "chp_annee", @class = "mdl-textfield__input" })
+
+                <label class="mdl-textfield__label" for="sample2">Année</label>
+                <span class="mdl-textfield__error">Année non valide</span>
+            </div>
+        </div>
+
+        <div class="col-sm-1 form-group">
+            <img class="hvr-grow" onClick="ChangerAnneeViaImage(1)" src='@Url.Content("~/Content/Next_Violet_50.png")' />
+        </div>
+
+
+        <!--Rechercher-->
+        <div class="col-sm-2 form-group">
+            <input class="mdl-button mdl-js-button mdl-button--primary" id="btn_Rechercher" type="button" value="Rechercher" onClick="EffectuerRecherche();" style="margin-top:10px" />
+        </div>
+        <div class="col-sm-3 form-group"></div>
+
+    </div>
+</div>
+
+
+
+<!--TABLEAU-->
+<center>
+    <table id="tabDepenses" class="tableListDepenses">
+        <thead>
+            <tr>
+                <th class="mdl-data-table__cell--non-numeric">Description</th>
+                <th class="mdl-data-table__cell--non-numeric">Janvier</th>
+                <th class="mdl-data-table__cell--non-numeric">Février</th>
+                <th class="mdl-data-table__cell--non-numeric">Mars</th>
+                <th class="mdl-data-table__cell--non-numeric">Avril</th>
+                <th class="mdl-data-table__cell--non-numeric">Mai</th>
+                <th class="mdl-data-table__cell--non-numeric">Juin</th>
+                <th class="mdl-data-table__cell--non-numeric">Juillet</th>
+                <th class="mdl-data-table__cell--non-numeric">Aout</th>
+                <th class="mdl-data-table__cell--non-numeric">Septembre</th>
+                <th class="mdl-data-table__cell--non-numeric">Octobre</th>
+                <th class="mdl-data-table__cell--non-numeric">Novembre</th>
+                <th class="mdl-data-table__cell--non-numeric">Décembre</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</center>

@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Mon application ASP.NET</title>
+
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/hover-min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/material.indigo-pink.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/jquery-ui-1.12.1.css")" rel="stylesheet" type="text/css" />
+
+    <script src="@Url.Content("~/Scripts/material.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-1.12.4.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.12.1.js")" type="text/javascript"></script>
+
+    <script>
+        function showGif() {
+            $("div#loadingWidget").show();
+        };
+        function hideGif() {
+            $("div#loadingWidget").hide();
+        };
+
+        $(document).ready(function () {
+            $(document).ajaxStart(function () {
+                showGif();
+            }).ajaxStop(function () {
+                hideGif();
+            });
+            ChargerTypeCompte();
+        });
+
+
+
+    //---------------------------------------------------------------------------------------------------------
+    //------------- AJAX -----------------------
+
+
+
+        function ChargerTypeCompte() {
+        var baseUrl = '@Url.Content("~/Home/GetCompteAjax/")';
+
+            $.getJSON(baseUrl, function (result) {
+                $.each(result, function (index, itemData) {
+
+                    var isComptePerso = itemData.isCat;
+                    var select = document.getElementById('selectComptes');
+                    var lbSelect = document.getElementById('lbSelectComptes');
+
+
+                    if (isComptePerso) {
+
+                        select.checked = false;
+                        TYPEdeCOMPTE = "perso";
+                        return "perso";
+                       }
+                    else {
+                        lbSelect.classList.add("is-checked");
+                        select.checked = true;
+                        TYPEdeCOMPTE = "commun";
+                        return "commun";
+                       }
+
+
+
+                });
+        });
+
+    };
+
+
+
+        function ChangementComptes(selecteur)
+        {
+
+            var compteChoisi;
+            var title = document.getElementById("titre");
+
+            if (selecteur.checked)
+            {
+                compteChoisi = "commun";
+                TYPEdeCOMPTE = "commun";
+                if (title != null) {
+                    title.innerText = title.innerText.replace("perso", compteChoisi);
+                }
+            }
+            else
+            {
+                compteChoisi = "perso";
+                TYPEdeCOMPTE = "perso";
+                if (title != null) {
+                    title.innerText = title.innerText.replace("commun", compteChoisi);
+                }
+            }
+
+
+
+            var data = {
+                'paramCompte': compteChoisi
+            };
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/Home/ChangementCompteAjax")',
+                data: data,
+                success: function () {
+                    displayMessage("Changement de compte effectué");
+                    EffectuerRecherche();
+                }
+            });
+
+
+        }
+
+
+        //ajouter une dépense
+        function displayMessage(message) {
+            document.getElementById('MessageFlottant').innerText = message;
+            document.getElementById('MessageFlottant').style.display = 'none';
+            document.getElementById('MessageFlottant').removeAttribute("hidden");
+            $('#MessageFlottant').fadeIn('fast');
+            $('#MessageFlottant').delay(3000).fadeOut('slow');
+        }
+
+    </script>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row" id="nav_liens">
+                <!-- Title -->
+                <a class="mdl-layout-title colorWhite" href="/Finance/">Finance</a>
+
+                <!-- Navigation. We hide it in small screens. -->
+                <nav class="mdl-navigation mdl-layout--large-screen-only">
+
+                    <!-- Appartement -->
+                    <a class="mdl-navigation__link" href="@Url.Content("~/Appartement/index")">Appartement</a>
+
+                    <!-- Dépenses -->
+                    <div class="dropdown">
+                        <label class="mdl-navigation__link">Dépenses</label>
+                        <div class="dropdown-content">
+                            <a class="mdl-navigation__link" href="@Url.Content("~/Depenses/AjoutUnitaire")">Ajout unitaire</a>
+                            <a class="mdl-navigation__link" href="@Url.Content("~/Depenses/AjoutEnMasse")">Ajout multiple</a>
+                        </div>
+                    </div>
+
+                    <!-- Consolidation -->
+                    <div class="dropdown">
+                        <label class="mdl-navigation__link">Consolidation</label>
+                        <div class="dropdown-content">
+                            <a class="mdl-navigation__link" href="@Url.Content("~/Consolidation/ConsoMensuelle")">Recap Mensuel</a>
+                            <a class="mdl-navigation__link" href="@Url.Content("~/Consolidation/ConsoAnnuelle")">Recap Annuel</a>
+                            <a class="mdl-navigation__link" href="@Url.Content("~/Consolidation/ConsoGenerale")">Recap Général</a>
+                            <a class="mdl-navigation__link" href="@Url.Content("~/Consolidation/Graphiques")">Graphiques</a>
+                        </div>
+                    </div>
+
+                    <!-- Epargne -->
+                    <a class="mdl-navigation__link" href="@Url.Content("~/Epargne/index")">Epargne</a>
+
+                    <!-- Carbone -->
+                    <a class="mdl-navigation__link" href="@Url.Content("~/Carbone/index")">Carbone</a>
+
+                    <!-- Administration -->
+                    <a class="mdl-navigation__link" href="@Url.Content("~/Administration/Index")">Administration</a><br />
+
+
+                </nav>
+            </div>
+        </header>
+
+        <div class="mdl-layout__drawer" id="nav_menu">
+            <a class="mdl-layout-title mdl-button--accent" href="/">Finance</a>
+            <nav class="mdl-navigation">
+                <div class="mdl-navigation__link">
+                    <a class="mdl-button--primary" href="@Url.Content("~/Home/Graph")">Graphs</a><br />
+                    <span>Représentation visuelle des données.</span>
+                </div>
+                <div class="mdl-navigation__link">
+                    <a class="mdl-button--primary" href="@Url.Content("~/Home/RecapGeneral")">Recap Général</a><br />
+                    <span>Récapitulatif général par catégories et par années.</span>
+                </div>
+                <div class="mdl-navigation__link">
+                    <a class="mdl-button--primary" href="@Url.Content("~/Home/RecapAnnuel")">Recap Annuel</a><br />
+                    <span>Récapitulatif de l'année.</span>
+                </div>
+                <div class="mdl-navigation__link">
+                    <a class="mdl-button--primary" href="@Url.Content("~/Home/Recap")">Recap Mensuel</a><br />
+                    <span>Récapitulatif d'un mois. Permet d'ajouter des dépenses rapidement.</span>
+                </div>
+                <div class="mdl-navigation__link">
+                    <a class="mdl-button--primary" href="@Url.Content("~/Home/Ajouter")">Dépenses Unitaires</a><br />
+                    <span>Liste précise des dépenses. Permet d'ajouter des dépenses.</span>
+                </div>
+                <div class="mdl-navigation__link">
+                    <a class="mdl-button--primary" href="@Url.Content("~/Appartement/Appartement")">Appartement</a><br />
+                    <span>Informations concernant le gestion de l'appartement.</span>
+                </div>
+                <div class="mdl-navigation__link">
+                    <a class="mdl-button--primary" href="@Url.Content("~/Administration/Index")">Administration</a><br />
+                </div>
+            </nav>
+        </div>
+
+
+        <span id="MessageFlottant" class="messageFlottant" hidden>Message</span>
+        <label id="lbSelectComptes" class="PositionRight mdl-switch mdl-js-switch mdl-js-ripple-effect" for="selectComptes">
+            <input type="checkbox" id="selectComptes" class="mdl-switch__input" onchange="ChangementComptes(this)">
+        </label>
+
+        <!--CONTENT-->
+        <main class="mdl-layout__content">
+            <div class="page-content">
+                <div class="" style="padding-left:5%; padding-right:5%">
+                    <br />
+                    <!--GIF-->
+                    <div id="loadingWidget" role="status">
+                        <div class="update-progress">
+                            <img src="@Url.Content("~/Content/wait-loading.gif")" class="gifLoading" />
+                            <div class="FondGif"></div>
+                        </div>
+                    </div>
+
+                    <!--PAGE-->
+                    @RenderBody()
+                    <hr />
+                    <footer></footer>
+                </div>
+
+               
+
+
+            </div>
+        </main>
+
+    </div>
+
+
+
+
+
+
+
+</body>
+</html>

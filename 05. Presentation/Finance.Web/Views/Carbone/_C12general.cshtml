@@ -1,0 +1,115 @@
+﻿<script>
+
+    $(document).ready(function () {
+
+        GetDonneesBilans();
+    });
+
+
+    //Get Donnees bilans carbones
+    function GetDonneesBilans() {
+        var baseUrl = '@Url.Content("~/Carbone/GetDonneesBilans/")';
+        var tab_Annee = new Array();
+        var tab_Logement = new Array();
+        var tab_Transports = new Array();
+        var tab_Alimentation = new Array();
+        var tab_Dechets = new Array();
+        var tab_Achats = new Array();
+        var tab_Finance = new Array();
+        var tab_ServicePublique = new Array();
+        var tab_Total = new Array();
+
+        $.ajax({
+            url: baseUrl, type: "POST", async: true, dataType: "json",
+            success: function (result) {
+                $.each(result, function (index, itemData) {
+                    var Annee = itemData.Annee;
+                    var Logement = itemData.Logement;
+                    var Transports = itemData.Transports;
+                    var Alimentation = itemData.Alimentation;
+                    var Dechets = itemData.Dechets;
+                    var Achats = itemData.Achats;
+                    var Finance = itemData.Finance;
+                    var ServicePublique = itemData.ServicePublique;
+                    var Total = itemData.Total;
+
+                    tab_Annee.push(Annee);
+                    tab_Logement.push(Logement);
+                    tab_Transports.push(Transports);
+                    tab_Alimentation.push(Alimentation);
+                    tab_Dechets.push(Dechets);
+                    tab_Achats.push(Achats);
+                    tab_Finance.push(Finance);
+                    tab_ServicePublique.push(ServicePublique);
+                    tab_Total.push(Total);
+                });
+            },
+            fail: function () {
+                //$('#consoEau_txt_popup').html('Pas de données en base pour cette année');
+            },
+            complete: function () {
+                var graphBilans = document.getElementById("ch_BilansCarbones").getContext('2d');
+                DisplayGraphConsoEauMontants (graphBilans, tab_Annee, tab_Logement, tab_Transports, tab_Alimentation, tab_Dechets, tab_Achats, tab_Finance, tab_ServicePublique, tab_Total)
+            }
+        });
+    };
+
+    //DisplayGraphConsoEauMontants
+    function DisplayGraphConsoEauMontants (chart, tab_Annee, tab_Logement, tab_Transports, tab_Alimentation, tab_Dechets, tab_Achats, tab_Finance, tab_ServicePublique, tab_Total) {
+        //var ctx = document.getElementById("ch_ConsoEauDetailM").getContext('2d');
+        var chart = new Chart(chart, {
+            // The type of chart we want to create
+            type: 'line',
+            // The data for our dataset
+            data: {
+                labels: tab_Annee,
+                datasets: [
+                        { label: "Logement", fill: false, borderColor: '#3F51B5', data: tab_Logement, },
+                        { label: "Transports", fill: false, borderColor: '#424242', data: tab_Transports, },
+                        { label: "Alimentation", fill: false, borderColor: '#9C27B0', data: tab_Alimentation, },
+                        { label: "Déchets", fill: false, borderColor: '#00BCD4', data: tab_Dechets, },
+                        { label: "Achats", fill: false, borderColor: '#795548', data: tab_Achats, },
+                        { label: "Finance", fill: false, borderColor: '#FFEB3B', data: tab_Finance, },
+                        { label: "Services publics", fill: false, borderColor: '#F44336', data: tab_ServicePublique, }
+                    ]
+            },
+
+             //{ label: "Logement", fill: false, borderColor: '#3F51B5', data: tab_Logement, },
+             //           { label: "Alimentaire", fill: false, borderColor: '#9C27B0', data: tab_Alimentaire, },
+             //           { label: "Voiture", fill: false, borderColor: '#607D8B', data: tab_Voiture, },
+             //           { label: "Transport", fill: false, borderColor: '#424242', data: tab_Transport, },
+             //           { label: "Loisirs", fill: false, borderColor: '#FF5722', data: tab_Loisirs, },
+             //           { label: "Voyage", fill: false, borderColor: '#4CAF50', data: tab_Voyage, },
+             //           { label: "Cadeaux", fill: false, borderColor: '#00BCD4', data: tab_Cadeaux, },
+             //           { label: "Achats", fill: false, borderColor: '#795548', data: tab_Achats, },
+             //           { label: "Vétements", fill: false, borderColor: '#A1887F', data: tab_Vetements, },
+             //           { label: "Santé", fill: false, borderColor: '#FFEB3B', data: tab_Sante, },
+             //           { label: "Impôts", fill: false, borderColor: '#F44336', data: tab_Impots, },
+             //           { label: "Frais Bancaires", fill: false, borderColor: '#EF9A9A', data: tab_Frais, },
+             //           { label: "Emprunt", fill: false, borderColor: '#B39DDB', data: tab_Emprunt, }
+
+            // Configuration options go here
+            options: {}
+        });
+
+    }
+
+
+</script>
+
+
+
+
+<h4 class="col-sm-12 titre-bloc">Evolution</h4>
+<div class="sous-partie">
+    <div class="row">
+
+        <!--Graph total-->
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+            <canvas id="ch_BilansCarbones"></canvas>
+        </div>
+        <div class="col-sm-2"></div>
+
+    </div>
+</div><br />

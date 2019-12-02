@@ -1,0 +1,143 @@
+﻿@{
+    ViewBag.Title = "Appartement";
+}
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/Chart.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Chart.bundle.min.js")"></script>
+<script type="text/javascript">
+
+    //Constantes onglets
+    var _isInfosGCharge = 0;
+    var _isValApptCharge = 0;
+    var _isConsoEnergieCharge = 0;
+    var _isConsoElecCharge = 0;
+    var _isConsoEauCharge = 0;
+    var _isConsoChauffageCharge = 0;
+
+    $(document).ready(function () {
+
+        //Chargement premier onglet
+        ChangeOnglet('tab_InfosG', 'c_InfosG');
+
+    });
+
+
+    
+    function ChangeOnglet(onglet, contenu) {
+
+        document.getElementById('c_InfosG').style.display = 'none';
+        document.getElementById('c_ValAppt').style.display = 'none';
+        document.getElementById('c_ConsoEnergie').style.display = 'none';
+        document.getElementById('c_ConsoElec').style.display = 'none';
+        document.getElementById('c_ConsoEau').style.display = 'none';
+        document.getElementById('c_ConsoChauffage').style.display = 'none';
+        document.getElementById(contenu).style.display = 'block';
+
+        document.getElementById('tab_InfosG').className = '';
+        document.getElementById('tab_ValAppt').className = '';
+        document.getElementById('tab_ConsoEnergie').className = '';
+        document.getElementById('tab_ConsoElec').className = '';
+        document.getElementById('tab_ConsoEau').className = '';
+        document.getElementById('tab_ConsoChauffage').className = '';
+        document.getElementById(onglet).className = 'active';
+
+
+        if (onglet == 'tab_InfosG' && _isInfosGCharge != 1) {
+            var url = '@Url.Action("ChargementInfosGenerales", "Appartement")';
+            _isInfosGCharge = 1;
+            $('#c_InfosG').load(url); 
+        }
+
+        if (onglet == 'tab_ValAppt' && _isValApptCharge != 1) {
+            var url = '@Url.Action("ChargementValeurAppartement", "Appartement")';
+            _isValApptCharge = 1;
+            $('#c_ValAppt').load(url); 
+        }
+
+        if (onglet == 'tab_ConsoEnergie' && _isConsoEnergieCharge != 1) {
+            var url = '@Url.Action("ChargementConsoEnergie", "Appartement")';
+            _isConsoEnergieCharge = 1;
+            $('#c_ConsoEnergie').load(url); 
+        }
+
+        if (onglet == 'tab_ConsoElec' && _isConsoElecCharge != 1) {
+            var url = '@Url.Action("ChargementConsoElec", "Appartement")';
+            _isConsoElecCharge = 1;
+            $('#c_ConsoElec').load(url); 
+        }
+
+        if (onglet == 'tab_ConsoEau' && _isConsoEauCharge != 1) {
+            var url = '@Url.Action("ChargementConsoEau", "Appartement")';
+            _isConsoEauCharge = 1;
+            $('#c_ConsoEau').load(url); 
+        }
+
+        if (onglet == 'tab_ConsoChauffage' && _isConsoChauffageCharge != 1) {
+            var url = '@Url.Action("ChargementChauffage", "Appartement")';
+            _isConsoChauffageCharge = 1;
+            $('#tab_ConsoChauffage').load(url); 
+        }
+        
+    }
+
+
+
+</script>
+
+<!--TITRE-->
+<div>
+    <h1 class="display-4">Appartement</h1><hr />
+</div>
+
+
+
+
+
+
+<div class="tabbed_area">
+    <ul class="tabs">
+        <li><a href="javascript:ChangeOnglet('tab_InfosG', 'c_InfosG');" id="tab_InfosG" class="active">Informations générales</a></li>
+        <li><a href="javascript:ChangeOnglet('tab_ValAppt', 'c_ValAppt');" id="tab_ValAppt">Valeur Appartement</a></li>
+        <li><a href="javascript:ChangeOnglet('tab_ConsoEnergie', 'c_ConsoEnergie');" id="tab_ConsoEnergie">Consommation énergie</a></li>
+        <li><a href="javascript:ChangeOnglet('tab_ConsoElec', 'c_ConsoElec');" id="tab_ConsoElec">Consommation électricité</a></li>
+        <li><a href="javascript:ChangeOnglet('tab_ConsoEau', 'c_ConsoEau');" id="tab_ConsoEau">Consommation Eau</a></li>
+        <li><a href="javascript:ChangeOnglet('tab_ConsoChauffage', 'c_ConsoChauffage');" id="tab_ConsoChauffage">Consommation Chauffage</a></li>
+    </ul>
+
+
+    <!--INFOS GENERALES-->
+    <div id="c_InfosG" class="content">
+
+    </div>
+
+
+    <!--VALEUR APPARTEMENT-->
+    <div id="c_ValAppt" class="content">
+
+    </div>
+
+    <!--CONSO ENERGIE-->
+    <div id="c_ConsoEnergie" class="content">
+
+    </div>
+
+
+    <!--CONSO ELECTRICITE-->
+    <div id="c_ConsoElec" class="content">
+
+    </div>
+
+
+    <!--CONSO EAU-->
+    <div id="c_ConsoEau" class="content">
+
+    </div>
+
+
+    <!--CONSO CHAUFFAGE-->
+    <div id="c_ConsoChauffage" class="content">
+
+    </div>
+
+
+</div>

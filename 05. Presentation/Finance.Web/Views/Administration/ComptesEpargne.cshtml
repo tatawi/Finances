@@ -1,0 +1,264 @@
+﻿
+
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+        RefreshTableauComptes();
+
+    });
+
+
+    function Ajouter() {
+        var modal = document.getElementById('myModal');
+        var span = document.getElementById("closePopUp");
+        modal.style.display = "block";
+
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    }
+
+
+
+     function selectionnerCategorie(object, trieMainPage) {
+        var arraySrc = object.src.split('/');
+        var nbSplit = arraySrc.length;
+        var changeSrc = arraySrc[nbSplit - 1];
+        var workingArray = changeSrc.split('_');
+
+        var selectedCat = workingArray[0];
+        var typeCat = workingArray[1].replace(".png", "");
+
+        //on met les images des cat a plat pour pas en avoir plusieurs selectionnées
+            var listeImgCat = document.getElementsByClassName("popUp_Cat");
+            for (x = 0; x < listeImgCat.length; x++) {
+                listeImgCat[x].src = listeImgCat[x].src.replace("full", "empty");
+                listeImgCat[x].classList.remove("selectedCat");
+            }
+
+
+        if (typeCat == "empty") {
+            object.src = object.src.replace("empty", "full");
+            object.classList.add("selectedCat");
+            SendSelectedCat = selectedCat;
+        }
+        else {
+            object.src = object.src.replace("full", "empty");
+            //CATHEGORIE = 'All';
+            }
+       RefreshListSousCat(selectedCat);
+    }
+
+
+    function RefreshListSousCat(categorie)
+    {
+        var baseUrl = '@Url.Content("~/Home/GetSousCategorie/")';
+        var nb = 1;
+
+        for (i = 1; i < 8; i++) {
+            var strLabelSousCatId = "SousCatPopUp" + i;
+            var LabelSousCatId = document.getElementById(strLabelSousCatId);
+            LabelSousCatId.style.display = 'none';
+        }
+
+            $.getJSON(baseUrl, { paramCat: categorie}, function (result) {
+                $.each(result, function (index, itemData) {
+
+                    var strLabelSousCatId = "SousCatPopUp" + nb;
+                    var LabelSousCatId = document.getElementById(strLabelSousCatId);
+                    LabelSousCatId.innerText = itemData.ssCat;
+                    LabelSousCatId.style.display = 'inline-block';
+                    nb++;
+                });
+            });
+    };
+
+    //Changer la couleur lors de la selection d'une reconductibilité
+    function selectionnerSousCatPopUp(object) {
+        //alert('in');
+        var tb_recon = document.getElementsByClassName("SousCatPopUp");
+        for (x = 0; x < tb_recon.length; x++) {
+            tb_recon[x].classList.remove("SousCatPopUpSelect");
+            tb_recon[x].classList.add("SousCatPopUpUnselect");
+        }
+
+        object.classList.remove("SousCatPopUpUnselect");
+        object.classList.add("SousCatPopUpSelect");
+    }
+
+
+
+     //---------------------------------------------------------------------------------------------------------
+    //-------------AJAX-----------------------
+    function RefreshTableauComptes() {
+        var baseUrl = '@Url.Content("~/Administration/GetListAllComptes/")';
+        var baseUrlImg = '@Url.Content("~/Content/Icones/")';
+
+        $('#tab_comptes > tbody').empty();
+            $.getJSON(baseUrl, function (result) {
+                $.each(result, function (index, itemData) {
+                    var Compte = itemData.Compte;
+                    var Actif = itemData.IsActif;
+                    var CompteId = itemData.Ref_CompteId;
+
+                    var row = "<tr>";
+                    row += "<td class='mdl-data-table__cell--non-numeric'>" + Compte + "</td>";
+                    if (Actif) {
+                        row += "<td><span class='GreenText'>Oui</span></td>";
+                    }
+                    else {
+                        row += "<td><span class='RedText'>Oui</span></td>";                }
+                    
+                    row += "<td class='mdl-data-table__cell--non-numeric'><center><img src='" + baseUrlImg + "Delete_Red_25.png' onclick='DeleteCompteAjax(" + CompteId+")'/></center></td>";
+                    row += "</tr>";
+
+                    $('#tab_comptes > tbody').append(row);
+
+                });
+            });
+    };
+
+
+
+    function DeleteCompteAjax(id) {
+       var data = {'paramId': id};
+         $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/Administration/DeleteCompte")',
+                data: data,
+                success: function () {RefreshTableauComptes();}
+            });
+    }
+
+
+
+
+    function AjouterCompte() {
+        var Compte = document.getElementById('chp_Compte').value;
+        var data = {'paramCompte': Compte};
+         $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/Administration/AjouterCompte")',
+                data: data,
+                success: function () {
+                    document.getElementById('myModal').style.display = "none";
+                    RefreshTableauComptes();
+                    AfficherMessageAjout();
+                }
+        });
+    }
+
+
+
+
+    function AfficherMessageAjout()
+    {
+        var baseUrl = '@Url.Content("~/Administration/GetMessage/")';
+            $.getJSON(baseUrl, { paramCat: ""}, function (result) {
+                $.each(result, function (index, itemData) {
+                    var message = itemData.msg;
+                    displayMessage(message)
+                });
+            });
+    }
+
+
+</script>
+
+
+
+
+<!--TITRE-->
+<div>
+    <h1 id="titre" class="display-4">Ajouter / Supprimer des comtpes épargnes</h1>
+</div>
+
+
+
+<div class="clear cf collapsible open">
+    <br /><br />
+    <center>
+        <input class="mdl-button mdl-js-button mdl-button--primary" type="button" value="Ajouter un compte" onClick="Ajouter();" style="margin-top:10px" />
+    </center>
+    <br />
+    <center>
+        <table id="tab_comptes" class="mdl-data-table mdl-js-data-table">
+            <thead>
+                <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Compte</th>
+                    <th>Actif</th>
+                    <th>Supprimer</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+
+        </table>
+    </center>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--POP UP AJOUTER DEPENSE-->
+<!-- The Modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <div class="col-sm-10 form-group">
+                <h2 id="modalTitle">Ajouter un compte épargne</h2>
+            </div>
+
+            <div class="col-sm-2 form-group">
+                <span id="closePopUp" class="close">&times;</span>
+            </div>
+
+
+            <!--Texte-->
+            <div class="col-sm-4 form-group">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input id="chp_Compte" class="mdl-textfield__input" name="Source">
+                    <label class="mdl-textfield__label" for="chp_texte">Compte</label>
+                    <span class="mdl-textfield__error">Texte non valide</span>
+                </div>
+            </div>
+
+           
+        </div>
+
+        <center>
+            <input class="mdl-button mdl-js-button mdl-button--accent" id="btn_Rechercher" type="button" value="Ajouter" onClick="AjouterCompte();" style="margin-top:10px" />
+        </center>
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+

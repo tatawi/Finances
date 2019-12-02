@@ -1,0 +1,75 @@
+﻿
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+        RefreshEpargneTotal();
+
+    });
+
+
+    function RefreshEpargneTotal() {
+        var baseUrl = '@Url.Content("~/Epargne/GetMontantEpargneAllYears/")';
+        var tab_Date = new Array();
+        var tab_Epargne = new Array();
+
+        $.getJSON(baseUrl, function (result) {
+                $.each(result, function (index, itemData) {
+                    var Annee = itemData.AnneeStr;
+                    var Epargne = itemData.Montant;
+                    tab_Date.push(Annee);
+                    tab_Epargne.push(Epargne);
+                });
+                DisplayGraphEpargneTotal(tab_Date, tab_Epargne);
+        });
+    };
+
+
+     function DisplayGraphEpargneTotal(tab_Date, tab_Epargne) {
+        var ctx = document.getElementById("ch_EvolEpargne").getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                labels: tab_Date,
+                datasets: [
+                    { label: "Epargne", fill: false, borderColor: '#E1BEE7', data: tab_Epargne, }
+
+                ]
+            },
+            // Configuration options go here
+            options: {}
+        });
+    }
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Evolution -->
+
+<h4 class="col-sm-12 titre-bloc">Evolution</h4>
+<div class="sous-partie">
+
+
+    <canvas width="300" height="100" id="ch_EvolEpargne"></canvas>
+
+    <div class="row">
+        <div class="col-sm-4">
+
+        </div>
+    </div>
+</div>

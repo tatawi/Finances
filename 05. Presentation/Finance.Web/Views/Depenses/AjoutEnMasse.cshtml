@@ -1,0 +1,358 @@
+﻿@model ViewModels.Depenses.AjouterDepensesMasseVM
+
+
+
+<script type="text/javascript">
+
+
+    //AJAX - Traiter les dépenses à ajouter
+    function AjouterManyDepensesAjax()
+    {
+        var Texte = $('#chp_txt').val();
+        var label = document.getElementById("MessageIntegration");
+
+        //on vide le champ erreur
+        label.innerHTML = '';
+        label.style.display = 'none';
+
+            var data = { 'paramTexte': Texte, };
+            $.ajax({
+                type: "POST", url: '@Url.Content("~/Depenses/ImportationDonneesDepenses")',
+                data: data,
+                success: function () {
+                    DisplayMessageAjoutMasse();
+                    DisplayManyDepensesAjoutees();
+                    DisplayManyDepenses();
+                }
+            });
+    }
+
+    //AJAX - Message Vérification des dépenses
+    function DisplayMessageAjoutMasse() {
+        var baseUrl = '@Url.Content("~/Depenses/GetMessageImportationDonnees/")';
+        var label = document.getElementById("MessageIntegration");
+
+            $.getJSON(baseUrl, function (result) {
+                $.each(result, function (index, itemData) {
+                    var Message = itemData.message;
+
+                    if (Message == "Dépenses correctement traitées") {
+                        displayMessage(Message)
+                    }
+                    else {
+                        label.innerHTML = Message;
+                        label.style.display = 'block';
+                    }
+                });
+            });
+    };
+
+    //AJAX - Affichage des dépenses traitées a compléter
+    function DisplayManyDepenses() {
+        var baseUrl = '@Url.Content("~/Depenses/GetDepensesAajouter/")';
+        var baseUrlImg = '@Url.Content("~/Content/Icones/")';
+        var id = 1;
+        var tab = document.getElementById('BlockTabDepenses');
+        tab.style.display = 'block';
+
+            $('#tabDepenses > tbody').empty();
+            $.getJSON(baseUrl, function (result) {
+                $.each(result, function (index, itemData) {
+
+                    var Montant = itemData.Montant;
+                    var Date = itemData.str_date;
+                    var Libelle = itemData.Libelle;
+                    var Categorie = itemData.Categorie;
+                    var SousCategorie = itemData.SousCategorie;
+
+                    var row = "<tr id='tr_"+id+"' class='color" + Categorie + "'>";
+                    row += "<td id='"+id+"_date' class='mdl-data - table__cell--non-numeric'>" + Date + "</td>";
+                    row += "<td id='" + id +"_lib' class='mdl-data-table__cell--non-numeric'>" + Libelle + "</td>";
+                    row += "<td id='" + id + "_val'>" + Montant + "</td>";
+
+                    //cat
+                    row += "<td id='" + id + "_cat'>";
+                    row += "<img class='cat_" + id + "' onClick='selectionnerCategorie(this, " + id + ")' src='" +baseUrlImg+"Logement_empty.png' width='30px' />";
+                    row += "<img class='cat_" + id + "' onClick='selectionnerCategorie(this, " + id + ")' src='" + baseUrlImg +"Alimentaire_empty.png' width='30px' />";
+                    row += "<img class='cat_" + id + "' onClick='selectionnerCategorie(this, " + id + ")' src='" + baseUrlImg +"Voiture_empty.png' width='30px' />";
+                    row += "<img class='cat_" + id + "' onClick='selectionnerCategorie(this, " + id + ")' src='" + baseUrlImg +"Transport_empty.png' width='30px' />";
+                    row += "<img class='cat_" + id + "' onClick='selectionnerCategorie(this, " + id + ")' src='" + baseUrlImg +"Loisirs_empty.png' width='30px' />";
+                    row += "<img class='cat_" + id + "' onClick='selectionnerCategorie(this, " + id + ")' src='" + baseUrlImg +"Voyages_empty.png' width='30px' />";
+                    row += "<img class='cat_" + id + "' onClick='selectionnerCategorie(this, " + id + ")' src='" + baseUrlImg +"Cadeaux_empty.png' width='30px' />";
+                    row += "<img class='cat_" + id + "' onClick='selectionnerCategorie(this, " + id + ")' src='" + baseUrlImg +"Achats_empty.png' width='30px' />";
+                    row += "<img class='cat_" + id + "' onClick='selectionnerCategorie(this, " + id + ")' src='" + baseUrlImg +"Vetements_empty.png' width='30px' />";
+                    row += "<img class='cat_" + id + "' onClick='selectionnerCategorie(this, " + id + ")' src='" + baseUrlImg +"Sante_empty.png' width='30px' />";
+                    row += "<img class='cat_" + id + "' onClick='selectionnerCategorie(this, " + id + ")' src='" + baseUrlImg +"Impots_empty.png' width='30px' />";
+                    row += "<img class='cat_" + id + "' onClick='selectionnerCategorie(this, " + id + ")' src='" + baseUrlImg +"FraisBancaires_empty.png' width='30px' />";
+                    row += "<img class='cat_" + id + "' onClick='selectionnerCategorie(this, " + id + ")' src='" + baseUrlImg +"Emprunts_empty.png' width='30px' />";
+                    row += "<img class='cat_" + id + "' onClick='selectionnerCategorie(this, " + id + ")' src='" + baseUrlImg +"Revenus_empty.png' width='30px' />";
+                    row += "</td>";
+
+                    //sscat
+                    row += "<td id='" + id + "_sscat'>";
+                    row += "<label class='ssCat_" + id + "' onClick='selectionnerSsCategorie(this, " + id + ")' style='display:none'></label><span id='separator_" + id + "_1'></span>";
+                    row += "<label class='ssCat_" + id + "' onClick='selectionnerSsCategorie(this, " + id + ")' style='display:none'></label><span id='separator_" + id + "_2'></span>";
+                    row += "<label class='ssCat_" + id + "' onClick='selectionnerSsCategorie(this, " + id + ")' style='display:none'></label><span id='separator_" + id + "_3'></span>";
+                    row += "<label class='ssCat_" + id + "' onClick='selectionnerSsCategorie(this, " + id + ")' style='display:none'></label><span id='separator_" + id + "_4'></span>";
+                    row += "<label class='ssCat_" + id + "' onClick='selectionnerSsCategorie(this, " + id + ")' style='display:none'></label><span id='separator_" + id + "_5'></span>";
+                    row += "<label class='ssCat_" + id + "' onClick='selectionnerSsCategorie(this, " + id + ")' style='display:none'></label><span id='separator_" + id + "_6'></span>";
+                    row += "<label class='ssCat_" + id + "' onClick='selectionnerSsCategorie(this, " + id + ")' style='display:none'></label>";
+                    row += "</td>";
+
+                    //btn add
+                    row += "<td><img id='" + id +"_add' onClick='AjouterDepense(this," + id + ")' src='" + baseUrlImg +"Add_Green_30.png' /></td></tr>";
+
+                    $('#tabDepenses > tbody').append(row);
+                    id++;
+                });
+            });
+    };
+
+    //AJAX - Affichage des dépenses traitées auto remplies et ajoutées
+    function DisplayManyDepensesAjoutees() {
+        var baseUrl = '@Url.Content("~/Depenses/GetDepensesAajouterTraitees/")';
+        var baseUrlImg = '@Url.Content("~/Content/Icones/")';
+
+
+        var tab = document.getElementById('BlockTabDepensesAjoutees');
+        tab.style.display = 'block';
+
+        $('#tabDepensesAjoutees > tbody').empty();
+            $.getJSON(baseUrl, function (result) {
+                $.each(result, function (index, itemData) {
+
+                    var Montant = itemData.Montant;
+                    var Date = itemData.str_date;
+                    var Libelle = itemData.Libelle;
+                    var Categorie = itemData.Categorie;
+                    var SousCategorie = itemData.SousCategorie;
+
+                    var row = "<tr class='color" + Categorie +"'><td class='mdl-data - table__cell--non-numeric'>" + Date + "</td>";
+                    row += "<td class='mdl-data-table__cell--non-numeric'>" + Libelle + "</td>";
+                    row += "<td>" + Montant + "</td>";
+                    row += "<td class='mdl-data-table__cell--non-numeric'><center><img src='" + baseUrlImg + Categorie + "_full.png' width='50%'/></center></td>";
+                    row += "<td class='mdl-data-table__cell--non-numeric'>" + SousCategorie + "</td></tr>";
+
+                    $('#tabDepensesAjoutees > tbody').append(row);
+                });
+            });
+    };
+
+    //AJAX - Ajouter dépense
+    function AjouterDepense(object, id) {
+        var className = id + "_selected";
+        var chp_cat = document.getElementsByClassName(className)[0];
+
+        var arraySrc = chp_cat.src.split('/');
+        var nbSplit = arraySrc.length;
+        var changeSrc = arraySrc[nbSplit - 1];
+        var workingArray = changeSrc.split('_');
+
+        var selectedCat = workingArray[0];
+
+        className = id + "_ssCat_selected";
+        var chp_ssCat = document.getElementsByClassName(className)[0];
+        var selectedSsCat = chp_ssCat.innerText
+
+        var dateName = id + "_date";
+        var date = document.getElementById(dateName).innerText;
+
+        var libName = id + "_lib";
+        var lib = document.getElementById(libName).innerText;
+
+        var montantName = id + "_val";
+        var val = document.getElementById(montantName).innerText;
+
+
+        var data = {};
+     
+        data['MontantStr'] = val;
+        data['strDate'] = date;
+        data['Libelle'] = lib;
+        data['strCategorie'] = selectedCat;
+        data['strSousCategorie'] = selectedSsCat;
+        data['strReconductible'] = "Non";
+
+
+         $.ajax({
+                type: "POST", url: '@Url.Content("~/Depenses/AjouterDepense")',
+                data: data,
+                success: function () {
+                    object.src = "";
+                }
+        });
+    }
+
+
+    //AJAX - Ajouter dépenses auto
+    function AjouterDepenseAutoCalculees(button) {
+
+         $.ajax({
+                type: "POST", url: '@Url.Content("~/Depenses/AjouterDespensesTraitees")',
+                success: function () {
+                    button.style.display = 'none';
+                }
+        });
+    }
+
+
+    //AJAX - Selection catégorie
+    function selectionnerCategorie(object, id) {
+
+        var arraySrc = object.src.split('/');
+        var nbSplit = arraySrc.length;
+        var changeSrc = arraySrc[nbSplit - 1];
+        var workingArray = changeSrc.split('_');
+
+        var selectedCat = workingArray[0];
+        var typeCat = workingArray[1].replace(".png", "");
+
+
+        var className = id + "_selected";
+
+
+        //remise à 0 de toutes les cases non cochées
+        var ImagesCat = document.getElementsByClassName("cat_"+id)
+        for (x = 0; x < ImagesCat.length; x++) {
+
+            ImagesCat[x].src = ImagesCat[x].src.replace("full", "empty");
+        }
+
+        object.src = object.src.replace("empty", "full");
+        object.classList.add(className);
+
+
+        //Gestion ss Cat
+        var baseUrl = '@Url.Content("~/Depenses/GetSousCategorie/")';
+
+        //on masque tous les champs
+        var sScatClass = "ssCat_" + id;
+        var listSsCat = document.getElementsByClassName(sScatClass);
+        for (x = 0; x < listSsCat.length; x++) {
+            listSsCat[x].style.display = 'none';
+        }
+
+        var parcours = 0;
+
+        $.getJSON(baseUrl, { paramCat: selectedCat }, function (result) {
+            $.each(result, function (index, itemData) {
+
+                var chp_ssCat = listSsCat[parcours];
+                chp_ssCat.innerText = itemData.ssCat;
+                if (parcours > 0 && parcours < 7) {
+                    var separator = document.getElementById("separator_" + id + "_" + parcours);
+                    if (separator != null) { separator.innerText = " | " }
+                }
+                
+                chp_ssCat.style.display = 'inline-block';
+                parcours++;
+                if (result.length==1) {
+                    chp_ssCat.classList.add("SousCatPopUpSelect");
+                }
+
+            });
+        });
+
+
+
+
+
+    }
+
+    //Sélection sous-catégorie
+    function selectionnerSsCategorie(object, id)
+    {
+        var className = id + "_ssCat_selected";
+
+        //on remet tous les champs normaux
+        var sScatClass = "ssCat_" + id;
+        var listSsCat = document.getElementsByClassName(sScatClass);
+        for (x = 0; x < listSsCat.length; x++) {
+            listSsCat[x].classList.remove(className);
+            listSsCat[x].classList.remove("SousCatPopUpSelect");
+        }
+        object.classList.add(className);
+        object.classList.add("SousCatPopUpSelect");
+
+    }
+
+
+
+</script>
+
+
+
+
+<!--TITRE-->
+<div>
+    <h1 id="titre" class="display-4">Ajouter une liste de dépenses</h1>
+</div>
+
+
+
+<div id="Recherche" class="row">
+
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:90%">
+        <input class="mdl-textfield__input" id="chp_txt" name="Texte" type="text" value="">
+        <label class="mdl-textfield__label" for="chp_txt">Liste des dépenses à ajouter </label>
+    </div>
+
+    <div class="col-sm-1">
+        <input class="mdl-button mdl-js-button mdl-button--accent" id="btn_addPopUpMany" type="button" value="Vérifier" style="margin-top:10px" onClick="AjouterManyDepensesAjax();" />
+    </div>
+
+</div>
+
+
+<!--Message erreur intégration-->
+<div class="row">
+    <br />
+    <label id="MessageIntegration" class="messageErreur" style="display:none"></label>
+    <br />
+</div>
+
+
+<!--Tab cat auto calculées-->
+<div id="BlockTabDepensesAjoutees" class="row" style="display:none">
+    <h3>Dépenses calculées automatiquement</h3>
+    <center>
+        <table id="tabDepensesAjoutees" class="mdl-data-table mdl-js-data-table">
+            <thead class="toto">
+                <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Date</th>
+                    <th class="mdl-data-table__cell--non-numeric">Libellé</th>
+                    <th>Montant</th>
+                    <th class="mdl-data-table__cell--non-numeric">Catégorie</th>
+                    <th class="mdl-data-table__cell--non-numeric">Sous-catégorie</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <input class="mdl-button mdl-js-button mdl-button--accent"  type="button" value="Ajouter ces dépenses" style="margin-top:10px" onClick="AjouterDepenseAutoCalculees(this);" />
+    </center>
+    <br /><hr /><br />
+</div>
+
+
+
+
+
+<!--Tab cat a modifier-->
+<div id="BlockTabDepenses" class="row" style="display:none">
+    <h3>Dépenses à ajouter</h3>
+    <center>
+        <table id="tabDepenses" class="mdl-data-table mdl-js-data-table">
+            <thead class="toto">
+                <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Date</th>
+                    <th class="mdl-data-table__cell--non-numeric">Libellé</th>
+                    <th>Montant</th>
+                    <th class="mdl-data-table__cell--non-numeric">Catégorie</th>
+                    <th class="mdl-data-table__cell--non-numeric">Sous-catégorie</th>
+                    <th class="mdl-data-table__cell--non-numeric">Ajouter</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </center>
+</div>

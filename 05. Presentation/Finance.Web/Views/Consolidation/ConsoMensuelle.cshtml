@@ -1,0 +1,437 @@
+﻿@model ViewModels.Consolidation.ConsoMensuelleVM
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        EffectuerRecherche();
+
+        document.getElementById("chp_montant")
+            .addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    document.getElementById("btn_Add").click();
+                }
+            });
+
+
+
+    });
+
+
+
+    //---------------------------------------------------------------------------------------------------------
+    //-------------ACTIONS-----------------------
+
+
+    //LANCER LA RECHERCHE
+    function EffectuerRecherche() {
+
+        var annee = document.getElementById('chp_annee').value;
+        var champmois = document.getElementById('chp_mois');
+        var mois = champmois.options[champmois.selectedIndex].value;
+
+        RefreshTableauDepenses(annee, mois);
+
+
+        //Affichage du bouton dupliquer selon compte
+        if (document.getElementById('selectComptes').checked) {
+            document.getElementById('btn_DupliquerCptPerso').style.display = 'inline-block';
+        }
+        else {
+            document.getElementById('btn_DupliquerCptPerso').style.display = 'none';
+        }
+    }
+
+
+    //ajouter une dépense
+    function AjouterDepenseAjax() {
+        var Montant = $('#chp_montant').val().replace('.',',');
+        var Libelle = document.getElementById("lb_depenseCat").innerText;
+        var Mois = $('#chp_mois').val();
+        var Annee = $('#chp_annee').val();
+
+        var data = {};
+     
+        data['Montant'] = Montant;
+        data['strDate'] = Annee+"/"+Mois+"/25";
+        data['strCatOuSsCat'] = Libelle;
+        data['strReconductible'] = "Non";
+
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/Consolidation/AjouterDepenseTableauMensuel")',
+                data: data,
+                success: function () {
+                    var modal = document.getElementById('myModal');
+                    modal.style.display = "none";
+                    var input = document.getElementById('chp_montant');
+                    input.value = '';
+                    EffectuerRecherche();
+                }
+            });
+    }
+
+
+    //changer année via image
+    function ChangerAnneeViaImage(plusOuMoins) {
+        if (plusOuMoins == 1) {
+            document.getElementById('chp_annee').value = parseInt(document.getElementById('chp_annee').value) + 1;
+        }
+        else {
+            document.getElementById('chp_annee').value = document.getElementById('chp_annee').value - 1;
+
+        }
+
+        EffectuerRecherche();
+    }
+
+
+    //Changer mois via image
+    function ChangerMoisViaImage(plusOuMoins) {
+
+        var champmois = document.getElementById('chp_mois');
+        var mois = champmois.options[champmois.selectedIndex].value;
+
+        if (plusOuMoins == 1) {
+
+            if (mois == 12) {
+                champmois.getElementsByTagName('option')[0].selected = 'selected';
+                document.getElementById('chp_annee').value = parseInt(document.getElementById('chp_annee').value) + 1;
+            }
+            else {
+                champmois.getElementsByTagName('option')[mois].selected = 'selected';
+            }
+        }
+        else {
+            if (mois == 1) {
+                champmois.getElementsByTagName('option')[11].selected = 'selected';
+                document.getElementById('chp_annee').value = parseInt(document.getElementById('chp_annee').value) - 1;
+            }
+            else {
+                champmois.getElementsByTagName('option')[mois - 2].selected = 'selected';
+            }
+
+
+        }
+
+        EffectuerRecherche();
+    }
+
+
+
+    //---------------------------------------------------------------------------------------------------------
+    //-------------POP UP-----------------------
+
+    //AJOUTER DEPENSE POP UP
+    function AjouterDepensePopUp(object, tableId) {
+        var modal = document.getElementById('myModal');
+        var span = document.getElementById("closePopUp");
+        var rect = object.getBoundingClientRect();
+
+        //get cat name
+        var lbDepenseCat = document.getElementById("lb_depenseCat");
+        lbDepenseCat.innerText = object.parentElement.children[0].innerText;
+
+        //selection auto de champ
+        var input = document.getElementById('chp_montant');
+        if (window.tableId != 'tabRevenus') {
+            input.value = '-';
+        }
+        input.autofocus = true;
+
+        //position modal
+        $('.modal-contentShort').css('position', 'absolute');
+        $('.modal-contentShort').css('top', rect.top); //or wherever you want it
+        $('.modal-contentShort').css('left', rect.left); //or wherever you want it
+
+        modal.style.display = "block";
+
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    }
+
+
+    //---------------------------------------------------------------------------------------------------------
+    //-------------AJAX-----------------------
+
+    //DupliquerVersComtpePerso
+    function DupliquerVersComtpePerso() {
+        var annee = document.getElementById('chp_annee').value;
+        var champmois = document.getElementById('chp_mois');
+        var mois = champmois.options[champmois.selectedIndex].value;
+        var data = { 'paramAnnee': annee, 'paramMois': mois };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/Consolidation/DupliquerDepensesVersPerso")',
+                data: data,
+                success: function () {
+                    displayMessage("Duplication effectuée")
+                    //AfficherMessageDuplicationComptePerso();
+                }
+            });
+            EffectuerRecherche();
+    }
+
+    //AfficherMessageDuplicationComptePerso
+    function AfficherMessageDuplicationComptePerso()
+    {
+        var baseUrl = '@Url.Content("~/Home/GetMessageDuplicationVersComptePerso/")';
+
+            $.getJSON(baseUrl, { paramCat: ""}, function (result) {
+                $.each(result, function (index, itemData) {
+
+                    var message = itemData.msg;
+                    displayMessage(message)
+                });
+            });
+    }
+
+    //RefreshTableauDepenses
+    function RefreshTableauDepenses(annee, mois) {
+        var catEnCours = "";
+        var tableId = "";
+        var baseUrl = '@Url.Content("~/Consolidation/CalculerDepensesConsolidesMois/")';
+        $('#tabIndispensables > tbody').empty();
+        $('#tabDispensable > tbody').empty();
+        $('#tabDispensableSuite > tbody').empty();
+        $('#tabImpots > tbody').empty();
+        $('#tabRevenus > tbody').empty();
+
+        $.getJSON(baseUrl, { paramAnnee: annee, paramMois: mois }, function (result) {
+            $.each(result, function (index, itemData) {
+                var Type = itemData.type;
+                var Libelle = itemData.Libelle;
+                var isCat = itemData.isCat;
+                var Montant = itemData.Montant;
+                var row = "<tr>";
+
+                if (Type == 'Revenus') { tableId = "tabRevenus"; }
+                if (Type == 'Impots') { tableId = "tabImpots"; }
+                if (Type == 'Indispensable') { tableId = "tabIndispensables"; }
+                if (Type == 'Dispensable') { tableId = "tabDispensable"; }
+                if (Type == 'Dispensable2') { tableId = "tabDispensableSuite"; }
+
+                if (isCat) {
+                    catEnCours = Libelle;
+                    row += "<td class='tableCat Fond_" + catEnCours + "'>" + Libelle + "</td>";
+                    row += "<td class='tableCat Fond_" + catEnCours + "' onclick='AjouterDepensePopUp(this,"+tableId+")'>" + Montant + "</td></tr>";
+                }
+                else {
+                    row += "<td class='tableSsCat FondTransparent_" + catEnCours + "'>" + Libelle + "</td>";
+                    row += "<td class='tableSsCat FondTransparent_" + catEnCours + "' onclick='AjouterDepensePopUp(this," + tableId +")'>" + Montant + "</td></tr>";
+                }
+
+                $('#' + tableId + ' > tbody').append(row);
+
+            });
+        });
+    };
+
+    //CalculerTotaux
+    function CalculerTotaux() {
+        var annee = document.getElementById('chp_annee').value;
+        var champmois = document.getElementById('chp_mois');
+        var mois = champmois.options[champmois.selectedIndex].value;
+
+        var data = {
+            'paramAnnee': annee,
+            'paramMois': mois
+            };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/Consolidation/CalculerTotaux")',
+                data: data,
+                success: function () {
+                    AfficherMessageCalculTotaux();
+                    EffectuerRecherche();
+                }
+            });
+    }
+
+    //AfficherMessageCalculTotaux
+    function AfficherMessageCalculTotaux()
+    {
+        var baseUrl = '@Url.Content("~/Consolidation/GetMessageCalculTotaux/")';
+
+            $.getJSON(baseUrl, { paramCat: ""}, function (result) {
+                $.each(result, function (index, itemData) {
+
+                    var message = itemData.msg;
+                    displayMessage(message)
+
+                });
+            });
+    }
+
+</script>
+
+
+
+
+
+<!--TITRE-->
+<div>
+    <h1 id="titre" class="display-4">Récapitulatif Mensuel [perso]</h1><hr />
+</div>
+
+<!--CONTROLES-->
+<h2 class="titre-bloc collapse">
+    Titre bloc
+</h2>
+<div class="clear cf collapsible open">
+    <div class="row">
+        <div class="col-sm-1 form-group"></div>
+        <!--Année-->
+        <div class="col-sm-1 form-group">
+            <img class="hvr-grow" onClick="ChangerAnneeViaImage(-1)" src='@Url.Content("~/Content/Previous_Violet_50.png")' />
+        </div>
+
+        <div class="col-sm-2 form-group">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                @Html.TextBoxFor(m => m.Annee, new { @id = "chp_annee", @class = "mdl-textfield__input" })
+
+                <label class="mdl-textfield__label" for="sample2">Année</label>
+                <span class="mdl-textfield__error">Année non valide</span>
+            </div>
+        </div>
+
+        <div class="col-sm-1 form-group">
+            <img class="hvr-grow" onClick="ChangerAnneeViaImage(1)" src='@Url.Content("~/Content/Next_Violet_50.png")' />
+        </div>
+
+        <!--Mois-->
+        <div class="col-sm-1 form-group">
+            <img class="hvr-grow" onClick="ChangerMoisViaImage(-1)" src='@Url.Content("~/Content/Previous_Violet_50.png")' />
+        </div>
+
+        <div class="col-sm-2 form-group">
+            <span class="littleTitle">Mois</span>
+            <div class="mdl-selectfield">
+                @Html.DropDownListFor(m => m.Mois, Model.list_mois, new { @id = "chp_mois" })
+            </div>
+        </div>
+
+        <div class="col-sm-1 form-group">
+            <img class="hvr-grow" onClick="ChangerMoisViaImage(1)" src='@Url.Content("~/Content/Next_Violet_50.png")' />
+        </div>
+
+
+
+
+        <!--Rechercher-->
+        <div class="col-sm-2 form-group">
+            <input class="mdl-button mdl-js-button mdl-button--primary" id="btn_Rechercher" type="button" value="Rechercher" onClick="EffectuerRecherche();" style="margin-top:10px" />
+        </div>
+        <div class="col-sm-1 form-group"></div>
+
+    </div>
+</div>
+
+
+
+<!--TABLEAUX DEPENSES-->
+<div class="row">
+    <div class="col-sm-1 form-group"></div>
+    <div class="col-sm-2 form-group">
+        <span class="littleTitle">Indispensables</span>
+        <table id="tabIndispensables" class="tableListDepenses">
+            <tbody></tbody>
+        </table>
+    </div>
+
+
+    <div class="col-sm-2 form-group">
+        <span class="littleTitle">Dispensable</span>
+        <table id="tabDispensable" class="tableListDepenses">
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="col-sm-2 form-group">
+        <span class="littleTitle">Dispensable suite</span>
+        <table id="tabDispensableSuite" class="tableListDepenses">
+            <tbody></tbody>
+        </table>
+    </div>
+
+
+    <div class="col-sm-2 form-group">
+        <span class="littleTitle">Impots</span>
+        <table id="tabImpots" class="tableListDepenses">
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="col-sm-2 form-group">
+        <span class="littleTitle">Revenus</span>
+        <table id="tabRevenus" class="tableListDepenses">
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="col-sm-1 form-group"></div>
+</div>
+<br />
+<br />
+
+<!--Boutons actions-->
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <label class="mdl-button mdl-js-button mdl-button--accent">Actions sur les comptes : </label>
+    </div>
+
+    <div class="col-sm-1"></div>
+    <div class="col-sm-11">
+        <input class="mdl-button mdl-js-button mdl-button--primary" id="btn_CalculerTotalImpots" type="button" value="Calculer les TOTAUX" onClick="CalculerTotaux();" style="margin-top:10px" />
+    </div>
+
+    <div class="col-sm-1"></div>
+    <div class="col-sm-11">
+        <input class="mdl-button mdl-js-button mdl-button--primary" id="btn_DupliquerCptPerso" type="button" value="Dupliquer vers comptes perso" onClick="DupliquerVersComtpePerso();" style="margin-top:10px" />
+    </div>
+</div>
+
+    <center>
+    </center>
+
+
+
+
+    <!--MODAL-->
+    <div id="myModal" class="modal">
+        <div id="myModalBox" class="modal-contentShort">
+            <div class="row">
+
+                <div class="col-sm-7 form-group">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="chp_montant" type="text" name="fname" class="mdl-textfield__input">
+                        <label id="lb_depenseCat" class="mdl-textfield__label" for="chp_montant">Montant</label>
+                        <span class="mdl-textfield__error">Montant non valide</span>
+                    </div>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <input class="mdl-button mdl-js-button mdl-button--accent" id="btn_Add" type="button" value="Add" onClick="AjouterDepenseAjax();" style="margin-top:15px" />
+                </div>
+                <div class="col-sm-2 form-group">
+                    <span id="closePopUp" class="close">&times;</span>
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+    </div>

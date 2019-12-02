@@ -1,0 +1,338 @@
+﻿
+<script>
+
+    var IS_GRAPH_SOLDE_CHARGE = false;
+    var IS_GRAPH_REVENUS_CHARGE = false;
+    var IS_GRAPH_DEP_CHARGE = false;
+    var IS_GRAPH_IMPOTS_CHARGE = false;
+    var IS_GRAPH_2013_CHARGE = false;
+    var IS_GRAPH_2014_CHARGE = false;
+    var IS_GRAPH_2015_CHARGE = false;
+    var IS_GRAPH_2016_CHARGE = false;
+    var IS_GRAPH_2017_CHARGE = false;
+    var IS_GRAPH_2018_CHARGE = false;
+    var IS_GRAPH_2019_CHARGE = false;
+
+
+    $(document).ready(function () {
+        ChangeOngletGen('tabGen_1', 'contentGen_1');
+    });
+
+
+    //ChangeOngletGen
+    function ChangeOngletGen(onglet, contenu) {
+        //on masque tout
+        document.getElementById('contentGen_1').style.display = 'none';
+        document.getElementById('contentGen_2').style.display = 'none';
+        document.getElementById('contentGen_3').style.display = 'none';
+        document.getElementById('contentGen_4').style.display = 'none';
+        document.getElementById('tabGen_1').className = '';
+        document.getElementById('tabGen_2').className = '';
+        document.getElementById('tabGen_3').className = '';
+        document.getElementById('tabGen_4').className = '';
+
+        //On affiche notre page
+        document.getElementById(contenu).style.display = 'block';
+        document.getElementById(onglet).className = 'active';
+
+        //on charge le graph
+        if (contenu == 'contentGen_1' && !IS_GRAPH_SOLDE_CHARGE) {
+            LoadGraphSolde();
+            IS_GRAPH_SOLDE_CHARGE = true;
+        }
+        if (contenu == 'contentGen_2' && !IS_GRAPH_REVENUS_CHARGE) {
+            LoadGraphRevenus();
+            IS_GRAPH_REVENUS_CHARGE = true;
+        }
+        if (contenu == 'contentGen_3' && !IS_GRAPH_DEP_CHARGE) {
+            LoadGraphDepenses();
+            IS_GRAPH_DEP_CHARGE = true;
+        }
+        if (contenu == 'contentGen_4' && !IS_GRAPH_IMPOTS_CHARGE) {
+            LoadGraphImpotsSalaire();
+            IS_GRAPH_IMPOTS_CHARGE = true;
+        }
+        hideGif();
+
+    }
+
+
+    // Graph Solde -----------------------------------------------------------------------------------------------------------------------------
+    //Chargement
+    function LoadGraphSolde() {
+        var baseUrl = '@Url.Content("~/Consolidation/GetGraphiqueSolde/")';
+        var tab_Annees = new Array();
+        var tab_Rev = new Array();
+        var tab_Dep = new Array();
+        var tab_Solde = new Array();
+
+        $.getJSON(baseUrl, function (result) {
+            $.each(result, function (index, itemData) {
+                tab_Annees.push(itemData.Annee);
+                tab_Rev.push(itemData.mntRevenus);
+                tab_Dep.push(itemData.mntDepenses);
+                tab_Solde.push(itemData.mntSolde);
+            });
+
+            DisplayTableSolde(tab_Annees, tab_Rev, tab_Dep, tab_Solde);
+        });
+    }
+
+    //Affichage
+    function DisplayTableSolde(tab_Annees, tab_Rev, tab_Dep, tab_Solde) {
+                    var ctx = document.getElementById("ch_Solde").getContext('2d');
+                    var chart = new Chart(ctx, {
+                        // The type of chart we want to create
+                        type: 'line',
+
+                        // The data for our dataset
+                        data: {
+                            labels: tab_Annees,
+                            datasets: [
+                                { label: "Solde", borderColor: '#FF9800', data: tab_Solde, },
+                                { label: "Revenus", borderColor: '#4CAF50', data: tab_Rev, },
+                                { label: "Dépenses", borderColor: '#F44336', data: tab_Dep, }
+                            ]
+                        },
+
+                        // Configuration options go here
+                        options: {}
+                    });
+
+            }
+
+    // Graph Revenus -----------------------------------------------------------------------------------------------------------------------------
+    //Chargement
+    function LoadGraphRevenus() {
+        var baseUrl = '@Url.Content("~/Consolidation/GetGraphiqueRevenus/")';
+
+        var tab_Annees = new Array();
+        var tab_Salaire = new Array();
+        var tab_Entreprise = new Array();
+        var tab_Aides = new Array();
+        var tab_Interets = new Array();
+        var tab_Vente = new Array();
+        var tab_AirBnb = new Array();
+        var tab_Cadeaux = new Array();
+        //var tab_Revenus = new Array();
+
+        $.getJSON(baseUrl, function (result) {
+            $.each(result, function (index, itemData) {
+                tab_Annees.push(itemData.Annee);
+                tab_Salaire.push(itemData.Salaire);
+                tab_Entreprise.push(itemData.Entreprise);
+                tab_Aides.push(itemData.Aides);
+                tab_Interets.push(itemData.Interets);
+                tab_Vente.push(itemData.Vente);
+                tab_AirBnb.push(itemData.Airbnb);
+                tab_Cadeaux.push(itemData.Cadeaux);
+            });
+
+            DisplayTableRevenus(tab_Annees, tab_Salaire, tab_Entreprise, tab_Aides, tab_Interets, tab_Vente, tab_AirBnb, tab_Cadeaux);
+        });
+        }
+
+    //Affichage
+    function DisplayTableRevenus(tbAnnees, tab_Salaire, tab_Entreprise, tab_Aides, tab_Interets, tab_Vente, tab_AirBnb, tab_Cadeaux) {
+            var ctx = document.getElementById("ch_Revenus").getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: tbAnnees,
+                    datasets: [
+                        { label: "Salaire", borderColor: '#4CAF50', data: tab_Salaire, },
+                        { label: "Entreprise", fill: false, borderColor: '#009688', data: tab_Entreprise, },
+                        { label: "Aides", fill: false, borderColor: '#8BC34A', data: tab_Aides, },
+                        { label: "Intêrets", fill: false, borderColor: '#69F0AE', data: tab_Interets, },
+                        { label: "Vente", fill: false, borderColor: '#DCEDC8', data: tab_Vente, },
+                        { label: "Airbnb", fill: false, borderColor: '#1B5E20', data: tab_AirBnb, },
+                        { label: "Cadeaux", fill: false, borderColor: '#CDDC39', data: tab_Cadeaux, }
+                    ]
+                },
+
+                // Configuration options go here
+                options: {}
+            });
+
+        }
+
+
+    // Graph Depenses -----------------------------------------------------------------------------------------------------------------------------
+    //Chargement
+    function LoadGraphDepenses() {
+        var baseUrl = '@Url.Content("~/Consolidation/GetGraphiqueDepenses/")';
+
+        var tab_Annees = new Array();
+        var tab_Logement = new Array();
+        var tab_Alimentaire = new Array();
+        var tab_Voiture = new Array();
+        var tab_Transport = new Array();
+        var tab_Loisirs = new Array();
+        var tab_Voyage = new Array();
+        var tab_Cadeaux = new Array();
+        var tab_Achats = new Array();
+        var tab_Vetements = new Array();
+        var tab_Sante = new Array();
+        var tab_Impots = new Array();
+        var tab_Frais = new Array();
+        var tab_Emprunt = new Array();
+
+        $.getJSON(baseUrl, function (result) {
+            $.each(result, function (index, itemData) {
+                tab_Annees.push(itemData.Annee);
+                tab_Logement.push(itemData.Logement);
+                tab_Alimentaire.push(itemData.Alimentaire);
+                tab_Voiture.push(itemData.Voiture);
+                tab_Transport.push(itemData.Transport);
+                tab_Loisirs.push(itemData.Loisirs);
+                tab_Voyage.push(itemData.Voyage);
+                tab_Cadeaux.push(itemData.Cadeaux);
+                tab_Achats.push(itemData.Achats);
+                tab_Vetements.push(itemData.Vetements);
+                tab_Sante.push(itemData.Sante);
+                tab_Impots.push(itemData.Impots);
+                tab_Frais.push(itemData.Frais);
+                tab_Emprunt.push(itemData.Emprunt);
+            });
+
+            DisplayTableDepenses(tab_Annees, tab_Logement, tab_Alimentaire, tab_Voiture, tab_Transport, tab_Loisirs, tab_Voyage, tab_Cadeaux, tab_Achats, tab_Vetements, tab_Sante, tab_Impots, tab_Frais, tab_Emprunt);
+        });
+    }
+
+    //Affichage
+    function DisplayTableDepenses(tab_Annees, tab_Logement, tab_Alimentaire, tab_Voiture, tab_Transport, tab_Loisirs, tab_Voyage, tab_Cadeaux, tab_Achats, tab_Vetements, tab_Sante, tab_Impots, tab_Frais, tab_Emprunt) {
+        var ctx = document.getElementById("ch_depenses").getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: tab_Annees,
+                    datasets: [
+                        { label: "Logement", fill: false, borderColor: '#3F51B5', data: tab_Logement, },
+                        { label: "Alimentaire", fill: false, borderColor: '#9C27B0', data: tab_Alimentaire, },
+                        { label: "Voiture", fill: false, borderColor: '#607D8B', data: tab_Voiture, },
+                        { label: "Transport", fill: false, borderColor: '#424242', data: tab_Transport, },
+                        { label: "Loisirs", fill: false, borderColor: '#FF5722', data: tab_Loisirs, },
+                        { label: "Voyage", fill: false, borderColor: '#4CAF50', data: tab_Voyage, },
+                        { label: "Cadeaux", fill: false, borderColor: '#00BCD4', data: tab_Cadeaux, },
+                        { label: "Achats", fill: false, borderColor: '#795548', data: tab_Achats, },
+                        { label: "Vétements", fill: false, borderColor: '#A1887F', data: tab_Vetements, },
+                        { label: "Santé", fill: false, borderColor: '#FFEB3B', data: tab_Sante, },
+                        { label: "Impôts", fill: false, borderColor: '#F44336', data: tab_Impots, },
+                        { label: "Frais Bancaires", fill: false, borderColor: '#EF9A9A', data: tab_Frais, },
+                        { label: "Emprunt", fill: false, borderColor: '#B39DDB', data: tab_Emprunt, }
+                    ]
+                },
+
+                // Configuration options go here
+                options: {}
+            });
+
+    }
+
+
+    // Graph Impots vs salaire -----------------------------------------------------------------------------------------------------------------------------
+    //Chargement
+    function LoadGraphImpotsSalaire() {
+        var baseUrl = '@Url.Content("~/Consolidation/GetGraphiqueImpotsSalaire/")';
+
+        var tab_Annees = new Array();
+        var tab_Impots = new Array();
+        var tab_Salaire = new Array();
+        var tab_ImpotsRev = new Array();
+        var tab_Cotisations = new Array();
+
+        $.getJSON(baseUrl, function (result) {
+            $.each(result, function (index, itemData) {
+                tab_Annees.push(itemData.Annee);
+                tab_Impots.push(itemData.Impots);
+                tab_Salaire.push(itemData.Salaire);
+                tab_ImpotsRev.push(itemData.ImpotsRev);
+                tab_Cotisations.push(itemData.Cotisations);
+
+            });
+
+            DisplayTableImpotsSalaire(tab_Annees, tab_Impots, tab_Salaire, tab_ImpotsRev, tab_Cotisations);
+        });
+    }
+
+    //Affichage
+    function DisplayTableImpotsSalaire(tab_Annees, tab_Impots, tab_Salaire, tab_ImpotsRev, tab_Cotisations) {
+        var ctx = document.getElementById("ch_impotsSalaire").getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: tab_Annees,
+                    datasets: [
+                        { label: "Salaire", fill: false, borderColor: '#4CAF50', data: tab_Salaire, },
+                        { label: "Impôts consolidés", fill: false, borderColor: '#F44336', data: tab_Impots, },
+                        { label: "Impôts revenus", fill: false, borderColor: '#ffae8e', data: tab_ImpotsRev, },
+                        { label: "Cotisations salariales", fill: false, borderColor: '#f9b6de', data: tab_Cotisations, }
+                    ]
+                },
+
+                // Configuration options go here
+                options: {}
+            });
+
+    }
+
+</script>
+
+
+
+
+<br />
+
+<!--Pour chaques Graphs-->
+<div class="tabbed_area">
+
+    <!--Sous onglets-->
+    <ul class="tabs">
+        <li class="Pink"><a href="javascript:ChangeOngletGen('tabGen_1', 'contentGen_1');" id="tabGen_1" class="active">Solde</a></li>
+        <li class="Pink"><a href="javascript:ChangeOngletGen('tabGen_2', 'contentGen_2');" id="tabGen_2">Revenus</a></li>
+        <li class="Pink"><a href="javascript:ChangeOngletGen('tabGen_3', 'contentGen_3');" id="tabGen_3">Dépenses</a></li>
+        <li class="Pink"><a href="javascript:ChangeOngletGen('tabGen_4', 'contentGen_4');" id="tabGen_4">Impôts vs salaire</a></li>
+    </ul>
+
+    <!--Graph solde-->
+    <div id="contentGen_1" class="content">
+        <div style="width:100%">
+            <center><h2>Evolution du solde</h2></center>
+            <canvas id="ch_Solde"></canvas>
+        </div>
+    </div>
+
+    <!--Graph revenus-->
+    <div id="contentGen_2" class="content">
+        <div style="width:100%">
+            <center><h2>Evolution des revenus</h2></center>
+            <canvas id="ch_Revenus"></canvas>
+        </div>
+    </div>
+
+    <!--Graph autres-->
+    <div id="contentGen_3" class="content">
+        <div style="width:100%">
+            <center><h2>Evolution des dépenses</h2></center>
+            <canvas id="ch_depenses"></canvas>
+        </div>
+    </div>
+
+    <!--Graph impots vs salaire-->
+    <div id="contentGen_4" class="content">
+        <div style="width:100%">
+            <center><h2>Impots vs Salaire</h2></center>
+            <canvas id="ch_impotsSalaire"></canvas>
+        </div>
+    </div>
+
+</div>

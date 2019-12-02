@@ -1,0 +1,737 @@
+﻿
+
+<script>
+
+    var Ref = [
+        ['l_elec', 0.0807],
+        ['l_elecV', 0.00733],
+        ['l_gaz', 0.217575],
+        ['l_Fioul', 3.67],
+        ['l_eau', 0.132], // m3/an
+        ['t_train', 0.0056],// km/an
+        ['t_bus', 102.96],// h/sem
+        ['t_metro', 8.58],// h/sem
+        ['t_avion', 188.25],// h/an
+        ['a_boeuf', 1.04], // g/sem
+        ['a_porc', 0.27], //  g/sem
+        ['a_volaille', 0.156], //  g/sem
+        ['a_poisson', 0.1],//  g/sem
+        ['a_fromage', 0.52],//  g/sem
+        ['a_laitages', 0.125632],//  g/sem
+        ['a_lait', 0.062816],//  g/sem
+        ['a_legumeshs', 0.143832],//  g/sem
+        ['a_legumesa', 0.572],//  g/sem
+        ['a_legumesl', 0.006084],//  g/sem
+        ['a_plats', 0.143832],//  g/sem
+        ['a_pain', 0.0286],//  g/sem
+        ['a_riz', 0.143],//  g/sem
+        ['a_alcool', 72.284],//  L/sem
+        ['a_sodas', 31.2],//  L/sem
+        ['d_info', 3.32785],//  L/sem
+        ['d_manu', 0.1275],//  L/sem
+        ['d_vet', 26],//  qté / an
+        ['d_electro', 251],//  qté / an
+        ['d_pc', 169],//  L/sem
+        ['d_tel', 32],//  L/sem
+        ['d_photo', 27],//  qté / an
+        ['d_tv', 453],//  qté / an
+        ['d_autres', 66],//  qté / an
+        ['f_banque', 0.01131],//  L/sem
+        ['f_vert', 0.0034],//  L/sem
+        ['p_orga', 0.032376],//  g/sem
+        ['p_papier', 0.0110459],//  g/sem
+        ['p_plastiques', 0.171401],//  g/sem
+        ['p_verre', 0.0053325],//  g/sem
+        ['p_metal', 0.0114268],//  g/sem
+        ['p_autres', 0.0095223],//  g/sem
+
+
+        
+    ];
+
+
+    $(document).ready(function () {
+
+
+    });
+
+
+     //Ajout bilan carbonne (POST)
+    function AjouterBilanCarboneAjax() {
+        var total_l = 0.0;
+        var total_t = 0.0;
+        var total_a = 0.0;
+        var total_d = 0.0;
+        var total_p = 0.0;
+        var total_f = 0.0;
+        var total_e = 0.0;
+
+        //Logement
+        $('.l_co2').each(function () {
+            var value = $(this).val()
+            if (value != '' && value != null && value > 0) {
+                total_l += parseFloat(value);
+            }
+        });
+
+        //Transport
+        $('.t_co2').each(function () {
+            var value = $(this).val()
+            if (value != '' && value != null && value > 0) {
+                total_t += parseFloat(value);
+            }
+        });
+
+        //Alimentation
+        $('.a_co2').each(function () {
+            var value = $(this).val()
+            if (value != '' && value != null && value > 0) {
+                total_a += parseFloat(value);
+            }
+        });
+
+        //Dépenses
+        $('.d_co2').each(function () {
+            var value = $(this).val()
+            if (value != '' && value != null && value > 0) {
+                total_d += parseFloat(value);
+            }
+        });
+
+        //Dechets
+        $('.p_co2').each(function () {
+            var value = $(this).val()
+            if (value != '' && value != null && value > 0) {
+                total_p += parseFloat(value);
+            }
+        });
+
+        //Finances
+        $('.f_co2').each(function () {
+            var value = $(this).val()
+            if (value != '' && value != null && value > 0) {
+                total_f += parseFloat(value);
+            }
+        });
+
+        //Etat
+        total_e += 1283;
+
+        var data = {};
+        data['Annee'] = $('#ch_annee').val();
+        data['Logement'] = total_l
+        data['Transports'] = total_t;
+        data['Alimentation'] = total_a;
+        data['Dechets'] = total_p;
+        data['Achats'] = total_d;
+        data['Finance'] = total_f;
+        data['ServicePublique'] = total_e;
+
+        $.ajax({
+            type: "POST", url: '@Url.Content("~/Carbone/PostCBilanCarbone")',
+            data: data, dataType: "json",
+            success: function () {
+
+            },
+            fail: function () {
+               // $('#consoEau_txt_popup').html("Echec lors de l'enregistrement");
+            },
+            complete: function () {
+              //  $('#modal_addConsoEau').hide();
+              //  GetDonneesConsoEau();
+            }
+        });
+    }
+
+
+    //Get valeurs référentiels
+    function GetValueRefFromCode(code) {
+        for (var i=0, len=Ref.length; i<len; i++) {
+            if (Ref[i][0] == code) {
+                return Ref[i][1];
+            }  
+        }
+    }
+
+    //Calcul co2 voiture
+    function t_voitureChange() {
+        var consoVoiture = 0;
+        var t_km = $('#t_km').val() * 0.03668;
+        var t_nbPers = $('#t_nbPers').val();
+        var t_conso = $('#t_conso').val();
+        
+        if (t_nbPers == 0) { t_nbPers = 1;}
+        consoVoiture = (t_km * t_conso) / t_nbPers //nombre km
+
+        $('#t_voiture_v').val(consoVoiture);
+        $('#t_voiture_v').html(Math.round(consoVoiture));
+    }
+
+    //calcul co2 bouteilles
+    function onBouteilleChange() {
+        var a_eau = $('#a_eau').val();
+        debugger;
+        var montant = 0.0;
+        if (a_eau == 'oui' || a_eau == 'Oui' || a_eau == 'OUI' || a_eau == 'O') {
+            
+            montant = 110;
+        }
+        
+        $('#a_eau_v').val(montant);
+        $('#a_eau_v').html(Math.round(montant));
+    }
+
+    //Calcul internet
+    function d_onInternetChange() {
+        var internetkwh = $('#d_internet').val() * 12 * 0.12;
+
+        $('#d_internet_kwh').html(Math.round(internetkwh));
+
+        var internet = internetkwh * ((0.00733+0.0807)/2);
+        $('#d_internet_v').val(internet);
+        $('#d_internet_v').html(Math.round(internet));
+        
+
+
+    }
+
+    //calcul co2 autres champs
+    function x_onChange(code) {
+        var montant = $('#'+code).val() * GetValueRefFromCode(code);
+        $('#'+code+'_v').val(montant);
+        $('#'+code+'_v').html(Math.round(montant));
+    }
+
+    
+    
+
+
+
+</script>
+
+
+
+
+
+
+<div class="col-sm-2 form-group">
+    <label class="PurpleText">Année :</label>
+    <div class="valeur">
+        <input id="ch_annee" placeholder="Année" class="mdl-textfield__input">
+    </div>
+</div>
+
+<br />
+<h4 class="col-sm-12 titre-bloc">Logement</h4>
+<div class="sous-partie">
+    <div class="row">
+
+        <!--Ligne 1-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Logement :</label>
+        </div>
+
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Nombre de personnes :</label>
+            <div class="valeur">
+                <input id="l_nbPers" placeholder="Nombre" class="mdl-textfield__input">
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Surface du logement (m<sup>2</sup>) :</label>
+            <div class="valeur">
+                <input id="l_surface" placeholder="Surface" class="mdl-textfield__input">
+            </div>
+        </div>
+        <div class="col-sm-6"></div>
+
+        <!--Ligne 2-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Electricité</label>
+            <label class="PurpleText"></label>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Fournisseur classique :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="l_elec" onchange="x_onChange('l_elec');" placeholder="kWh/an" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="l_co2" id="l_elec_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Fournisseur vert :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="l_elecV" onchange="x_onChange('l_elecV');" placeholder="kWh/an" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="l_co2" id="l_elecV_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-6"></div>
+
+        <!--Ligne 3-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Gaz et fioul</label>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Gaz (kWh) :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="l_gaz" onchange="x_onChange('l_gaz');" placeholder="kWh/an" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="l_co2" id="l_gaz_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Fioul :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="l_Fioul" onchange="x_onChange('l_Fioul');" placeholder="L/an" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="l_co2" id="l_Fioul_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-6"></div>
+
+        <!--Ligne 3-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Eau</label>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Consommation :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="l_eau" onchange="x_onChange('l_eau');" placeholder="m3/an" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="l_co2" id="l_eau_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+
+        <div class="col-sm-8"></div>
+
+    </div> 
+</div>
+
+<br />
+<h4 class="col-sm-12 titre-bloc">Transports</h4>
+<div class="sous-partie">
+    <div class="row">
+        <!--Voiture-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Voiture (essence)</label>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">km annuels :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="t_km" onchange="t_voitureChange();" placeholder="km/an" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Nombre usagers :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="t_nbPers" onchange="t_voitureChange();" placeholder="Nombre" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Consommation moyenne :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="t_conso" onchange="t_voitureChange();" placeholder="L/100km" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText"> </label>
+            <div class="valeur row">
+                <div class="col-sm-7"><span class="t_co2" id="t_voiture_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2"></div>
+
+        <!--Avion-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Avion</label>
+        </div>
+        <div class="col-sm-3 form-group">
+            <label class="PurpleText">Nombre d'heures par an :</label>
+            <div class="valeur row">
+                <div class="col-sm-3"><input id="t_avion" onchange="x_onChange('t_avion');" placeholder="h/an" class="mdl-textfield__input"></div>
+                <div class="col-sm-9"><span class="t_co2" id="t_avion_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-7"></div>
+
+        <!--Train-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Train</label>
+        </div>
+        <div class="col-sm-3 form-group">
+            <label class="PurpleText">Kilométrage annuel :</label>
+            <div class="valeur row">
+                <div class="col-sm-3"><input id="t_train" onchange="x_onChange('t_train');" placeholder="km/an" class="mdl-textfield__input"></div>
+                <div class="col-sm-9"><span class="t_co2" id="t_train_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-7"></div>
+
+        <!--Transports en commun-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Transports en</label>
+            <label class="mdl-button mdl-js-button mdl-button--accent">commun</label>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Bus / sem :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="t_bus" onchange="x_onChange('t_bus');" placeholder="h/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="t_co2" id="t_bus_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group"> 
+            <label class="PurpleText">Métro / sem :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="t_metro" onchange="x_onChange('t_metro');" placeholder="h/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="t_co2" id="t_metro_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-6"></div>
+    </div> 
+</div>
+
+<br />
+<h4 class="col-sm-12 titre-bloc">Alimentation</h4>
+<div class="sous-partie">
+    <div class="row">
+        <!--Viande et poisson-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Viande et poisson</label>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Bœuf, veau, mouton  :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="a_boeuf" onchange="x_onChange('a_boeuf');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="a_co2" id="a_boeuf_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Porc :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="a_porc" onchange="x_onChange('a_porc');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="a_co2" id="a_porc_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Volaille & œufs  :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="a_volaille" onchange="x_onChange('a_volaille');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="a_co2" id="a_volaille_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Poisson :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="a_poisson" onchange="x_onChange('a_poisson');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="a_co2" id="a_poisson_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2"></div>
+
+        <!--Laitages-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Laitages</label>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Fromage & beurre  :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="a_fromage" onchange="x_onChange('a_fromage');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="a_co2" id="a_fromage_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Laitages  :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="a_laitages" onchange="x_onChange('a_laitages');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="a_co2" id="a_laitages_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText"> Lait  :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="a_lait" onchange="x_onChange('a_lait');" placeholder="L/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="a_co2" id="a_lait_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-4"></div>
+
+        <!--Fruits et légumes-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Fruits et légumes</label>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Hors saison  :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="a_legumeshs" onchange="x_onChange('a_legumeshs');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="a_co2" id="a_legumeshs_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Par avion  :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="a_legumesa" onchange="x_onChange('a_legumesa');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="a_co2" id="a_legumesa_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Locaux de saison  :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="a_legumesl" onchange="x_onChange('a_legumesl');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="a_co2" id="a_legumesl_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-4"></div>
+
+         <!--Plats cuisinés-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Plats cuisinés</label>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Plats cuisinés / conserves :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="a_plats" onchange="x_onChange('a_plats');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="a_co2" id="a_plats_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        
+        <div class="col-sm-8"></div>
+
+         <!--Féculents-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Féculents</label>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Pain / pâtes :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="a_pain" onchange="x_onChange('a_pain');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="a_co2" id="a_pain_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Riz :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="a_riz" onchange="x_onChange('a_riz');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="a_co2" id="a_riz_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-6"></div>
+
+         <!--Boissons-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Boissons</label>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Alcool :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="a_alcool" onchange="x_onChange('a_alcool');" placeholder="L/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="a_co2" id="a_alcool_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Sodas / Jus :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="a_sodas" onchange="x_onChange('a_sodas');" placeholder="L/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="a_co2" id="a_sodas_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-6"></div>
+
+         <!--Fruits et légumes-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Eau en bouteille</label>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Eau en bouteille :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="a_eau" onchange="onBouteilleChange();" placeholder="oui/non" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="a_co2" id="a_eau_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-8"></div>
+    </div> 
+</div>
+
+<br />
+<h4 class="col-sm-12 titre-bloc">Déchets</h4>
+<div class="sous-partie">
+    <div class="row">
+         <!--Dépenses annuelles-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Déchets</label>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Organiques :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="p_orga" onchange="x_onChange('p_orga');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="p_co2" id="p_orga_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Papiers :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="p_papier" onchange="x_onChange('p_papier');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="p_co2" id="p_papier_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Plastiques :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="p_plastiques" onchange="x_onChange('p_plastiques');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="p_co2" id="p_plastiques_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-4"></div>
+
+        <div class="col-sm-2"></div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Verre :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="p_verre" onchange="x_onChange('p_verre');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="p_co2" id="p_verre_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Métaux :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="p_metal" onchange="x_onChange('p_metal');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="p_co2" id="p_metal_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Autres :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="p_autres" onchange="x_onChange('p_autres');" placeholder="g/sem" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="p_co2" id="p_autres_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-4"></div>
+    </div> 
+</div>
+
+<br />
+<h4 class="col-sm-12 titre-bloc">Biens et services</h4>
+<div class="sous-partie">
+    <div class="row">
+         <!--Dépenses annuelles-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Dépenses annuelles</label>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Produits manufacturés :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="d_manu" onchange="x_onChange('d_manu');" placeholder="€/an" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="d_co2" id="d_manu_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Vetements :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="d_vet" onchange="x_onChange('d_vet');" placeholder="qté/an" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="d_co2" id="d_vet_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+         <div class="col-sm-2 form-group">
+            <label class="PurpleText">Electroménager :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="d_electro" onchange="x_onChange('d_electro');" placeholder="qté/an" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="d_co2" id="d_electro_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-4 form-group">
+            <label class="PurpleText">Internet :</label>
+            <div class="valeur row">
+                <div class="col-sm-3"><input id="d_internet" onchange="d_onInternetChange();" placeholder="go/mois" class="mdl-textfield__input"></div>
+                <div class="col-sm-3"><span id="d_internet_kwh"></span> kWh </div>
+                <div class="col-sm-3"><span class="d_co2" id="d_internet_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+
+
+        <div class="col-sm-2"></div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">PC portable :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="d_pc" onchange="x_onChange('d_pc');" placeholder="qté/an" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="d_co2" id="d_pc_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Smartphone :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="d_tel" onchange="x_onChange('d_tel');" placeholder="qté/an" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="d_co2" id="d_tel_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">App photo :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="d_photo" onchange="x_onChange('d_photo');" placeholder="qté/an" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="d_co2" id="d_photo_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+         <div class="col-sm-2 form-group">
+            <label class="PurpleText">Télévision :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="d_tv" onchange="x_onChange('d_tv');" placeholder="qté/an" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="d_co2" id="d_tv_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Autres :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="d_autres" onchange="x_onChange('d_autres');" placeholder="qté/an" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="d_co2" id="d_autres_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+    </div> 
+</div>
+
+
+<br />
+<h4 class="col-sm-12 titre-bloc">Finance</h4>
+<div class="sous-partie">
+    <div class="row">
+         <!--Actifs financier-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Actifs financier</label>  
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Classique :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="f_banque" onchange="x_onChange('f_banque');" placeholder="€" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="f_co2" id="f_banque_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="PurpleText">Responsables :</label>
+            <div class="valeur row">
+                <div class="col-sm-5"><input id="f_vert" onchange="x_onChange('f_vert');" placeholder="€" class="mdl-textfield__input"></div>
+                <div class="col-sm-7"><span class="f_co2" id="f_vert_v"></span> kg CO<sub>2</sub></div>
+            </div>
+        </div>
+        <div class="col-sm-6"></div>
+    </div> 
+</div>
+
+
+<br />
+<h4 class="col-sm-12 titre-bloc">Service public</h4>
+<div class="sous-partie">
+    <div class="row">
+        <!--Ligne 1-->
+        <div class="col-sm-2">
+            <label class="mdl-button mdl-js-button mdl-button--accent">Services de l'Etat et des collectivités</label>
+        </div>
+        <div class="col-sm-4 form-group">
+            <label class="PurpleText">Forfait individuel identique pour tous :</label>
+            <div class="valeur">
+                <span class="e_co2" value="1283">1283</span> kg CO<sub>2</sub>
+            </div>
+        </div>
+        <div class="col-sm-4"></div>
+    </div> 
+</div>
+
+<div class="col-sm-12">
+    <center><button class="mdl-button mdl-js-button mdl-button--accent" onclick="AjouterBilanCarboneAjax()">Ajouter mon bilan</button></center>
+</div>
+

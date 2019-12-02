@@ -1,0 +1,119 @@
+﻿@model ViewModels.Consolidation.ConsoGeneraleVM
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+    });
+
+    function EffectuerRecherche()
+    {
+        //do nothing
+        document.location.reload(true);
+    }
+
+
+
+    function ChangeOnglet(onglet, contenu) {
+        document.getElementById('content_1').style.display = 'none';
+        document.getElementById('content_2').style.display = 'none';
+        document.getElementById(contenu).style.display = 'block';
+
+        document.getElementById('tab_1').className = '';
+        document.getElementById('tab_2').className = '';
+        document.getElementById(onglet).className = 'active';
+    }
+
+</script>
+
+
+
+<!--TITRE-->
+<div>
+    <h1 id="titre" class="display-4">Récapitulatif [perso]</h1><hr />
+</div>
+
+
+<div class="tabbed_area">
+    <ul class="tabs">
+        <li><a href="javascript:ChangeOnglet('tab_1', 'content_1');" id="tab_1" class="active">Montants Totaux</a></li>
+        <li><a href="javascript:ChangeOnglet('tab_2', 'content_2');" id="tab_2">Montants Moyens</a></li>
+    </ul>
+
+
+    <!--TABLEAU RECAP GENERAL-->
+    <div id="content_1" class="content">
+        <table class="tableListDepensesGeneral">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    @for (var anneesIndex = 0; anneesIndex < Model.list_recaps.Count(); anneesIndex++)
+                    {
+                        <th> @Model.list_recaps[anneesIndex].Annee</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @for (var ligne = 0; ligne < Model.list_recaps[0].list_Consos.Count(); ligne++)
+                {
+                    <tr>
+                        <td class='tableListDepensesLib tableSsCatGeneral Fond_@Model.list_recaps[0].list_Consos[ligne].Cat'>@Model.list_recaps[0].list_Consos[ligne].Libelle</td>
+
+                        @for (var anneesIndex = 0; anneesIndex < Model.list_recaps.Count(); anneesIndex++)
+                        {
+                            <td class='tableListDepensesMontant tableSsCatGeneral Janvier Fond_@Model.list_recaps[anneesIndex].list_Consos[ligne].Cat'> @Model.list_recaps[anneesIndex].list_Consos[ligne].Montant</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!--TABLEAU RECAP MENSUEL-->
+    <div id="content_2" class="content">
+        <table class="tableListDepensesGeneral">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    @for (var anneesIndex = 0; anneesIndex < Model.list_recapsMoyenne.Count(); anneesIndex++)
+                {
+                    <th> @Model.list_recapsMoyenne[anneesIndex].Annee</th>
+            }
+                </tr>
+            </thead>
+            <tbody>
+                @for (var ligne = 0; ligne < Model.list_recapsMoyenne[0].list_Consos.Count(); ligne++)
+            {
+                <tr>
+                    <td class='tableListDepensesLib tableSsCatGeneral Fond_@Model.list_recapsMoyenne[0].list_Consos[ligne].Cat'>@Model.list_recapsMoyenne[0].list_Consos[ligne].Libelle</td>
+
+                    @for (var anneesIndex = 0; anneesIndex < Model.list_recapsMoyenne.Count(); anneesIndex++)
+                {
+                    <td class='tableListDepensesMontant tableSsCatGeneral Janvier Fond_@Model.list_recapsMoyenne[anneesIndex].list_Consos[ligne].Cat'> @Model.list_recapsMoyenne[anneesIndex].list_Consos[ligne].Montant</td>
+            }
+                </tr>
+        }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+
+
+    @if (ViewBag.MessageErreur != null)
+    {
+        @ViewBag.MessageErreur
+    }
+
+
+
+
+
+
+
+
+

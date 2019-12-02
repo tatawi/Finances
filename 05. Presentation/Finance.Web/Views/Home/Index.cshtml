@@ -1,0 +1,191 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/Chart.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Chart.bundle.min.js")"></script>
+<style>
+    .demo-card-square.mdl-card {
+        width: 320px;
+        height: 320px;
+    }
+
+    .demo-card-square.mdl-card_Big {
+        width: 640px;
+        height: 320px;
+    }
+
+    .demo-card-square > .mdl-card__title {
+        color: #fff;
+        background: bottom right 15% no-repeat #3f51b5;
+    }
+</style>
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        hideGif();
+        LoadGraphDepensesPie();
+
+        
+    });
+
+
+
+
+    // Pie Dépenses -----------------------------------------------------------------------------------------------------------------------------
+    //Calcul
+    function LoadGraphDepensesPie() {
+        var baseUrl = '@Url.Content("~/Home/GetGraphiqueCurrentDepensesPie/")';
+
+        var tab_Annees = 0;
+        var tab_Logement = 0;
+        var tab_Entreprise = 0;
+        var tab_Alimentaire = 0;
+        var tab_Voiture = 0;
+        var tab_Transport = 0;
+        var tab_Loisirs = 0;
+        var tab_Voyage = 0;
+        var tab_Cadeaux = 0;
+        var tab_Vetements = 0;
+        var tab_Sante = 0;
+        var tab_Impots = 0;
+        var tab_Frais = 0;
+        var tab_Emprunt = 0;
+
+        $.getJSON(baseUrl, function (result) {
+            $.each(result, function (index, itemData) {
+                tab_Annees=(itemData.Annee);
+                tab_Logement=(itemData.Logement);
+                tab_Alimentaire=(itemData.Alimentaire);
+                tab_Voiture=(itemData.Voiture);
+                tab_Transport=(itemData.Transport);
+                tab_Loisirs=(itemData.Loisirs);
+                tab_Voyage=(itemData.Voyage);
+                tab_Cadeaux=(itemData.Cadeaux);
+                tab_Achats=(itemData.Achats);
+                tab_Vetements=(itemData.Vetements);
+                tab_Sante=(itemData.Sante);
+                tab_Impots=(itemData.Impots);
+                tab_Frais=(itemData.Frais);
+                tab_Emprunt=(itemData.Emprunt);
+            });
+
+
+            DisplayTableDepensesPie(tab_Annees, tab_Logement, tab_Alimentaire, tab_Voiture, tab_Transport, tab_Loisirs, tab_Voyage, tab_Cadeaux, tab_Achats, tab_Vetements, tab_Sante, tab_Impots, tab_Frais, tab_Emprunt);
+        });
+    }
+
+    //Affichage
+    function DisplayTableDepensesPie(tab_Annees, tab_Logement, tab_Alimentaire, tab_Voiture, tab_Transport, tab_Loisirs, tab_Voyage, tab_Cadeaux, tab_Achats, tab_Vetements, tab_Sante, tab_Impots, tab_Frais, tab_Emprunt){
+        var graphName = 'ch_DepensesPie';
+        var ctx = document.getElementById(graphName).getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [
+                        tab_Logement, tab_Alimentaire, tab_Voiture, tab_Transport, tab_Loisirs, tab_Voyage, tab_Cadeaux, tab_Achats, tab_Vetements, tab_Sante, tab_Impots, tab_Frais, tab_Emprunt,
+                    ],
+                    backgroundColor: ['#9FA8DA', '#CE93D8', '#B0BEC5', '#616161', '#FFAB91', '#A5D6A7', '#B2EBF2', '#BCAAA4', '#AFB42B', '#FFF59D', '#EF9A9A', '#F8BBD0', '#E1BEE7',],
+                    label: 'Dataset 1'
+                }],
+                labels: [
+                    'Logement', 'Alimentaire', 'Voiture', 'Transport',
+                    'Loisirs', 'Voyage', 'Cadeaux', 'Achats',
+                    'Vétements', 'Santé', 'Impôts', 'Frais Bancaires',
+                    'Emprunt'
+                ]
+
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'left',
+                },
+
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        });
+    }
+
+
+
+
+</script>
+
+
+
+
+<div class="jumbotron">
+    <h1 id="titre" class="display-4">Gestion des comptes</h1><hr />
+    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+
+</div>
+
+
+
+
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="demo-card-square mdl-card mdl-shadow--2dp">
+
+            <div class="mdl-card__title mdl-card--expand">
+                <h2 class="mdl-card__title-text">Pouet</h2>
+            </div>
+
+            <div class="mdl-card__supporting-text">
+                Je suis une tuile inutile
+            </div>
+
+            <div class="mdl-card__actions mdl-card--border">
+                <button class="mdl-button mdl-js-button mdl-button--primary" onclick="alert('Pouet !')">
+                    Click me !
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div class="col-md-6">
+        <center>
+            <div class="demo-card-square mdl-card_Big mdl-shadow--2dp">
+                <div style="width:100%">
+                    <canvas id="ch_DepensesPie"></canvas>
+                </div>
+            </div>
+        </center>
+    </div>
+
+
+
+
+
+
+    <div class="col-md-3">
+        <div class="demo-card-square mdl-card mdl-shadow--2dp">
+
+            <div class="FondCarte">
+                <h2 class="mdl-card__title-text">Chiffres</h2>
+            </div>
+
+            <div id="main_chiffres" class="mdl-card__supporting-text">
+
+            </div>
+
+            <div  class="mdl-card__actions mdl-card--border">
+                <span>Solde du mois : </span><br />
+                <input id="main_chiffres_bar" class="mdl-slider mdl-js-slider decallageSlider" type="range" min="0" max="100" value="25" tabindex="0">
+            </div>
+
+        </div>
+    </div>
+</div>

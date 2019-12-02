@@ -1,0 +1,78 @@
+﻿
+
+
+
+
+
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/Chart.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Chart.bundle.min.js")"></script>
+
+<script>
+
+    var _isGraphsGenerauxCharge = 0;
+    var _isGraphsAnnuelsCharge = 0;
+
+     $(document).ready(function () {
+        
+        ChangeOnglet('t_GraphsGeneraux', 'c_GraphsGeneraux');
+
+    });
+
+
+    //ChangeOnglet
+    function ChangeOnglet(onglet, contenu) {
+        document.getElementById('c_GraphsGeneraux').style.display = 'none';
+        document.getElementById('c_GraphsAnnuels').style.display = 'none';
+        document.getElementById(contenu).style.display = 'block';
+
+        document.getElementById('t_GraphsGeneraux').className = '';
+        document.getElementById('t_GraphsAnnuels').className = '';
+        document.getElementById(onglet).className = 'active';
+
+
+        if (onglet == 't_GraphsGeneraux' && _isGraphsGenerauxCharge != 1) {
+            var url = '@Url.Action("GraphGeneraux", "Consolidation")';
+            _isGraphsGenerauxCharge = 1;
+            $('#c_GraphsGeneraux').load(url); 
+        }
+
+        if (onglet == 't_GraphsAnnuels' && _isGraphsAnnuelsCharge != 1) {
+            var url = '@Url.Action("GraphAnnuels", "Consolidation")';
+            _isGraphsAnnuelsCharge = 1;
+            $('#c_GraphsAnnuels').load(url); 
+        }
+    }
+
+</script>
+
+
+
+
+
+<!--TITRE-->
+<div>
+    <h1 class="display-4">Graphiques</h1><hr />
+</div>
+
+
+<div class="tabbed_area">
+
+    <!--onglets-->
+    <ul class="tabs">
+        <li><a href="javascript:ChangeOnglet('t_GraphsGeneraux', 'c_GraphsGeneraux');" id="t_GraphsGeneraux" class="active">Graphiques généraux</a></li>
+        <li><a href="javascript:ChangeOnglet('t_GraphsAnnuels', 'c_GraphsAnnuels');" id="t_GraphsAnnuels">Graphiques annuels</a></li>
+    </ul>
+
+    <!--Généraux-->
+    <div id="c_GraphsGeneraux" class="content">
+
+    </div>
+
+
+    <!--Annuels-->
+    <div id="c_GraphsAnnuels" class="content">
+
+    </div>
+
+</div>

@@ -1,0 +1,86 @@
+﻿
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+        RefreshEpargneTotal();
+
+    });
+
+
+    function RefreshEpargneTotal() {
+        var baseUrl = '@Url.Content("~/Epargne/GetMontantEpargneTotal/")';
+        var tab_Date = new Array();
+        var tab_Epargne = new Array();
+        var tab_Appt = new Array();
+        var tab_Total = new Array();
+
+        $.getJSON(baseUrl, function (result) {
+                $.each(result, function (index, itemData) {
+                    var Annee = itemData.AnneeStr;
+                    var MontantTotalEpargne = itemData.MontantTotalEpargne;
+                    var MontantAppartement = itemData.MontantAppartement;
+                    var Total = itemData.Total;
+
+                    tab_Date.push(Annee);
+                    tab_Epargne.push(MontantTotalEpargne);
+                    tab_Appt.push(MontantAppartement);
+                    tab_Total.push(Total);
+                });
+
+                DisplayGraphEpargneTotal(tab_Date, tab_Epargne, tab_Appt, tab_Total);
+        });
+    };
+
+
+     function DisplayGraphEpargneTotal(tab_Date, tab_Epargne, tab_Appt, tab_Total) {
+        var ctx = document.getElementById("ch_EpargneTotal").getContext('2d');
+
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                labels: tab_Date,
+                datasets: [
+                    { label: "Epargne Totale", fill: false, borderColor: '#E1BEE7', data: tab_Epargne, },
+                    { label: "Valeur Appartement", fill: false, borderColor: '#CDDC39', data: tab_Appt, },
+                    { label: "Total", fill: false, borderColor: '#4CAF50', data: tab_Total, }
+                ]
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+    }
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Evolution -->
+
+<h4 class="col-sm-12 titre-bloc">Evolution</h4>
+<div class="sous-partie">
+
+
+    <canvas width="300" height="100" id="ch_EpargneTotal"></canvas>
+
+    <div class="row">
+        <div class="col-sm-4">
+
+        </div>
+    </div>
+</div>

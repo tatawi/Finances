@@ -1,0 +1,694 @@
+﻿body {
+
+    padding-bottom: 20px;
+}
+
+.colorWhite {
+    color: #ffffff;
+}
+
+.colorWhite:hover {
+        color: #ffffff;
+    }
+
+
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 100%;
+}
+
+
+th {
+    background-color: #3e3e3e;
+    color: white !important;
+}
+
+
+
+select {
+    font-family: inherit;
+    background-color: transparent;
+    width: 100%;
+    padding: 4px 0;
+    font-size: 16px;
+    border: none;
+    border-bottom: 1px solid;
+}
+
+.mdl-selectfield label {
+    display: none;
+}
+/* Use custom arrow */
+.mdl-selectfield select {
+    appearance: none
+}
+
+.mdl-selectfield {
+    font-family: 'Roboto','Helvetica','Arial',sans-serif;
+    position: relative;
+   
+   
+    
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    border-radius: 0;
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%;
+}
+
+
+
+/* Modal Content */
+.modal-contentShort {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 20%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+.SousCatPopUpSelect {
+    color: #ff4081
+}
+
+.SousCatPopUpUnselect {
+    color: #3f51c5
+}
+
+.littleTitle {
+    color: #3f51b5;
+    font-size: 85%;
+    font-weight: bold;
+}
+
+.colorLogement {
+    color: #2980b9;
+}
+
+.colorAlimentaire {
+    color: #673AB7;
+}
+
+.colorVoiture {
+    color: #607D8B;
+}
+
+.colorTransport {
+    color: #424242;
+}
+
+.colorLoisirs {
+    color: #FF9800;
+}
+
+.colorVoyages {
+    color: #4CAF50;
+}
+
+.colorCadeaux {
+    color: #00BCD4;
+}
+
+.colorAchats {
+    color: #795548;
+}
+
+.colorVetements {
+    color: #4e342e;
+}
+
+.colorSante {
+    color: #f1c40f;
+}
+
+.colorImpots {
+    color: #F44336;
+}
+
+.colorFraisBancaires {
+    color: #FF4081;
+}
+
+.colorEmprunts {
+    color: #ce93d8;
+}
+
+.colorRevenus {
+    color: #8BC34A;
+}
+
+.Fond_Logement {
+    background-color: #2980b9;
+    background: rgba(41,128,185,0.5);
+}
+
+.Fond_Alimentaire {
+    background-color: #673AB7;
+    background: rgba(103,58,183,0.5);
+}
+
+.Fond_Voiture {
+    background-color: #607D8B;
+    background: rgba(96,125,139,0.5);
+}
+
+.Fond_Transport {
+    background-color: #424242;
+    background: rgba(66,66,66,0.5);
+}
+
+.Fond_Loisirs {
+    background-color: #FF9800;
+    background: rgba(255,152,0,0.5);
+}
+
+.Fond_Voyages {
+    background-color: #4CAF50;
+    background: rgba(76,175,80,0.5);
+}
+
+.Fond_Cadeaux {
+    background-color: #00BCD4;
+    background: rgba(0,188,212,0.5);
+}
+
+.Fond_Achats {
+    background-color: #795548;
+    background: rgba(121,85,72,0.5);
+}
+
+.Fond_Vetements {
+    background-color: #4e342e;
+    background: rgba(78,52,46,0.5);
+}
+
+.Fond_Sante {
+    background-color: #f1c40f;
+    background: rgba(241,196,15,0.5);
+}
+
+.Fond_Impots {
+    background-color: #F44336;
+    background: rgba(244,67,54,0.5);
+}
+
+.Fond_FraisBancaires {
+    background-color: #FF4081;
+    background: rgba(255,64,129,0.5);
+}
+
+.Fond_Emprunts {
+    background-color: #ce93d8;
+    background: rgba(206,147,216,0.5);
+}
+
+.Fond_Revenus {
+    background-color: #8BC34A;
+    background: rgba(139,195,74,0.5);
+}
+
+.Fond_TOTALdépenses {
+    background-color: #424242;
+    background: rgba(66,66,66,0.5);
+}
+
+.Fond_ImpotsTOTAUX {
+    background-color: #c4352b;
+    background: rgba(196,53,43,0.5);
+}
+
+.FondTransparent_Logement {
+    background-color: #2980b9;
+    background: rgba(41,128,185,0.2);
+}
+
+.FondTransparent_Alimentaire {
+    background-color: #673AB7;
+    background: rgba(103,58,183,0.2);
+}
+
+.FondTransparent_Voiture {
+    background-color: #607D8B;
+    background: rgba(96,125,139,0.2);
+}
+
+.FondTransparent_Transport {
+    background-color: #424242;
+    background: rgba(66,66,66,0.2);
+}
+
+.FondTransparent_Loisirs {
+    background-color: #FF9800;
+    background: rgba(255,152,0,0.2);
+}
+
+.FondTransparent_Voyages {
+    background-color: #4CAF50;
+    background: rgba(76,175,80,0.2);
+}
+
+.FondTransparent_Cadeaux {
+    background-color: #00BCD4;
+    background: rgba(0,188,212,0.2);
+}
+
+.FondTransparent_Achats {
+    background-color: #795548;
+    background: rgba(121,85,72,0.2);
+}
+
+.FondTransparent_Vetements {
+    background-color: #4e342e;
+    background: rgba(78,52,46,0.2);
+}
+
+.FondTransparent_Sante {
+    background-color: #f1c40f;
+    background: rgba(241,196,15,0.2);
+}
+
+.FondTransparent_Impots {
+    background-color: #F44336;
+    background: rgba(244,67,54,0.2);
+}
+
+.FondTransparent_FraisBancaires {
+    background-color: #FF4081;
+    background: rgba(255,64,129,0.2);
+}
+
+.FondTransparent_Emprunts {
+    background-color: #ce93d8;
+    background: rgba(206,147,216,0.2);
+}
+
+.FondTransparent_Revenus {
+    background-color: #8BC34A;
+    background: rgba(139,195,74,0.2);
+}
+
+
+.tableCat {
+    font-size: 100% !important;
+    font-weight: bold !important;
+    height: 15px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 15px;
+    padding-right: 15px;
+    text-align: left;
+}
+
+.tableSsCat {
+    font-size: 12px !important;
+    font-weight: normal !important;
+    height: 15px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
+    text-align: left;
+}
+
+.tableListDepenses {
+    border: 1px solid #ddd;
+}
+
+.tableListDepenses th, td {
+    border-bottom: 1px solid #ddd;
+}
+
+
+    .tableListDepenses th {
+        font-size: 85%;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 15px;
+        padding-right: 15px;
+        text-align: left;
+    }
+
+.tableListDepensesLib {
+    width: 150px;
+}
+
+.tableListDepensesMontant {
+    width: 100px;
+}
+
+
+.tableListDepenses tr:hover {
+    background-color: #f5f5f5;
+}
+
+
+
+/*-------------------------------------------------*/
+
+.tableListDepensesGeneral {
+    border: 1px solid #ddd;
+}
+
+    .tableListDepensesGeneral th, td {
+        border-bottom: 1px solid #ddd;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+
+    .tableListDepensesGeneral th {
+        padding-top:8px;
+        padding-bottom: 8px;
+        padding-left: 15px;
+        padding-right: 15px;
+        text-align: left;
+    }
+
+.tableListDepensesGeneralLib {
+    width: 150px;
+}
+
+.tableListDepensesGeneralMontant {
+    width: 120px;
+}
+
+
+.tableListDepensesGeneral tr:hover {
+    background-color: #f5f5f5;
+}
+
+.tableSsCatGeneral {
+    font-size: 14px !important;
+    font-weight: normal !important;
+    height: 18px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 15px;
+    padding-right: 15px;
+    text-align: left;
+}
+
+/*-------------------------------------------------*/
+
+.PositionRight {
+    position: fixed;
+    z-index: 998;
+    left: 96%;
+    top: 80px;
+    text-align: right;
+}
+
+.messageErreur {
+    background: #e6464d;
+    color: white;
+}
+
+
+.messageFlottant {
+    position: fixed;
+    z-index: 999;
+    top: 80px;
+    right: 1em;
+    background: #2c9151;
+    color: white;
+    padding: 8px;
+}
+
+.gifLoading {
+
+    position: fixed;
+    z-index: 1100;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100px; /* Need a specific value to work */
+    padding-top: 300px;
+    /*padding-bottom: 80%;*/
+    /*background-color: rgba(0, 0, 255, 0.5);*/
+}
+
+
+.FondGif {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    right: 0;
+    top:0;
+    width: 100%;
+    height: 100%;
+}
+
+
+/*----ONGLETS-----------------------------------------------------------------------------------------------------------*/
+.tabbed_area {
+    /*border: 1px solid #494e52;
+    background-color: #636d76;*/
+    padding: 8px;
+}
+
+ul.tabs {
+    margin: 0px;
+    padding: 0px;
+    margin-top: 5px;
+    margin-bottom: 6px;
+}
+
+ul.tabs li {
+    list-style: none;
+    display: inline;
+}
+
+    ul.tabs li a {
+        background-color: #ffffff;
+        color: #3f51b5;
+        padding: 8px 14px 8px 14px;
+        text-decoration: none;
+        font-size: 14px;
+        text-transform: uppercase;
+
+    }
+
+ul.tabs li a:hover {
+    border-color: #3f51b5;
+}
+
+ul.tabs li a.active {
+    background-color: #3f51b5;
+    color: #ffffff;
+    }
+
+.content {
+    background-color: #ffffff;
+    padding: 10px;
+    border-top: 1px solid #3f51b5;
+}
+
+
+#content_2, #content_3, #content_4, #content_5 {
+    display: none;
+}
+
+
+
+
+
+ul.sSTabs {
+    margin: 0px;
+    padding: 0px;
+    margin-top: 5px;
+    margin-bottom: 6px;
+}
+
+    ul.sSTabs li {
+        list-style: none;
+        display: inline;
+    }
+
+        ul.sSTabs li a {
+            background-color: #ffffff;
+            color: #3f51b5;
+            padding: 8px 14px 8px 14px;
+            text-decoration: none;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+            ul.sSTabs li a:hover {
+                border-color: #3f51b5;
+            }
+
+            ul.sSTabs li a.active {
+                background-color: #3f51b5;
+                color: #ffffff;
+            }
+
+.ssContent {
+    background-color: #ffffff;
+    padding: 10px;
+    border-top: 1px solid #3f51b5;
+}
+
+#ssContent_0, #ssContent_1, #ssContent_2, #ssContent_3, #ssContent4, #ssContent_5, #ssContent_6, #ssContent_7, #ssContent_8, #ssContent_9 {
+    display: none;
+}
+
+
+
+#contentGen_2, #contentGen_3 {
+    display: none;
+}
+
+.blueBackGround {
+    background-color :#3f51b5
+}
+
+.blueBackGround li:hover {
+    background-color: #3f51b5
+}
+
+
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #3f51b5;
+    color: white;
+    min-width: 180px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+
+
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+
+
+
+.FondCarte {
+    color: #fff;
+    height: 57%;
+    background: bottom right 15% no-repeat #ff4081;
+}
+
+.FondCarte h2 {
+    padding-left: 5%;
+    padding-top: 41%;
+}
+
+.decallageSlider {
+    padding-top: 10px;
+}
+
+pre {
+    font-family: inherit;
+    padding: 0 0 0 0;
+    margin-bottom: 0;
+    margin-top :5px;
+}
+
+.GreenText {
+    color: #8BC34A;
+}
+.RedText {
+    color: #E91E63;
+}
+
+
+.valeur {
+    color: #797979;
+}
+
+.row {
+    
+}
+
+
+.titre-bloc {
+    font-size: 18px;
+    font-weight: 300;
+    position: relative;
+    clear: both;
+    padding: 5px 10px;
+    color: white;
+    border: 1px solid #4b4b4b;
+    background: #3e3e3e;
+}
+
+.sous-partie {
+    font-family: 'Roboto', Arial, sans-serif;
+    font-size: 16px;
+    position: relative;
+    top: -10px;
+    padding: 15px;
+    border: 1px solid #3e3e3e;
+    border-radius: 0;
+}
+
+.hidden {
+    visibility: hidden;
+}

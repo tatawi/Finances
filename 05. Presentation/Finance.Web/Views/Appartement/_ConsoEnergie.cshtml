@@ -1,0 +1,144 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        GetDonneesConsoEnergie();
+
+    });
+
+
+
+     //Get Donnees Conso Elec ANNEE
+    function GetDonneesConsoEnergie() {
+        var baseUrl = '@Url.Content("~/Appartement/GetDonneesConsoEnergie/")';
+        var tab_Annee = new Array();
+        var tab_ConsoChauffage = new Array();
+        var tab_ConsoEau= new Array();
+        var tab_ConsoElec = new Array();
+        var tab_ConsoTotale = new Array();
+
+
+        $('#tb_consoEnergie > tbody').empty();
+
+        $.ajax({
+            url: baseUrl, type: "POST", async: true, dataType: "json",
+            success: function (result) {
+                $.each(result, function (index, itemData) {
+                    var Annee = itemData.Annee;
+                    var ConsoChauffage = itemData.ConsoChauffage;
+                    var ConsoEau = itemData.ConsoEau;
+                    var ConsoElec = itemData.ConsoElec;
+                    var ConsoTotale = itemData.ConsoTotale;
+                   
+                    tab_Annee.push(Annee);
+                    tab_ConsoChauffage.push(ConsoChauffage);
+                    tab_ConsoEau.push(ConsoEau);
+                    tab_ConsoElec.push(ConsoElec);
+                    tab_ConsoTotale.push(ConsoTotale);
+
+                    var row = "<tr>";
+                    row += "<td><strong>" + Annee + "</strong></td>";
+                    if (ConsoChauffage != 0) {
+                        row += "<td>" + Math.trunc(ConsoChauffage) + " kWh</td>";
+                    }
+                    else {
+                        row += "<td><center> - </center></td>";
+                    }
+
+                    if (ConsoEau != 0) {
+                        row += "<td>" + Math.trunc(ConsoEau) + " kWh</td>";
+                    }
+                    else {
+                        row += "<td><center> - </center></td>";
+                    }
+
+                    if (ConsoElec != 0) {
+                        row += "<td>" + Math.trunc(ConsoElec) + " kWh</td>";
+                    }
+                    else {
+                        row += "<td><center> - </center></td>";
+                    }
+
+                    if (ConsoTotale != 0) {
+                        row += "<td><strong>" + Math.trunc(ConsoTotale) + " kWh</strong></td>";
+                    }
+                    else {
+                        row += "<td><center><strong> - </strong></center></td>";
+                    }
+                        
+                    row += "</tr>";
+
+                    $('#tb_consoEnergie > tbody').append(row);
+                    
+                });
+            },
+            fail: function () {
+
+            },
+            complete: function () {
+                var graph = document.getElementById("ch_ConsoEnergie").getContext('2d');
+                DisplayGraphConsoEnergie(graph, tab_Annee, tab_ConsoChauffage, tab_ConsoEau, tab_ConsoElec, tab_ConsoTotale);
+            }
+        });
+
+    };
+
+    //DisplayGraphConsoEauTotal
+    function DisplayGraphConsoEnergie (chart, tab_Annee, tab_ConsoChauffage, tab_ConsoEau, tab_ConsoElec, tab_ConsoTotale) {
+        //var ctx = document.getElementById("ch_ConsoElec").getContext('2d');
+        var chart = new Chart(chart, {
+            // The type of chart we want to create
+            type: 'line',
+            // The data for our dataset
+            data: {
+                labels: tab_Annee,
+                datasets: [
+                    { label: "Chauffage (gaz)", borderDash: [5, 5], borderColor: '#d43333', data: tab_ConsoChauffage, },
+                    { label: "Eau (gaz)", borderDash: [5, 5], borderColor: '#9C27B0', data: tab_ConsoEau, },
+                    { label: "Electricité", borderDash: [5,5], borderColor: '#00BCD4', data: tab_ConsoElec, },
+                    { label: "Total", borderColor: '#FF5722', data: tab_ConsoTotale }
+                ]
+            },
+
+            // Configuration options go here
+            options: {
+                responsive: true,
+                hoverMode:'index',
+                
+            }
+        });
+
+    }
+
+</script >
+
+
+
+<h4 class="col-sm-12 titre-bloc">Evolution</h4>
+<div class="sous-partie">
+    <div class="row">
+
+        <!-- -->
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+            <canvas id="ch_ConsoEnergie"></canvas>
+            <center>
+                <table id="tb_consoEnergie" class="mdl-data-table mdl-js-data-table">
+                    <thead>
+                        <tr>
+                            <th>Année</th>
+                            <th>Chauffage (gaz)</th>
+                            <th>Eau (gaz)</th>
+                            <th>Electricité</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+
+                </table>
+            </center>
+        </div>
+        <div class="col-sm-2"></div>
+
+    </div>
+</div><br />

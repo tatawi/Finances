@@ -1,0 +1,273 @@
+﻿@model ViewModels.Consolidation.GraphiquesAnnuelsVM
+
+<script>
+
+
+    var IS_GRAPH_2013_CHARGE = false;
+    var IS_GRAPH_2014_CHARGE = false;
+    var IS_GRAPH_2015_CHARGE = false;
+    var IS_GRAPH_2016_CHARGE = false;
+    var IS_GRAPH_2017_CHARGE = false;
+    var IS_GRAPH_2018_CHARGE = false;
+    var IS_GRAPH_2019_CHARGE = false;
+
+
+    $(document).ready(function () {
+        ChangeSsOnglet('ssTab_6', 'ssContent_6', 6);
+    });
+
+
+    //ChangeSsOnglet
+    function ChangeSsOnglet(onglet, contenu, numOnglet) {
+        
+        var anneeDebut = '@Model.AnneeDebut';
+        var nbAnnee = parseInt('@Model.nbAnnees');
+        var anneeOnglet = @Model.AnneeDebut + numOnglet;
+
+        for (var i = 0; i <= nbAnnee; i++) {
+            var content = 'ssContent_' + i;
+            var tabs = 'ssTab_' + i;
+            document.getElementById(content).style.display = 'none';
+            document.getElementById(tabs).className = '';
+        }
+        document.getElementById(contenu).style.display = 'block';
+        document.getElementById(onglet).className = 'active';
+
+        if (numOnglet > 0) {
+            if (anneeOnglet == 2013 && !IS_GRAPH_2013_CHARGE) {
+                LoadGraphRevenusPie(anneeOnglet); LoadGraphDepensesPie(anneeOnglet);
+                IS_GRAPH_2013_CHARGE = true;
+            }
+            if (anneeOnglet == 2014 && !IS_GRAPH_2014_CHARGE) {
+                LoadGraphRevenusPie(anneeOnglet); LoadGraphDepensesPie(anneeOnglet);
+                IS_GRAPH_2014_CHARGE = true;
+            }
+            if (anneeOnglet == 2015 && !IS_GRAPH_2015_CHARGE) {
+                LoadGraphRevenusPie(anneeOnglet); LoadGraphDepensesPie(anneeOnglet);
+                IS_GRAPH_2015_CHARGE = true;
+            }
+            if (anneeOnglet == 2016 && !IS_GRAPH_2016_CHARGE) {
+                LoadGraphRevenusPie(anneeOnglet); LoadGraphDepensesPie(anneeOnglet);
+                IS_GRAPH_2016_CHARGE = true;
+            }
+            if (anneeOnglet == 2017 && !IS_GRAPH_2017_CHARGE) {
+                LoadGraphRevenusPie(anneeOnglet); LoadGraphDepensesPie(anneeOnglet);
+                IS_GRAPH_2017_CHARGE = true;
+            }
+            if (anneeOnglet == 2018 && !IS_GRAPH_2018_CHARGE) {
+                LoadGraphRevenusPie(anneeOnglet); LoadGraphDepensesPie(anneeOnglet);
+                IS_GRAPH_2018_CHARGE = true;
+            }
+            if (anneeOnglet == 2019 && !IS_GRAPH_2019_CHARGE) {
+                LoadGraphRevenusPie(anneeOnglet); LoadGraphDepensesPie(anneeOnglet);
+                IS_GRAPH_2019_CHARGE = true;
+            }  
+        }
+    }
+
+    // Pie Revenus -----------------------------------------------------------------------------------------------------------------------------
+    //Chargement
+    function LoadGraphRevenusPie(annee) {
+        var baseUrl = '@Url.Content("~/Consolidation/GetGraphiqueRevenusPie/")';
+
+        var tab_Annees = 0;
+        var tab_Salaire = 0;
+        var tab_Entreprise = 0;
+        var tab_Aides = 0;
+        var tab_Interets = 0;
+        var tab_Vente = 0;
+        var tab_AirBnb = 0;
+        var tab_Cadeaux = 0;
+
+        $.getJSON(baseUrl, { Annee: annee}, function (result) {
+            $.each(result, function (index, itemData) {
+                tab_Annees=(itemData.Annee);
+                tab_Salaire=(itemData.Salaire);
+                tab_Entreprise=(itemData.Entreprise);
+                tab_Aides=(itemData.Aides);
+                tab_Interets=(itemData.Interets);
+                tab_Vente=(itemData.Vente);
+                tab_AirBnb=(itemData.Airbnb);
+                tab_Cadeaux=(itemData.Cadeaux);
+            });
+
+            DisplayTableRevenusPie(annee, tab_Annees, tab_Salaire, tab_Entreprise, tab_Aides, tab_Interets, tab_Vente, tab_AirBnb, tab_Cadeaux);
+        });
+    }
+
+    //Affichage
+    function DisplayTableRevenusPie(annee, tbAnnees, tab_Salaire, tab_Entreprise, tab_Aides, tab_Interets, tab_Vente, tab_AirBnb, tab_Cadeaux) {
+        var graphName = 'ch_RevenusPie-' + annee;
+        var ctx = document.getElementById(graphName).getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [
+                        tab_Salaire,
+                        tab_Entreprise,
+                        tab_Aides,
+                        tab_Interets,
+                        tab_Vente,
+                        tab_AirBnb,
+                        tab_Cadeaux,
+                    ],
+                    backgroundColor: ['#81C784', '#AED581', '#A5D6A7', '#4DB6AC', '#C5E1A5', '#DCE775', '#80CBC4',],
+                    label: 'Dataset 1'
+                }],
+                labels: [
+                    'Salaire',
+                    'Entreprise',
+                    'Aides',
+                    'Intêrets',
+                    'Vente', 'Airbnb', 'Cadeaux'
+                ]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'top',
+                },
+
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        });
+
+
+    }
+
+
+    // Pie Dépenses -----------------------------------------------------------------------------------------------------------------------------
+    //Chargement
+    function LoadGraphDepensesPie(annee) {
+        var baseUrl = '@Url.Content("~/Consolidation/GetGraphiqueDepensesPie/")';
+
+        var tab_Annees = 0;
+        var tab_Logement = 0;
+        var tab_Entreprise = 0;
+        var tab_Alimentaire = 0;
+        var tab_Voiture = 0;
+        var tab_Transport = 0;
+        var tab_Loisirs = 0;
+        var tab_Voyage = 0;
+        var tab_Cadeaux = 0;
+        var tab_Vetements = 0;
+        var tab_Sante = 0;
+        var tab_Impots = 0;
+        var tab_Frais = 0;
+        var tab_Emprunt = 0;
+
+        $.getJSON(baseUrl, { Annee: annee}, function (result) {
+            $.each(result, function (index, itemData) {
+                tab_Annees=(itemData.Annee);
+                tab_Logement=(itemData.Logement);
+                tab_Alimentaire=(itemData.Alimentaire);
+                tab_Voiture=(itemData.Voiture);
+                tab_Transport=(itemData.Transport);
+                tab_Loisirs=(itemData.Loisirs);
+                tab_Voyage=(itemData.Voyage);
+                tab_Cadeaux=(itemData.Cadeaux);
+                tab_Achats=(itemData.Achats);
+                tab_Vetements=(itemData.Vetements);
+                tab_Sante=(itemData.Sante);
+                tab_Impots=(itemData.Impots);
+                tab_Frais=(itemData.Frais);
+                tab_Emprunt=(itemData.Emprunt);
+            });
+
+
+            DisplayTableDepensesPie(annee, tab_Annees, tab_Logement, tab_Alimentaire, tab_Voiture, tab_Transport, tab_Loisirs, tab_Voyage, tab_Cadeaux, tab_Achats, tab_Vetements, tab_Sante, tab_Impots, tab_Frais, tab_Emprunt);
+        });
+    }
+
+    //Affichage
+    function DisplayTableDepensesPie(annee, tab_Annees, tab_Logement, tab_Alimentaire, tab_Voiture, tab_Transport, tab_Loisirs, tab_Voyage, tab_Cadeaux, tab_Achats, tab_Vetements, tab_Sante, tab_Impots, tab_Frais, tab_Emprunt){
+        var graphName = 'ch_DepensesPie-' + annee;
+        var ctx = document.getElementById(graphName).getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [
+                        tab_Logement, tab_Alimentaire, tab_Voiture, tab_Transport, tab_Loisirs, tab_Voyage, tab_Cadeaux, tab_Achats, tab_Vetements, tab_Sante, tab_Impots, tab_Frais, tab_Emprunt,
+                    ],
+                    backgroundColor: ['#9FA8DA', '#CE93D8', '#B0BEC5', '#616161', '#FFAB91', '#A5D6A7', '#B2EBF2', '#BCAAA4', '#AFB42B', '#FFF59D', '#EF9A9A', '#F8BBD0', '#E1BEE7',],
+                    label: 'Dataset 1'
+                }],
+                labels: [
+                    'Logement', 'Alimentaire', 'Voiture', 'Transport',
+                    'Loisirs', 'Voyage', 'Cadeaux', 'Achats',
+                    'Vétements', 'Santé', 'Impôts', 'Frais Bancaires',
+                    'Emprunt'
+                ]
+                
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'top',
+                },
+
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        });
+
+
+    }
+
+
+    
+</script>
+
+
+
+<br />
+
+<!--Pour chaques années-->
+<div class="tabbed_area">
+
+    <!--Sous onglets-->
+    <ul class="tabs">
+        @for (int i = 0; i <= Model.nbAnnees; i++)
+        {
+            int an = Model.AnneeDebut + i;
+            <li><a href="javascript:ChangeSsOnglet('ssTab_@i', 'ssContent_@i', @i);" id="ssTab_@i" class="active">@an</a></li>
+        }
+    </ul>
+
+    <!--Pour chaque année-->
+    @for (int i = 0; i <= Model.nbAnnees; i++)
+    {
+        int annee = Model.AnneeDebut + i;
+
+        <div id="ssContent_@i" class="content">
+            <div class="row">
+
+                <!--Pie Revenus-->
+                <div class="col-sm-6">
+                    <div style="width:100%">
+                        <center><h3>Revenus @annee</h3></center>
+                        <canvas id="ch_RevenusPie-@annee"></canvas>
+                    </div>
+                </div>
+
+                <!--Pie Dépenses-->
+                <div class="col-sm-6">
+
+                    <div style="width:100%">
+                        <center><h3>Dépenses @annee</h3></center>
+                        <canvas id="ch_DepensesPie-@annee"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+
+</div>
