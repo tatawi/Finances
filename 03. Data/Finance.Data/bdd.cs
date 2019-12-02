@@ -12,8 +12,8 @@ namespace Finance.Data.bdd
 
         public bdd()
         {
-            this.connectionString = @"Data Source=LT-SOD00005718\MSSQLSERVER2014;Initial Catalog=Finance;User Id=sa;Password=N3tapsys;MultipleActiveResultSets=True;Application Name=EntityFramework";
-            //this.connectionString = "Server = tcp:tatabdd.database.windows.net,1433; Initial Catalog = Finance; Persist Security Info = False; User ID=tatawi; Password =azure1452.Pouet; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 30;";
+            this.connectionString = @"Data Source=LT-SOD00005718\MSSQLSERVER2014;Initial Catalog=Finance;User Id=sa;Password=*****;MultipleActiveResultSets=True;Application Name=EntityFramework";
+            
         }
 
     }
