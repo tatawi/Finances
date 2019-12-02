@@ -1,0 +1,278 @@
+packages/popper.js.1.12.9/popper.js.1.12.9.nupkg
+packages/popper.js.1.12.9/content/Scripts/umd/popper.min.js.map
+packages/popper.js.1.12.9/content/Scripts/umd/popper.min.js
+packages/popper.js.1.12.9/content/Scripts/umd/popper.js.map
+packages/popper.js.1.12.9/content/Scripts/umd/popper.js
+packages/popper.js.1.12.9/content/Scripts/umd/popper-utils.min.js.map
+packages/popper.js.1.12.9/content/Scripts/umd/popper-utils.min.js
+packages/popper.js.1.12.9/content/Scripts/umd/popper-utils.js.map
+packages/popper.js.1.12.9/content/Scripts/umd/popper-utils.js
+packages/popper.js.1.12.9/content/Scripts/popper.min.js.map
+packages/popper.js.1.12.9/content/Scripts/popper.min.js
+packages/popper.js.1.12.9/content/Scripts/popper.js.map
+packages/popper.js.1.12.9/content/Scripts/popper.js
+packages/popper.js.1.12.9/content/Scripts/popper-utils.min.js.map
+packages/popper.js.1.12.9/content/Scripts/popper-utils.min.js
+packages/popper.js.1.12.9/content/Scripts/popper-utils.js.map
+packages/popper.js.1.12.9/content/Scripts/popper-utils.js
+packages/popper.js.1.12.9/content/Scripts/index.d.ts
+packages/popper.js.1.12.9/content/Scripts/esm/popper.min.js.map
+packages/popper.js.1.12.9/content/Scripts/esm/popper.min.js
+packages/popper.js.1.12.9/content/Scripts/esm/popper.js.map
+packages/popper.js.1.12.9/content/Scripts/esm/popper.js
+packages/popper.js.1.12.9/content/Scripts/esm/popper-utils.min.js.map
+packages/popper.js.1.12.9/content/Scripts/esm/popper-utils.min.js
+packages/popper.js.1.12.9/content/Scripts/esm/popper-utils.js.map
+packages/popper.js.1.12.9/content/Scripts/esm/popper-utils.js
+packages/popper.js.1.12.9/content/Scripts/README.md
+packages/jQuery.Validation.1.17.0/jQuery.Validation.1.17.0.nupkg
+packages/jQuery.Validation.1.17.0/Content/Scripts/jquery.validate.min.js
+packages/jQuery.Validation.1.17.0/Content/Scripts/jquery.validate.js
+packages/jQuery.Validation.1.17.0/Content/Scripts/jquery.validate-vsdoc.js
+packages/jQuery.3.3.1/jQuery.3.3.1.nupkg
+packages/jQuery.3.3.1/Tools/uninstall.ps1
+packages/jQuery.3.3.1/Tools/jquery-3.3.1.intellisense.js
+packages/jQuery.3.3.1/Tools/install.ps1
+packages/jQuery.3.3.1/Tools/common.ps1
+packages/jQuery.3.3.1/Content/Scripts/jquery-3.3.1.slim.min.map
+packages/jQuery.3.3.1/Content/Scripts/jquery-3.3.1.slim.min.js
+packages/jQuery.3.3.1/Content/Scripts/jquery-3.3.1.slim.js
+packages/jQuery.3.3.1/Content/Scripts/jquery-3.3.1.min.map
+packages/jQuery.3.3.1/Content/Scripts/jquery-3.3.1.min.js
+packages/jQuery.3.3.1/Content/Scripts/jquery-3.3.1.js
+packages/jQuery.3.3.1/Content/Scripts/jquery-3.3.1-vsdoc.js
+packages/bootstrap.4.0.0/content/Scripts/bootstrap.min.js.map
+packages/bootstrap.4.0.0/content/Scripts/bootstrap.min.js
+packages/bootstrap.4.0.0/content/Scripts/bootstrap.js.map
+packages/bootstrap.4.0.0/content/Scripts/bootstrap.js
+packages/bootstrap.4.0.0/content/Scripts/bootstrap.bundle.min.js.map
+packages/bootstrap.4.0.0/content/Scripts/bootstrap.bundle.min.js
+packages/bootstrap.4.0.0/content/Scripts/bootstrap.bundle.js.map
+packages/bootstrap.4.0.0/content/Scripts/bootstrap.bundle.js
+packages/bootstrap.4.0.0/content/Content/bootstrap.min.css.map
+packages/bootstrap.4.0.0/content/Content/bootstrap.min.css
+packages/bootstrap.4.0.0/content/Content/bootstrap.css.map
+packages/bootstrap.4.0.0/content/Content/bootstrap.css
+packages/bootstrap.4.0.0/content/Content/bootstrap-reboot.min.css.map
+packages/bootstrap.4.0.0/content/Content/bootstrap-reboot.min.css
+packages/bootstrap.4.0.0/content/Content/bootstrap-reboot.css.map
+packages/bootstrap.4.0.0/content/Content/bootstrap-reboot.css
+packages/bootstrap.4.0.0/content/Content/bootstrap-grid.min.css.map
+packages/bootstrap.4.0.0/content/Content/bootstrap-grid.min.css
+packages/bootstrap.4.0.0/content/Content/bootstrap-grid.css.map
+packages/bootstrap.4.0.0/content/Content/bootstrap-grid.css
+packages/bootstrap.4.0.0/bootstrap.4.0.0.nupkg
+packages/WebGrease.1.6.0/WebGrease.1.6.0.nupkg
+packages/System.Diagnostics.DiagnosticSource.4.4.0/version.txt
+packages/System.Diagnostics.DiagnosticSource.4.4.0/useSharedDesignerContext.txt
+packages/System.Diagnostics.DiagnosticSource.4.4.0/ref/netcoreapp2.0/_._
+packages/System.Diagnostics.DiagnosticSource.4.4.0/lib/portable-net45+win8+wpa81/System.Diagnostics.DiagnosticSource.xml
+packages/System.Diagnostics.DiagnosticSource.4.4.0/lib/netstandard1.3/System.Diagnostics.DiagnosticSource.xml
+packages/System.Diagnostics.DiagnosticSource.4.4.0/lib/netstandard1.1/System.Diagnostics.DiagnosticSource.xml
+packages/System.Diagnostics.DiagnosticSource.4.4.0/lib/netcoreapp2.0/_._
+packages/System.Diagnostics.DiagnosticSource.4.4.0/lib/net46/System.Diagnostics.DiagnosticSource.xml
+packages/System.Diagnostics.DiagnosticSource.4.4.0/lib/net45/System.Diagnostics.DiagnosticSource.xml
+packages/System.Diagnostics.DiagnosticSource.4.4.0/THIRD-PARTY-NOTICES.TXT
+packages/System.Diagnostics.DiagnosticSource.4.4.0/System.Diagnostics.DiagnosticSource.4.4.0.nupkg
+packages/System.Diagnostics.DiagnosticSource.4.4.0/LICENSE.TXT
+packages/Respond.1.4.2/content/Scripts/respond.min.js
+packages/Respond.1.4.2/content/Scripts/respond.matchmedia.addListener.min.js
+packages/Respond.1.4.2/content/Scripts/respond.matchmedia.addListener.js
+packages/Respond.1.4.2/content/Scripts/respond.js
+packages/Respond.1.4.2/Respond.1.4.2.nupkg
+packages/Newtonsoft.Json.11.0.1/lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.xml
+packages/Newtonsoft.Json.11.0.1/lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.xml
+packages/Newtonsoft.Json.11.0.1/lib/netstandard2.0/Newtonsoft.Json.xml
+packages/Newtonsoft.Json.11.0.1/lib/netstandard1.3/Newtonsoft.Json.xml
+packages/Newtonsoft.Json.11.0.1/lib/netstandard1.0/Newtonsoft.Json.xml
+packages/Newtonsoft.Json.11.0.1/lib/net45/Newtonsoft.Json.xml
+packages/Newtonsoft.Json.11.0.1/lib/net40/Newtonsoft.Json.xml
+packages/Newtonsoft.Json.11.0.1/lib/net35/Newtonsoft.Json.xml
+packages/Newtonsoft.Json.11.0.1/lib/net20/Newtonsoft.Json.xml
+packages/Newtonsoft.Json.11.0.1/Newtonsoft.Json.11.0.1.nupkg
+packages/Newtonsoft.Json.11.0.1/LICENSE.md
+packages/Modernizr.2.8.3/Tools/uninstall.ps1
+packages/Modernizr.2.8.3/Tools/install.ps1
+packages/Modernizr.2.8.3/Tools/common.ps1
+packages/Modernizr.2.8.3/Modernizr.2.8.3.nupkg
+packages/Modernizr.2.8.3/Content/Scripts/modernizr-2.8.3.js
+packages/Microsoft.jQuery.Unobtrusive.Validation.3.2.4/Microsoft.jQuery.Unobtrusive.Validation.3.2.4.nupkg
+packages/Microsoft.jQuery.Unobtrusive.Validation.3.2.4/Content/Scripts/jquery.validate.unobtrusive.min.js
+packages/Microsoft.jQuery.Unobtrusive.Validation.3.2.4/Content/Scripts/jquery.validate.unobtrusive.js
+packages/Microsoft.Web.Infrastructure.1.0.0.0/Microsoft.Web.Infrastructure.1.0.0.0.nupkg
+packages/Microsoft.Web.Infrastructure.1.0.0.0/.signature.p7s
+packages/Microsoft.Net.Compilers.2.6.1/tools/vbc.rsp
+packages/Microsoft.Net.Compilers.2.6.1/tools/vbc.exe.config
+packages/Microsoft.Net.Compilers.2.6.1/tools/csi.rsp
+packages/Microsoft.Net.Compilers.2.6.1/tools/csi.exe.config
+packages/Microsoft.Net.Compilers.2.6.1/tools/csc.rsp
+packages/Microsoft.Net.Compilers.2.6.1/tools/csc.exe.config
+packages/Microsoft.Net.Compilers.2.6.1/tools/VBCSCompiler.exe.config
+packages/Microsoft.Net.Compilers.2.6.1/tools/Microsoft.VisualBasic.Core.targets
+packages/Microsoft.Net.Compilers.2.6.1/tools/Microsoft.CSharp.Core.targets
+packages/Microsoft.Net.Compilers.2.6.1/build/Microsoft.Net.Compilers.props
+packages/Microsoft.Net.Compilers.2.6.1/ThirdPartyNotices.rtf
+packages/Microsoft.Net.Compilers.2.6.1/Microsoft.Net.Compilers.2.6.1.nupkg
+packages/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8/tools/net45/uninstall.ps1
+packages/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8/tools/net45/install.ps1
+packages/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8/lib/net45/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+packages/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8/content/net46/web.config.uninstall.xdt
+packages/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8/content/net46/web.config.install.xdt
+packages/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8/content/net45/web.config.uninstall.xdt
+packages/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8/content/net45/web.config.install.xdt
+packages/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8/build/net45/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props
+packages/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8.nupkg
+packages/Microsoft.AspNet.WebPages.fr.3.2.7/lib/net45/fr/system.web.webpages.xml
+packages/Microsoft.AspNet.WebPages.fr.3.2.7/lib/net45/fr/system.web.webpages.razor.xml
+packages/Microsoft.AspNet.WebPages.fr.3.2.7/lib/net45/fr/system.web.webpages.deployment.xml
+packages/Microsoft.AspNet.WebPages.fr.3.2.7/lib/net45/fr/system.web.helpers.xml
+packages/Microsoft.AspNet.WebPages.fr.3.2.7/Microsoft.AspNet.WebPages.fr.3.2.7.nupkg
+packages/Microsoft.AspNet.WebPages.fr.3.2.7/.signature.p7s
+packages/Microsoft.AspNet.WebPages.3.2.7/lib/net45/fr/system.web.webpages.xml
+packages/Microsoft.AspNet.WebPages.3.2.7/lib/net45/fr/system.web.webpages.razor.xml
+packages/Microsoft.AspNet.WebPages.3.2.7/lib/net45/fr/system.web.webpages.deployment.xml
+packages/Microsoft.AspNet.WebPages.3.2.7/lib/net45/fr/system.web.helpers.xml
+packages/Microsoft.AspNet.WebPages.3.2.7/lib/net45/System.Web.WebPages.xml
+packages/Microsoft.AspNet.WebPages.3.2.7/lib/net45/System.Web.WebPages.Razor.xml
+packages/Microsoft.AspNet.WebPages.3.2.7/lib/net45/System.Web.WebPages.Deployment.xml
+packages/Microsoft.AspNet.WebPages.3.2.7/lib/net45/System.Web.Helpers.xml
+packages/Microsoft.AspNet.WebPages.3.2.7/Microsoft.AspNet.WebPages.3.2.7.nupkg
+packages/Microsoft.AspNet.WebPages.3.2.7/Content/Web.config.uninstall.xdt
+packages/Microsoft.AspNet.WebPages.3.2.7/Content/Web.config.install.xdt
+packages/Microsoft.AspNet.WebPages.3.2.7/.signature.p7s
+packages/Microsoft.AspNet.Web.Optimization.fr.1.1.3/Microsoft.AspNet.Web.Optimization.fr.1.1.3.nupkg
+packages/Microsoft.AspNet.Web.Optimization.fr.1.1.3/.signature.p7s
+packages/Microsoft.AspNet.Web.Optimization.1.1.3/lib/net40/system.web.optimization.xml
+packages/Microsoft.AspNet.Web.Optimization.1.1.3/Microsoft.AspNet.Web.Optimization.1.1.3.nupkg
+packages/Microsoft.AspNet.Web.Optimization.1.1.3/.signature.p7s
+packages/Microsoft.AspNet.TelemetryCorrelation.1.0.0/lib/net45/Microsoft.AspNet.TelemetryCorrelation.xml
+packages/Microsoft.AspNet.TelemetryCorrelation.1.0.0/content/net45/web.config.uninstall.xdt
+packages/Microsoft.AspNet.TelemetryCorrelation.1.0.0/content/net45/web.config.install.xdt
+packages/Microsoft.AspNet.TelemetryCorrelation.1.0.0/Microsoft.AspNet.TelemetryCorrelation.1.0.0.nupkg
+packages/Microsoft.AspNet.Razor.fr.3.2.7/lib/net45/fr/system.web.razor.xml
+packages/Microsoft.AspNet.Razor.fr.3.2.7/Microsoft.AspNet.Razor.fr.3.2.7.nupkg
+packages/Microsoft.AspNet.Razor.fr.3.2.7/.signature.p7s
+packages/Microsoft.AspNet.Razor.3.2.7/lib/net45/fr/system.web.razor.xml
+packages/Microsoft.AspNet.Razor.3.2.7/lib/net45/System.Web.Razor.xml
+packages/Microsoft.AspNet.Razor.3.2.7/Microsoft.AspNet.Razor.3.2.7.nupkg
+packages/Microsoft.AspNet.Razor.3.2.7/.signature.p7s
+packages/Microsoft.AspNet.Mvc.fr.5.2.7/lib/net45/fr/System.Web.Mvc.xml
+packages/Microsoft.AspNet.Mvc.fr.5.2.7/Microsoft.AspNet.Mvc.fr.5.2.7.nupkg
+packages/Microsoft.AspNet.Mvc.fr.5.2.7/.signature.p7s
+packages/Microsoft.AspNet.Mvc.5.2.7/lib/net45/fr/System.Web.Mvc.xml
+packages/Microsoft.AspNet.Mvc.5.2.7/lib/net45/System.Web.Mvc.xml
+packages/Microsoft.AspNet.Mvc.5.2.7/Microsoft.AspNet.Mvc.5.2.7.nupkg
+packages/Microsoft.AspNet.Mvc.5.2.7/Content/Web.config.uninstall.xdt
+packages/Microsoft.AspNet.Mvc.5.2.7/Content/Web.config.install.xdt
+packages/Microsoft.AspNet.Mvc.5.2.7/.signature.p7s
+packages/Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.5.1/content/ApplicationInsights.config.uninstall.xdt
+packages/Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.5.1/content/ApplicationInsights.config.transform
+packages/Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.5.1/content/ApplicationInsights.config.install.xdt
+packages/Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.5.1/Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.5.1.nupkg
+packages/Microsoft.ApplicationInsights.WindowsServer.2.5.1/lib/net45/Microsoft.AI.WindowsServer.XML
+packages/Microsoft.ApplicationInsights.WindowsServer.2.5.1/content/ApplicationInsights.config.uninstall.xdt
+packages/Microsoft.ApplicationInsights.WindowsServer.2.5.1/content/ApplicationInsights.config.transform
+packages/Microsoft.ApplicationInsights.WindowsServer.2.5.1/content/ApplicationInsights.config.install.xdt
+packages/Microsoft.ApplicationInsights.WindowsServer.2.5.1/Tools/install.ps1
+packages/Microsoft.ApplicationInsights.WindowsServer.2.5.1/Microsoft.ApplicationInsights.WindowsServer.2.5.1.nupkg
+packages/Microsoft.ApplicationInsights.Web.2.5.1/lib/net45/Microsoft.AI.Web.XML
+packages/Microsoft.ApplicationInsights.Web.2.5.1/content/net45/web.config.uninstall.xdt
+packages/Microsoft.ApplicationInsights.Web.2.5.1/content/net45/web.config.install.xdt
+packages/Microsoft.ApplicationInsights.Web.2.5.1/content/net45/ApplicationInsights.config.uninstall.xdt
+packages/Microsoft.ApplicationInsights.Web.2.5.1/content/net45/ApplicationInsights.config.transform
+packages/Microsoft.ApplicationInsights.Web.2.5.1/content/net45/ApplicationInsights.config.install.xdt
+packages/Microsoft.ApplicationInsights.Web.2.5.1/Microsoft.ApplicationInsights.Web.2.5.1.nupkg
+packages/Microsoft.ApplicationInsights.PerfCounterCollector.2.5.1/lib/netstandard1.6/Microsoft.AI.PerfCounterCollector.xml
+packages/Microsoft.ApplicationInsights.PerfCounterCollector.2.5.1/content/ApplicationInsights.config.uninstall.xdt
+packages/Microsoft.ApplicationInsights.PerfCounterCollector.2.5.1/content/ApplicationInsights.config.transform
+packages/Microsoft.ApplicationInsights.PerfCounterCollector.2.5.1/content/ApplicationInsights.config.install.xdt
+packages/Microsoft.ApplicationInsights.PerfCounterCollector.2.5.1/Microsoft.ApplicationInsights.PerfCounterCollector.2.5.1.nupkg
+packages/Microsoft.ApplicationInsights.DependencyCollector.2.5.1/lib/netstandard1.6/Microsoft.AI.DependencyCollector.xml
+packages/Microsoft.ApplicationInsights.DependencyCollector.2.5.1/lib/net45/Microsoft.AI.DependencyCollector.XML
+packages/Microsoft.ApplicationInsights.DependencyCollector.2.5.1/content/ApplicationInsights.config.uninstall.xdt
+packages/Microsoft.ApplicationInsights.DependencyCollector.2.5.1/content/ApplicationInsights.config.transform
+packages/Microsoft.ApplicationInsights.DependencyCollector.2.5.1/content/ApplicationInsights.config.install.xdt
+packages/Microsoft.ApplicationInsights.DependencyCollector.2.5.1/Microsoft.ApplicationInsights.DependencyCollector.2.5.1.nupkg
+packages/Microsoft.ApplicationInsights.Agent.Intercept.2.4.0/Microsoft.ApplicationInsights.Agent.Intercept.2.4.0.nupkg
+packages/Microsoft.ApplicationInsights.2.5.1/Microsoft.ApplicationInsights.2.5.1.nupkg
+packages/Antlr.3.5.0.2/Antlr.3.5.0.2.nupkg
+05. Presentation/Finance.Web/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+05. Presentation/Finance.Web/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+05. Presentation/Finance.Web/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+05. Presentation/Finance.Web/obj/Debug/Finance.Web.csproj.FileListAbsolute.txt
+05. Presentation/Finance.Web/obj/Debug/Finance.Web.csproj.CopyComplete
+05. Presentation/Finance.Web/bin/roslyn/vbc.rsp
+05. Presentation/Finance.Web/bin/roslyn/vbc.exe.config
+05. Presentation/Finance.Web/bin/roslyn/csi.rsp
+05. Presentation/Finance.Web/bin/roslyn/csi.exe.config
+05. Presentation/Finance.Web/bin/roslyn/csc.rsp
+05. Presentation/Finance.Web/bin/roslyn/csc.exe.config
+05. Presentation/Finance.Web/bin/roslyn/VBCSCompiler.exe.config
+05. Presentation/Finance.Web/bin/roslyn/Microsoft.VisualBasic.Core.targets
+05. Presentation/Finance.Web/bin/roslyn/Microsoft.CSharp.Core.targets
+05. Presentation/Finance.Web/bin/System.Web.WebPages.xml
+05. Presentation/Finance.Web/bin/System.Web.WebPages.Razor.xml
+05. Presentation/Finance.Web/bin/System.Web.WebPages.Deployment.xml
+05. Presentation/Finance.Web/bin/System.Web.Razor.xml
+05. Presentation/Finance.Web/bin/System.Web.Optimization.xml
+05. Presentation/Finance.Web/bin/System.Web.Mvc.xml
+05. Presentation/Finance.Web/bin/System.Web.Helpers.xml
+05. Presentation/Finance.Web/bin/System.Diagnostics.DiagnosticSource.xml
+05. Presentation/Finance.Web/bin/Newtonsoft.Json.xml
+05. Presentation/Finance.Web/bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+05. Presentation/Finance.Web/bin/Microsoft.AspNet.TelemetryCorrelation.xml
+05. Presentation/Finance.Web/bin/Microsoft.AI.WindowsServer.xml
+05. Presentation/Finance.Web/bin/Microsoft.AI.Web.xml
+05. Presentation/Finance.Web/bin/Microsoft.AI.DependencyCollector.xml
+05. Presentation/Finance.Web/bin/Finance.dll.config
+05. Presentation/Finance.Web/bin/ApplicationInsights.config
+04. Business/ViewModels/obj/Debug/ViewModels.csproj.FileListAbsolute.txt
+04. Business/ViewModels/obj/Debug/ViewModels.csproj.CopyComplete
+04. Business/ViewModels/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+04. Business/ViewModels/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+04. Business/ViewModels/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+04. Business/ViewModels/bin/Debug/System.Web.WebPages.xml
+04. Business/ViewModels/bin/Debug/System.Web.WebPages.Razor.xml
+04. Business/ViewModels/bin/Debug/System.Web.WebPages.Deployment.xml
+04. Business/ViewModels/bin/Debug/System.Web.Razor.xml
+04. Business/ViewModels/bin/Debug/System.Web.Mvc.xml
+04. Business/ViewModels/bin/Debug/System.Web.Helpers.xml
+04. Business/Finance.Helpers/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+04. Business/Finance.Helpers/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+04. Business/Finance.Helpers/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+04. Business/Finance.Helpers/obj/Debug/Finance.Helpers.csproj.FileListAbsolute.txt
+04. Business/Finance.Business/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+04. Business/Finance.Business/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+04. Business/Finance.Business/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+04. Business/Finance.Business/obj/Debug/Finance.Business.csproj.FileListAbsolute.txt
+04. Business/Finance.Business/obj/Debug/Finance.Business.csproj.CopyComplete
+04. Business/Finance.Business/bin/Debug/System.Web.WebPages.xml
+04. Business/Finance.Business/bin/Debug/System.Web.WebPages.Razor.xml
+04. Business/Finance.Business/bin/Debug/System.Web.WebPages.Deployment.xml
+04. Business/Finance.Business/bin/Debug/System.Web.Razor.xml
+04. Business/Finance.Business/bin/Debug/System.Web.Mvc.xml
+04. Business/Finance.Business/bin/Debug/System.Web.Helpers.xml
+04. Business/Finance.Business.Interface/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+04. Business/Finance.Business.Interface/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+04. Business/Finance.Business.Interface/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+04. Business/Finance.Business.Interface/obj/Debug/Finance.Business.Interface.csproj.FileListAbsolute.txt
+04. Business/Finance.Business.Interface/obj/Debug/Finance.Business.Interface.csproj.CopyComplete
+04. Business/Finance.Business.Interface/bin/Debug/System.Web.WebPages.xml
+04. Business/Finance.Business.Interface/bin/Debug/System.Web.WebPages.Razor.xml
+04. Business/Finance.Business.Interface/bin/Debug/System.Web.WebPages.Deployment.xml
+04. Business/Finance.Business.Interface/bin/Debug/System.Web.Razor.xml
+04. Business/Finance.Business.Interface/bin/Debug/System.Web.Mvc.xml
+04. Business/Finance.Business.Interface/bin/Debug/System.Web.Helpers.xml
+03. Data/Finance.Poco/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+03. Data/Finance.Poco/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+03. Data/Finance.Poco/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+03. Data/Finance.Poco/obj/Debug/Finance.Poco.csproj.FileListAbsolute.txt
+03. Data/Finance.Data/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+03. Data/Finance.Data/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+03. Data/Finance.Data/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+03. Data/Finance.Data/obj/Debug/Finance.Data.csproj.FileListAbsolute.txt
+03. Data/Finance.Data/obj/Debug/Finance.Data.csproj.CopyComplete
+.vs/Finance/v15/Server/sqlite3/storage.ide-wal
+.vs/Finance/v15/Server/sqlite3/storage.ide-shm
+.vs/Finance/v15/Server/sqlite3/storage.ide
+.vs/Finance/v15/Server/sqlite3/db.lock
