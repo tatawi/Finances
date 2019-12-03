@@ -19,10 +19,10 @@ namespace Finance.Business.Services
         {
             string password = Convert.ToBase64String(Encoding.UTF8.GetBytes(vm.mdp));
 
-            if (vm.Utilisateur== "Maxime" && password == "MTQ1Mi5Qb3VldA==")
+            if (vm.Utilisateur== "Maxime" && password == "dfg==")
                 return true;
 
-            if (vm.Utilisateur == "Test" && password == "dGVzdA==")
+            if (vm.Utilisateur == "Test" && password == "dfg==")
                 return true;
 
             return false;

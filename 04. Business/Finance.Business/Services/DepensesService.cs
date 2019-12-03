@@ -203,7 +203,23 @@ namespace Finance.Business.Services
                     //Montant
                     parcours++;
                     val += " | " + split[parcours];
-                    dep.Montant = System.Convert.ToDecimal(split[parcours]);
+                    var montant = split[parcours];
+                    montant = montant.Replace(",", ".");
+                    decimal result;
+                    if (Decimal.TryParse(montant, out result))
+                    {
+                        // dep.Montant = System.Convert.ToDecimal(split[parcours]);
+                        dep.Montant = result;
+                    }
+                    else if(Decimal.TryParse(split[parcours], out result))
+                    {
+                        dep.Montant = result;
+                    }
+                    else
+                    {
+                        dep.Montant = 0;
+                    }
+                    
 
                     if (!_DepensesManager.IsDepensePresenteByDateAndLib(dep,vm.user, vm.compte))
                     {
