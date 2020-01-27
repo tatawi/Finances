@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using Finance.Attributes;
 using Finance.Business.Interface.Services;
 using Finance.Business.Services;
 using ViewModels.Consommation;
@@ -8,7 +9,7 @@ using ViewModels.Consommation;
 
 namespace Finance.Controllers
 {
-    [Authorize]
+    [ApplicationAuthorize]
     public class AppartementController : Controller
     {
         private IAppartementService _AppartementService { get; set; }
@@ -52,7 +53,7 @@ namespace Finance.Controllers
         // GET (AJAX) - Chargement du tableau de valeur de l'appartement
         public JsonResult GetListValeursAppartement()
         {
-            var list_Conso = _AppartementService.GetAllListValeursAppartement(User.Identity.Name);
+            var list_Conso = _AppartementService.GetAllListValeursAppartement();
             var result = new List<object>();
             foreach (var info in list_Conso)
             {
@@ -80,11 +81,10 @@ namespace Finance.Controllers
         {
             try
             {
-                //bdd_InfosAppt = new bdd_InfosAppartement(User.Identity.Name);
                 decimal montant = Convert.ToDecimal(Request.Params["paramMontant"]);
                 string source = Convert.ToString(Request.Params["paramSource"]);
 
-                _AppartementService.AjouterEstimationAppartement(source, montant, User.Identity.Name);
+                _AppartementService.AjouterEstimationAppartement(source, montant);
 
                 TempData["messageAjouter"] = "Ajout effectué";
             }
@@ -109,7 +109,7 @@ namespace Finance.Controllers
         public JsonResult GetDonneesConsoEnergie()
         {
             var result = new List<object>();
-            var listConso = _ConsoEnergieService.GetConsoEnergie(User.Identity.Name);
+            var listConso = _ConsoEnergieService.GetConsoEnergie();
 
             foreach (var c in listConso)
             {
@@ -140,7 +140,7 @@ namespace Finance.Controllers
         public JsonResult GetDonneesConsoElec()
         {
             var result = new List<object>();
-            var listConso = _ConsoElecService.GetAllConsosElec(User.Identity.Name);
+            var listConso = _ConsoElecService.GetAllConsosElec();
 
             foreach (var c in listConso)
             {
@@ -158,7 +158,7 @@ namespace Finance.Controllers
         public JsonResult GetDonneesConsoElecAnnee(int annee)
         {
             var result = new List<object>();
-            var conso = _ConsoElecService.GetConsoElecAnnee(annee, User.Identity.Name);
+            var conso = _ConsoElecService.GetConsoElecAnnee(annee);
 
             foreach (var c in conso.listeConsoMois)
             {
@@ -180,7 +180,7 @@ namespace Finance.Controllers
         {
             bool success = false;
             if (vm.Annee != 0)
-                success = _ConsoElecService.PostConsommationAnnee(vm, User.Identity.Name);
+                success = _ConsoElecService.PostConsommationAnnee(vm);
 
             if (success)
                 TempData["messageAjoutConsoEau"] = "Ajout effectué";

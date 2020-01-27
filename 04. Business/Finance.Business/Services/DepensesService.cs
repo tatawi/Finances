@@ -45,15 +45,15 @@ namespace Finance.Business.Services
 
         #region dépenses unitaires
         //Récupére la liste des dépenses du mois
-        public List<Depense> GetAllDepensesMois(int annee, int mois, string user, bool isForPerso)
+        public List<Depense> GetAllDepensesMois(int annee, int mois, bool isForPerso)
         {
-            return _DepensesManager.GetAllDepensesMois(annee, mois, user, isForPerso);
+            return _DepensesManager.GetAllDepensesMois(annee, mois, isForPerso);
         }
 
         //récupére la liste des dépenses du mois pour une catégorie
-        public List<Depense> GetAllDepensesMoisForCat(int annee, int mois, string cat, string user, bool isForPerso)
+        public List<Depense> GetAllDepensesMoisForCat(int annee, int mois, string cat, bool isForPerso)
         {
-            return _DepensesManager.GetAllDepensesMois(annee, mois, user, isForPerso);
+            return _DepensesManager.GetAllDepensesMois(annee, mois, isForPerso);
         }
 
         //Ajout d'une dépense
@@ -73,8 +73,24 @@ namespace Finance.Business.Services
 
             if(vm.MontantStr != null && vm.MontantStr != "")
             {
-                vm.MontantStr = vm.MontantStr.Replace(".", ",");
-                vm.Montant = decimal.Parse(vm.MontantStr);
+                decimal result;
+
+                if(decimal.TryParse(vm.MontantStr, out result))
+                {
+                    vm.Montant = result;
+                }
+                else if (decimal.TryParse(vm.MontantStr.Replace(".", ","), out result))
+                {
+                    vm.Montant = result;
+                }
+                else if (decimal.TryParse(vm.MontantStr.Replace(",", "."), out result))
+                {
+                    vm.Montant = result;
+                }
+                else
+                {
+                    return;
+                }
             }
 
             Depense dep = new Depense()
@@ -93,15 +109,15 @@ namespace Finance.Business.Services
             //    dep.Libelle = dep.Categorie + " " + dep.SousCategorie;
             //}
 
-            _DepensesManager.AjouterDepenseUnitaire(dep, vm.user, vm.compte);
+            _DepensesManager.AjouterDepenseUnitaire(dep, vm.compte);
         }
 
         //Ajoute une liste de dépenses en base
-        public void AjouterDepensesMasse(List<Depense> listDepenses, string user, bool isForPerso)
+        public void AjouterDepensesMasse(List<Depense> listDepenses, bool isForPerso)
         {
             foreach (Depense dep in listDepenses)
             {
-                _DepensesManager.AjouterDepenseUnitaire(dep, user, isForPerso);
+                _DepensesManager.AjouterDepenseUnitaire(dep, isForPerso);
             }
             
         }
@@ -113,7 +129,7 @@ namespace Finance.Business.Services
         }
 
         //Dupliquer dépenses vers perso
-        public string DupliquerDepensesCommunesVersPerso(int annee, int mois, string user)
+        public string DupliquerDepensesCommunesVersPerso(int annee, int mois)
         {
             //bdd_Depense = new Bdd_Depense(User.Identity.Name, this.isComptePerso());
             List<Depense> list_DepenseCommunes = new List<Depense>();
@@ -121,12 +137,12 @@ namespace Finance.Business.Services
             int nbDoublons = 0;
 
 
-            list_DepenseCommunes = _DepensesManager.GetAllDepensesMois(annee, mois, user, false);
+            list_DepenseCommunes = _DepensesManager.GetAllDepensesMois(annee, mois, false);
             int nbTotal = list_DepenseCommunes.Count;
 
             foreach (Depense dep in list_DepenseCommunes)
             {
-                bool isDepensePresent = _DepensesManager.IsDepensePresente(dep, user, true);
+                bool isDepensePresent = _DepensesManager.IsDepensePresente(dep, true);
                 if (!isDepensePresent)
                 {
                     Depense newDep = new Depense();
@@ -138,7 +154,7 @@ namespace Finance.Business.Services
                     newDep.Montant = dep.Montant / 2;
 
 
-                    _DepensesManager.AjouterDepenseUnitaire(newDep, user, true);
+                    _DepensesManager.AjouterDepenseUnitaire(newDep, true);
                     nbTraites++;
                 }
                 else
@@ -221,7 +237,7 @@ namespace Finance.Business.Services
                     }
                     
 
-                    if (!_DepensesManager.IsDepensePresenteByDateAndLib(dep,vm.user, vm.compte))
+                    if (!_DepensesManager.IsDepensePresenteByDateAndLib(dep, vm.compte))
                     {
                         //Maj dépense
                         dep = this._CategorieDepenseManager.RenseignerCategoriesDepense(dep);

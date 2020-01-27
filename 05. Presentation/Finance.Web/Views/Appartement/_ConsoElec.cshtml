@@ -26,7 +26,7 @@
 
 
     //Get Donnees Conso Elec TOTALE
-    function GetDonneesConsoElec() {
+     function GetDonneesConsoElec() {
         var baseUrl = '@Url.Content("~/Appartement/GetDonneesConsoElec/")';
         var tab_Annee = new Array();
         var tab_Conso= new Array();
@@ -105,7 +105,7 @@
     };
 
     //Get Donnees Conso Elec ANNEE pour POP UP
-     function GetDonneesConsoElecAnneePopUp() {
+    function GetDonneesConsoElecAnneePopUp() {
         var baseUrl = '@Url.Content("~/Appartement/GetDonneesConsoElecAnnee/")';
         var an = parseInt($("#chp_consoElec_Annee").val());
         var mois = 1;

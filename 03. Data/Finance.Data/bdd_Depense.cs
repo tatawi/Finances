@@ -13,14 +13,13 @@ namespace Finance.Data.bdd
 {
     public class Bdd_Depense : bdd
     {
-        public string userName;
+        public int userId;
         public string compte;
 
 
-        public Bdd_Depense(string paramUserName, bool paramComptePerso)
+        public Bdd_Depense(int UtilisateurId, bool paramComptePerso)
         {
-            //this.connectionString = ConfigurationManager.ConnectionStrings["FinanceConnection"].ConnectionString;
-            this.userName = paramUserName;
+            this.userId = UtilisateurId;
             this.compte = paramComptePerso ? "perso" : "commun";
         }
 
@@ -29,9 +28,9 @@ namespace Finance.Data.bdd
 
         }
 
-        public void setUser(string user)
+        public void setUser (int UtilisateurId)
         {
-            this.userName = user;
+            this.userId = UtilisateurId;
         }
 
         public void setCompte(bool isCptPerso)
@@ -77,14 +76,14 @@ namespace Finance.Data.bdd
         public List<Depense>get_DepensesMois(int annnee, int mois)
         {
             List<Depense> list_depenses = new List<Depense>();
-            string sql = "SELECT DepenseId, Montant, Date, Libelle, Categorie, SousCategorie, Reconductible FROM Depense WHERE  UserName = @paramUser AND compte = @paramCompte AND YEAR(Date) = @paramAnnee AND MONTH(Date)= @paramMois ";
+            string sql = "SELECT DepenseId, Montant, Date, Libelle, Categorie, SousCategorie, Reconductible FROM Depense WHERE  UtilisateurId = @paramUserId AND compte = @paramCompte AND YEAR(Date) = @paramAnnee AND MONTH(Date)= @paramMois ";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("paramUser", this.userName);
+                    cmd.Parameters.AddWithValue("paramUserId", this.userId);
                     cmd.Parameters.AddWithValue("paramCompte", this.compte);
                     cmd.Parameters.AddWithValue("paramAnnee", annnee);
                     cmd.Parameters.AddWithValue("paramMois", mois);
@@ -115,14 +114,14 @@ namespace Finance.Data.bdd
         public List<Depense> get_DepensesMoisByCat(int annnee, int mois, string cat)
         {
             List<Depense> list_depenses = new List<Depense>();
-            string sql = "SELECT DepenseId, Montant, Date, Libelle, Categorie, SousCategorie, Reconductible FROM Depense WHERE UserName = @paramUser AND compte = @paramCompte AND Categorie = @paramCat AND YEAR(Date) = @paramAnnee AND MONTH(Date)= @paramMois";
+            string sql = "SELECT DepenseId, Montant, Date, Libelle, Categorie, SousCategorie, Reconductible FROM Depense WHERE UtilisateurId = @paramUserId AND compte = @paramCompte AND Categorie = @paramCat AND YEAR(Date) = @paramAnnee AND MONTH(Date)= @paramMois";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("paramUser", this.userName);
+                    cmd.Parameters.AddWithValue("paramUserId", this.userId);
                     cmd.Parameters.AddWithValue("paramCompte", this.compte);
                     cmd.Parameters.AddWithValue("paramAnnee", annnee);
                     cmd.Parameters.AddWithValue("paramMois", mois);
@@ -154,14 +153,14 @@ namespace Finance.Data.bdd
         public List<Depense> get_DepensesMoisBySousCat(int annnee, int mois, string sousCat)
         {
             List<Depense> list_depenses = new List<Depense>();
-            string sql = "SELECT DepenseId, Montant, Date, Libelle, Categorie, SousCategorie, Reconductible FROM Depense WHERE UserName = @paramUser AND compte = @paramCompte AND SousCategorie = @paramSsCat AND YEAR(Date)=@paramAnnee AND MONTH(Date)=@paramMois";
+            string sql = "SELECT DepenseId, Montant, Date, Libelle, Categorie, SousCategorie, Reconductible FROM Depense WHERE UtilisateurId = @paramUserId AND compte = @paramCompte AND SousCategorie = @paramSsCat AND YEAR(Date)=@paramAnnee AND MONTH(Date)=@paramMois";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("paramUser", this.userName);
+                    cmd.Parameters.AddWithValue("paramUserId", this.userId);
                     cmd.Parameters.AddWithValue("paramCompte", this.compte);
                     cmd.Parameters.AddWithValue("paramAnnee", annnee);
                     cmd.Parameters.AddWithValue("paramMois", mois);
@@ -197,10 +196,10 @@ namespace Finance.Data.bdd
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                using (var cmd = new SqlCommand("SELECT Count(*) FROM Depense WHERE compte=@paramCompte AND UserName=@paramUser AND Year(Date)=@paramDateY AND Month(Date)=@paramDateM AND Libelle=@paramLibelle AND Categorie=@paramCategorie AND SousCategorie=@paramSousCategorie", conn))
+                using (var cmd = new SqlCommand("SELECT Count(*) FROM Depense WHERE compte=@paramCompte AND UtilisateurId=@paramUserId AND Year(Date)=@paramDateY AND Month(Date)=@paramDateM AND Libelle=@paramLibelle AND Categorie=@paramCategorie AND SousCategorie=@paramSousCategorie", conn))
                 {
                     cmd.Parameters.Add("@paramCompte", SqlDbType.VarChar).Value = this.compte;
-                    cmd.Parameters.Add("@paramUser", SqlDbType.VarChar).Value = this.userName;
+                    cmd.Parameters.Add("@paramUserId", SqlDbType.VarChar).Value = this.userId;
                     cmd.Parameters.AddWithValue("paramDateY", d.Date.Value.Year);
                     cmd.Parameters.AddWithValue("paramDateM", d.Date.Value.Month);
                     cmd.Parameters.AddWithValue("paramLibelle", "[Commun] " + d.Libelle);
@@ -225,10 +224,10 @@ namespace Finance.Data.bdd
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                using (var cmd = new SqlCommand("SELECT Count(*) FROM Depense WHERE compte=@paramCompte AND UserName=@paramUser AND Year(Date)=@paramDateY AND Month(Date)=@paramDateM AND Day(Date)=@paramDateD AND Libelle=@paramLibelle", conn))
+                using (var cmd = new SqlCommand("SELECT Count(*) FROM Depense WHERE compte=@paramCompte AND UtilisateurId=@paramUserId AND Year(Date)=@paramDateY AND Month(Date)=@paramDateM AND Day(Date)=@paramDateD AND Libelle=@paramLibelle", conn))
                 {
                     cmd.Parameters.Add("@paramCompte", SqlDbType.VarChar).Value = this.compte;
-                    cmd.Parameters.Add("@paramUser", SqlDbType.VarChar).Value = this.userName;
+                    cmd.Parameters.Add("@paramUserId", SqlDbType.VarChar).Value = this.userId;
                     cmd.Parameters.AddWithValue("paramDateY", d.Date.Value.Year);
                     cmd.Parameters.AddWithValue("paramDateM", d.Date.Value.Month);
                     cmd.Parameters.AddWithValue("paramDateD", d.Date.Value.Day);
@@ -252,14 +251,14 @@ namespace Finance.Data.bdd
         public decimal get_MontantCatAnnee(int annee, string cat)
         {
             decimal montant = 0;
-            string sql = "SELECT sum(Montant) FROM Depense WHERE UserName = @paramUser AND compte = @paramCompte AND Categorie = @paramCat AND YEAR(Date) = @paramAnnee";
+            string sql = "SELECT sum(Montant) FROM Depense WHERE UtilisateurId = @paramUserId AND compte = @paramCompte AND Categorie = @paramCat AND YEAR(Date) = @paramAnnee";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("paramUser", this.userName);
+                    cmd.Parameters.AddWithValue("paramUserId", this.userId);
                     cmd.Parameters.AddWithValue("paramCompte", this.compte);
                     cmd.Parameters.AddWithValue("paramAnnee", annee);
                     cmd.Parameters.AddWithValue("paramCat", cat);
@@ -286,14 +285,14 @@ namespace Finance.Data.bdd
         public decimal get_MontantCatMois(int annee, int mois, string cat)
         {
             decimal montant = 0;
-            string sql = "SELECT sum(Montant) FROM Depense WHERE UserName = @paramUser AND compte = @paramCompte AND Categorie = @paramCat AND YEAR(Date) = @paramAnnee AND MONTH(Date)= @paramMois";
+            string sql = "SELECT sum(Montant) FROM Depense WHERE UtilisateurId = @paramUserId AND compte = @paramCompte AND Categorie = @paramCat AND YEAR(Date) = @paramAnnee AND MONTH(Date)= @paramMois";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("paramUser", this.userName);
+                    cmd.Parameters.AddWithValue("paramUserId", this.userId);
                     cmd.Parameters.AddWithValue("paramCompte", this.compte);
                     cmd.Parameters.AddWithValue("paramAnnee", annee);
                     cmd.Parameters.AddWithValue("paramMois", mois);
@@ -321,14 +320,14 @@ namespace Finance.Data.bdd
         public decimal get_MontantSsCatAnnee(int annee, string ssCat)
         {
             decimal montant = 0;
-            string sql = "SELECT sum(Montant) FROM Depense WHERE UserName = @paramUser AND compte = @paramCompte AND SousCategorie = @paramSsCat AND YEAR(Date) = @paramAnnee";
+            string sql = "SELECT sum(Montant) FROM Depense WHERE UtilisateurId = @paramUserId AND compte = @paramCompte AND SousCategorie = @paramSsCat AND YEAR(Date) = @paramAnnee";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("paramUser", this.userName);
+                    cmd.Parameters.AddWithValue("paramUserId", this.userId);
                     cmd.Parameters.AddWithValue("paramCompte", this.compte);
                     cmd.Parameters.AddWithValue("paramAnnee", annee);
                     cmd.Parameters.AddWithValue("paramSsCat", ssCat);
@@ -355,14 +354,14 @@ namespace Finance.Data.bdd
         public decimal get_MontantSsCatMois(int annee, int mois, string ssCat)
         {
             decimal montant = 0;
-            string sql = "SELECT sum(Montant) FROM Depense WHERE UserName = @paramUser AND compte = @paramCompte AND SousCategorie = @paramSsCat AND YEAR(Date) = @paramAnnee AND MONTH(Date)= @paramMois";
+            string sql = "SELECT sum(Montant) FROM Depense WHERE UtilisateurId = @paramUserId AND compte = @paramCompte AND SousCategorie = @paramSsCat AND YEAR(Date) = @paramAnnee AND MONTH(Date)= @paramMois";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("paramUser", this.userName);
+                    cmd.Parameters.AddWithValue("paramUserId", this.userId);
                     cmd.Parameters.AddWithValue("paramCompte", this.compte);
                     cmd.Parameters.AddWithValue("paramAnnee", annee);
                     cmd.Parameters.AddWithValue("paramMois", mois);
@@ -399,7 +398,7 @@ namespace Finance.Data.bdd
             using (SqlConnection conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                string sql = "INSERT INTO Depense VALUES(@Montant,@Date,@Libelle,@Categorie,@SousCategorie,@Reconductible,@compte, @UserName)";
+                string sql = "INSERT INTO Depense VALUES(@Montant,@Date,@Libelle,@Categorie,@SousCategorie,@Reconductible,@compte, @UserNameId)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add("@Montant", SqlDbType.Int).Value = d.Montant;
@@ -409,7 +408,7 @@ namespace Finance.Data.bdd
                 cmd.Parameters.Add("@SousCategorie", SqlDbType.VarChar).Value = d.SousCategorie;
                 cmd.Parameters.Add("@Reconductible", SqlDbType.VarChar).Value = d.Reconductible;
                 cmd.Parameters.Add("@compte", SqlDbType.VarChar).Value = this.compte;
-                cmd.Parameters.Add("@UserName", SqlDbType.VarChar).Value = this.userName;
+                cmd.Parameters.Add("@UserNameId", SqlDbType.Int).Value = this.userId;
 
                 cmd.CommandType = CommandType.Text;
                 cmd.ExecuteNonQuery();
@@ -543,10 +542,10 @@ namespace Finance.Data.bdd
             using (SqlConnection conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                string sql = "DELETE from Depense WHERE UserName = @paramUser AND compte = @paramCompte AND YEAR(Date) = @paramAnnee AND MONTH(Date) = @paramMois AND Categorie= @paramCat AND SousCategorie = @paramSsCat";
+                string sql = "DELETE from Depense WHERE UtilisateurId = @paramUserId AND compte = @paramCompte AND YEAR(Date) = @paramAnnee AND MONTH(Date) = @paramMois AND Categorie= @paramCat AND SousCategorie = @paramSsCat";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("paramUser", this.userName);
+                cmd.Parameters.AddWithValue("paramUserId", this.userId);
                 cmd.Parameters.AddWithValue("paramCompte", this.compte);
                 cmd.Parameters.Add("@paramAnnee", SqlDbType.Int).Value = annee;
                 cmd.Parameters.Add("@paramMois", SqlDbType.Int).Value = mois;

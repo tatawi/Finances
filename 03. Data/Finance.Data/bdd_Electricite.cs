@@ -11,21 +11,21 @@ namespace Finance.Data.bdd
     public class bdd_Electricite : bdd
     {
 
-        public string userName;
+        public int utilisateurId;
 
 
         public bdd_Electricite()
         {
         }
 
-        public bdd_Electricite(string paramUserName)
+        public bdd_Electricite(int paramUserName)
         {
-            this.userName = paramUserName;
+            this.utilisateurId = paramUserName;
         }
 
-        public void setUser(string user)
+        public void setUser(int user)
         {
-            this.userName = user;
+            this.utilisateurId = user;
         }
 
 
@@ -37,14 +37,14 @@ namespace Finance.Data.bdd
         public List<Electricite> get_All()
         {
             List<Electricite> list_infos = new List<Electricite>();
-            string sql = "SELECT ElectriciteId, Montant, Consommation, Date, Description, PrixKwh FROM ConsoElectricite WHERE  UserName = @paramUser";
+            string sql = "SELECT ElectriciteId, Montant, Consommation, Date, Description, PrixKwh FROM ConsoElectricite WHERE UtilisateurId = @paramUserId";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("paramUser", this.userName);
+                    cmd.Parameters.AddWithValue("paramUserId", this.utilisateurId);
 
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -72,14 +72,14 @@ namespace Finance.Data.bdd
         public List<Electricite> get_ElectriciteForYear(int annee)
         {
             List<Electricite> list_infos = new List<Electricite>();
-            string sql = "SELECT ElectriciteId, Montant, Consommation, Date, Description, PrixKwh FROM ConsoElectricite WHERE  UserName = @paramUser AND Year(Date) = @paramDate order by Date";
+            string sql = "SELECT ElectriciteId, Montant, Consommation, Date, Description, PrixKwh FROM ConsoElectricite WHERE  utilisateurId = @paramUserId AND Year(Date) = @paramDate order by Date";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("paramUser", this.userName);
+                    cmd.Parameters.AddWithValue("paramUserId", this.utilisateurId);
                     cmd.Parameters.AddWithValue("paramDate", annee);
 
                     using (var reader = cmd.ExecuteReader())
@@ -114,13 +114,13 @@ namespace Finance.Data.bdd
             using (SqlConnection conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                string sql = "INSERT INTO ConsoElectricite (Montant, Date, Description, userName, Consommation, PrixKwh) VALUES(@Montant, @Date, @Description, @UserName, @Consommation, @PrixKwh)";
+                string sql = "INSERT INTO ConsoElectricite (Montant, Date, Description, UtilisateurId, Consommation, PrixKwh) VALUES(@Montant, @Date, @Description, @paramUserId, @Consommation, @PrixKwh)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add("@Montant", SqlDbType.Decimal).Value = info.Montant;
                 cmd.Parameters.Add("@Date", SqlDbType.DateTime).Value = info.Date;
                 cmd.Parameters.Add("@Description", SqlDbType.VarChar).Value = info.Description;
-                cmd.Parameters.Add("@UserName", SqlDbType.VarChar).Value = this.userName;
+                cmd.Parameters.Add("@paramUserId", SqlDbType.VarChar).Value = this.utilisateurId;
                 cmd.Parameters.Add("@Consommation", SqlDbType.Int).Value = info.Consommation;
                 cmd.Parameters.Add("@PrixKwh", SqlDbType.VarChar).Value = info.PrixKwh;
 
@@ -142,7 +142,7 @@ namespace Finance.Data.bdd
             using (SqlConnection conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                string sql = "UPDATE ConsoElectricite SET Consommation=@Conso, Montant=@Montant, Date=@Date, UserName=@user WHERE Year(Date)=@Annee AND Month(Date)=@Mois  AND UserName=@user";
+                string sql = "UPDATE ConsoElectricite SET Consommation=@Conso, Montant=@Montant, Date=@Date, UtilisateurId=@paramUserId WHERE Year(Date)=@Annee AND Month(Date)=@Mois  AND UserName=@user";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add("@Conso", SqlDbType.Int).Value = conso.Consommation;
@@ -150,7 +150,7 @@ namespace Finance.Data.bdd
                 cmd.Parameters.Add("@Date", SqlDbType.DateTime).Value = conso.Date;
                 cmd.Parameters.Add("@Annee", SqlDbType.Int).Value = conso.Date.Value.Year;
                 cmd.Parameters.Add("@Mois", SqlDbType.Int).Value = conso.Date.Value.Month;
-                cmd.Parameters.Add("@user", SqlDbType.VarChar).Value = this.userName;
+                cmd.Parameters.Add("@paramUserId", SqlDbType.VarChar).Value = this.utilisateurId;
 
 
 
@@ -174,11 +174,11 @@ namespace Finance.Data.bdd
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                using (var cmd = new SqlCommand("SELECT Count(*) FROM ConsoElectricite WHERE Year(Date)=@Annee AND Month(Date)=@Mois  AND UserName=@user", conn))
+                using (var cmd = new SqlCommand("SELECT Count(*) FROM ConsoElectricite WHERE Year(Date)=@Annee AND Month(Date)=@Mois  AND UtilisateurId=@paramUserId", conn))
                 {
                     cmd.Parameters.AddWithValue("Annee", c.Date.Value.Year);
                     cmd.Parameters.AddWithValue("Mois", c.Date.Value.Month);
-                    cmd.Parameters.AddWithValue("user", this.userName);
+                    cmd.Parameters.AddWithValue("paramUserId", this.utilisateurId);
 
 
                     Int32 count = (Int32)cmd.ExecuteScalar();

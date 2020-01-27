@@ -22,7 +22,7 @@ namespace Finance.Business.Services
 
 
         //Retourne une liste de valeurs de l'appartement pour toutes les années
-        public List<int> GetListeValeurApptParAnnees(string user)
+        public List<int> GetListeValeurApptParAnnees()
         {
             int anneeDebut = 2013;
             int anneeCourante = DateTime.Now.Year;
@@ -30,7 +30,7 @@ namespace Finance.Business.Services
 
             for (int annee = anneeDebut; annee <= anneeCourante; annee++)
             {
-                int montantAnnee = _AppartementManager.GetListeValeurApptPourAnnee(annee, user);
+                int montantAnnee = _AppartementManager.GetListeValeurApptPourAnnee(annee);
                 listeMontans.Add(montantAnnee);
             }
 
@@ -39,26 +39,26 @@ namespace Finance.Business.Services
         }
 
         //Retourne la valeur de l'appartement pour une année
-        public int GetListeValeurApptPourAnnee(int annee, string user)
+        public int GetListeValeurApptPourAnnee(int annee)
         {
-            return _AppartementManager.GetListeValeurApptPourAnnee(annee, user);
+            return _AppartementManager.GetListeValeurApptPourAnnee(annee);
         }
 
         //Retourne la liste de toutes les valeurs
-        public List<InfoAppartement> GetAllListValeursAppartement (string user)
+        public List<InfoAppartement> GetAllListValeursAppartement ()
         {
-            return _AppartementManager.GetAllListValeursAppartement(user);
+            return _AppartementManager.GetAllListValeursAppartement();
         }
 
         //Ajoute une nouvelle estimation
-        public void AjouterEstimationAppartement(string source, decimal montant, string user)
+        public void AjouterEstimationAppartement(string source, decimal montant)
         {
             InfoAppartement estimation = new InfoAppartement();
             estimation.Montant = montant;
             estimation.Description = source;
             estimation.Type = EnumTypeInfoAppartement.ValeurAppartement;
             estimation.Date = DateTime.Now;
-            _AppartementManager.AjouterEstimationAppartement(estimation, user);
+            _AppartementManager.AjouterEstimationAppartement(estimation);
         }
 
 

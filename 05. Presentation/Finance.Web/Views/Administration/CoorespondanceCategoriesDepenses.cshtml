@@ -176,43 +176,45 @@
 </script>
 
 
+<div class="row">
 
+    <!--TITRE-->
+    <div class="col-sm-12">
+        <h1 id="titre" class="display-4">Administration</h1>
+    </div>
 
-<!--TITRE-->
-<div>
-    <h1 id="titre" class="display-4">Correspondance catégories / dépenses</h1>
+    <!--MENU Admin de gauche-->
+    <div class="col-sm-4">
+        @Html.Partial("_AdministrationListElements")
+    </div>
+
+    <!--PAGE-->
+    <div class="col-sm-8">
+        
+        <div>
+            <h2 id="titre" class="display-6">Correspondance catégories / dépenses</h2>
+        </div>
+
+        <div class="clear cf collapsible open">
+            <br /><br />
+                <input class="mdl-button mdl-js-button mdl-button--primary" id="btn_Rechercher" type="button" value="Ajouter une entrée" onClick="Ajouter();" style="margin-top:10px" />
+            <br />
+                <table id="tab_catDepenses" class="mdl-data-table mdl-js-data-table">
+                    <thead>
+                        <tr>
+                            <th class="mdl-data-table__cell--non-numeric">Texte</th>
+                            <th>Catégorie</th>
+                            <th>Sous-catégorie</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+
+                </table>
+        </div>
+
+    </div>
+
 </div>
-
-
-
-
-<div class="clear cf collapsible open">
-    <br /><br />
-    <center>
-        <input class="mdl-button mdl-js-button mdl-button--primary" id="btn_Rechercher" type="button" value="Ajouter une entrée" onClick="Ajouter();" style="margin-top:10px" />
-    </center>
-    <br />
-    <center>
-        <table id="tab_catDepenses" class="mdl-data-table mdl-js-data-table">
-            <thead>
-                <tr>
-                    <th class="mdl-data-table__cell--non-numeric">Texte</th>
-                    <th>Catégorie</th>
-                    <th>Sous-catégorie</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-
-        </table>
-    </center>
-
-</div>
-
-
-
-
-
-
 
 
 

@@ -21,10 +21,10 @@ namespace Finance.Business.Services
 
         
 
-        public ConsommationElecAnnuelle GetConsoElecAnnee(int annee, string user)
+        public ConsommationElecAnnuelle GetConsoElecAnnee(int annee)
         {
             ConsommationElecAnnuelle consoA = new ConsommationElecAnnuelle();
-            List<Electricite> listConsos = _ConsoElecManager.GetAllElectriciteForYear(annee, user);
+            List<Electricite> listConsos = _ConsoElecManager.GetAllElectriciteForYear(annee);
 
             foreach(Electricite c in listConsos)
             {
@@ -46,68 +46,68 @@ namespace Finance.Business.Services
             return consoA;
         }
 
-        public List<ConsommationElecAnnuelle> GetAllConsosElec (string user)
+        public List<ConsommationElecAnnuelle> GetAllConsosElec ()
         {
             List<ConsommationElecAnnuelle> listeConsos = new List<ConsommationElecAnnuelle>();
 
             for (int an=2017; an<=DateTime.Now.Year; an++)
             {
-                listeConsos.Add(this.GetConsoElecAnnee(an, user));
+                listeConsos.Add(this.GetConsoElecAnnee(an));
             }
             return listeConsos;
         }
 
 
-        public bool PostConsommationAnnee(_ConsoElec_POST vm, string user)
+        public bool PostConsommationAnnee(_ConsoElec_POST vm)
         {
             bool success = true;
 
             Electricite e1 = new Electricite {Date= new DateTime(vm.Annee, 1, 1), Montant =vm.chp_consoElec_M1, Consommation=vm.chp_consoElec_C1, Description="", PrixKwh=0 };
-            success = _ConsoElecManager.AjouterConsommation(e1, user);
+            success = _ConsoElecManager.AjouterConsommation(e1);
             if (!success) return false;
 
             Electricite e2 = new Electricite { Date = new DateTime(vm.Annee, 2, 1), Montant = vm.chp_consoElec_M2, Consommation = vm.chp_consoElec_C2, Description = "", PrixKwh = 0 };
-            success = _ConsoElecManager.AjouterConsommation(e2, user);
+            success = _ConsoElecManager.AjouterConsommation(e2);
             if (!success) return false;
 
             Electricite e3 = new Electricite { Date = new DateTime(vm.Annee, 3, 1), Montant = vm.chp_consoElec_M3, Consommation = vm.chp_consoElec_C3, Description = "", PrixKwh = 0 };
-            success = _ConsoElecManager.AjouterConsommation(e3, user);
+            success = _ConsoElecManager.AjouterConsommation(e3);
             if (!success) return false;
 
             Electricite e4 = new Electricite { Date = new DateTime(vm.Annee, 4, 1), Montant = vm.chp_consoElec_M4, Consommation = vm.chp_consoElec_C4, Description = "", PrixKwh = 0 };
-            success = _ConsoElecManager.AjouterConsommation(e4, user);
+            success = _ConsoElecManager.AjouterConsommation(e4);
             if (!success) return false;
 
             Electricite e5 = new Electricite { Date = new DateTime(vm.Annee, 5, 1), Montant = vm.chp_consoElec_M5, Consommation = vm.chp_consoElec_C5, Description = "", PrixKwh = 0 };
-            success = _ConsoElecManager.AjouterConsommation(e5, user);
+            success = _ConsoElecManager.AjouterConsommation(e5);
             if (!success) return false;
 
             Electricite e6 = new Electricite { Date = new DateTime(vm.Annee, 6, 1), Montant = vm.chp_consoElec_M6, Consommation = vm.chp_consoElec_C6, Description = "", PrixKwh = 0 };
-            success = _ConsoElecManager.AjouterConsommation(e6, user);
+            success = _ConsoElecManager.AjouterConsommation(e6);
             if (!success) return false;
 
             Electricite e7 = new Electricite { Date = new DateTime(vm.Annee, 7, 1), Montant = vm.chp_consoElec_M7, Consommation = vm.chp_consoElec_C7, Description = "", PrixKwh = 0 };
-            success = _ConsoElecManager.AjouterConsommation(e7, user);
+            success = _ConsoElecManager.AjouterConsommation(e7);
             if (!success) return false;
 
             Electricite e8 = new Electricite { Date = new DateTime(vm.Annee, 8, 1), Montant = vm.chp_consoElec_M8, Consommation = vm.chp_consoElec_C8, Description = "", PrixKwh = 0 };
-            success = _ConsoElecManager.AjouterConsommation(e8, user);
+            success = _ConsoElecManager.AjouterConsommation(e8);
             if (!success) return false;
 
             Electricite e9 = new Electricite { Date = new DateTime(vm.Annee, 9, 1), Montant = vm.chp_consoElec_M9, Consommation = vm.chp_consoElec_C9, Description = "", PrixKwh = 0 };
-            success = _ConsoElecManager.AjouterConsommation(e9, user);
+            success = _ConsoElecManager.AjouterConsommation(e9);
             if (!success) return false;
 
             Electricite e10 = new Electricite { Date = new DateTime(vm.Annee, 10, 1), Montant = vm.chp_consoElec_M10, Consommation = vm.chp_consoElec_C10, Description = "", PrixKwh = 0 };
-            success = _ConsoElecManager.AjouterConsommation(e10, user);
+            success = _ConsoElecManager.AjouterConsommation(e10);
             if (!success) return false;
 
             Electricite e11 = new Electricite { Date = new DateTime(vm.Annee, 11, 1), Montant = vm.chp_consoElec_M11, Consommation = vm.chp_consoElec_C11, Description = "", PrixKwh = 0 };
-            success = _ConsoElecManager.AjouterConsommation(e11, user);
+            success = _ConsoElecManager.AjouterConsommation(e11);
             if (!success) return false;
 
             Electricite e12 = new Electricite { Date = new DateTime(vm.Annee, 12, 1), Montant = vm.chp_consoElec_M12, Consommation = vm.chp_consoElec_C12, Description = "", PrixKwh = 0 };
-            success = _ConsoElecManager.AjouterConsommation(e12, user);
+            success = _ConsoElecManager.AjouterConsommation(e12);
             if (!success) return false;
 
             return success;

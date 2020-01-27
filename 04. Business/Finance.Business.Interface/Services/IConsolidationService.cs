@@ -18,32 +18,28 @@ namespace Finance.Business.Interface.Services
         /// <param name="annee">Année de recherche des dépenses</param>
         /// <param name="mois">Mois de recherche des dépenses</param>
         /// <param name="displaySsCat">Si vrai, on effectue la consolidation des sous-catégories</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
         /// <returns>Liste de dépenses consolidées</returns>
-        List<ConsolidationVM> GetListConsoMensuelle(int annee, int mois, bool displaySsCat, string user, bool isForPerso);
+        List<ConsolidationVM> GetListConsoMensuelle(int annee, int mois, bool displaySsCat, bool isForPerso);
 
         /// <summary>Effectue la consolidation des totaux (impots / solde / dépenses)</summary>
         /// <param name="annee">Année de recherche des dépenses</param>
         /// <param name="mois">Mois de recherche des dépenses</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
         /// <returns>Message de retour</returns>
-        string Calculer_TOTAUX(int annee, int mois, string user, bool isForPerso);
+        string Calculer_TOTAUX(int annee, int mois, bool isForPerso);
 
         /// <summary>Duplique les dépenses communes vers le compte perso (montant /2)</summary>
         /// <param name="annee">Année de recherche des dépenses</param>
         /// <param name="mois">Mois de recherche des dépenses</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
-        void DupliquerDepensesVersPerso(int paramAnnee, int paramMois, string user);
+        void DupliquerDepensesVersPerso(int paramAnnee, int paramMois);
 
         /// <summary>Retourne une liste de dépenses consolidées par catégories par années</summary>
         /// <param name="annee">Année de recherche des dépenses</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
         /// <returns>Liste de dépenses consolidées</returns>
-        List<ConsolidationAnnuelleVM> GetListConsoAnnuelle(int annee, string user, bool isForPerso);
+        List<ConsolidationAnnuelleVM> GetListConsoAnnuelle(int annee, bool isForPerso);
 
         /// <summary>Effectue les calculs de consolidation générale</summary>
         /// <param name="vm">ViewModel à mettre à jour</param>
@@ -55,25 +51,22 @@ namespace Finance.Business.Interface.Services
         /// <param name="annee">Année de recherche</param>
         /// <param name="mois">Mois de recherche</param>
         /// <param name="ssCat">Ssous-catégorie de recherche</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <returns>Montant</returns>
-        decimal GetMontantSsCatAnnee(int annee, string ssCat, string user);
+        decimal GetMontantSsCatAnnee(int annee, string ssCat);
 
         /// <summary>Retourne le montant des dépenses de la catégorie pour une année</summary>
         /// <param name="annee">Année de recherche</param>
         /// <param name="cat">Catégorie de recherche</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
         /// <returns>Montant</returns>
-        decimal GetMontantCatAnnee(int annee, string cat, string user);
+        decimal GetMontantCatAnnee(int annee, string cat);
 
         /// <summary>Retourne le montant des dépenses de la catégorie pour un mois</summary>
         /// <param name="annee">Année de recherche</param>
         /// <param name="mois">Mois de recherche</param>
         /// <param name="cat">catégorie de recherche</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
         /// <returns>Montant</returns>
-        decimal GetMontantCatMois(int annee, int mois, string cat, string user);
+        decimal GetMontantCatMois(int annee, int mois, string cat);
     }
 }

@@ -1,67 +1,334 @@
 ﻿@model ViewModels.Login.LoginVM
 
 
-
-
 <script>
     $(document).ready(function () {
+        $('#PopUpAjoutUser').hide();
+        //GetImageDuJour();
 
-            var navLiens = document.getElementById('nav_liens');
-            navLiens.style.display = 'none';
 
-            var navMenu = document.getElementById('nav_menu'); 
-            navMenu.style.display = 'none';
+        //Gestion cas création
+        var Message = '@Model.Message';
 
-            var navSelecteurCompte = document.getElementById('lbSelectComptes');
-            navSelecteurCompte.style.display = 'none';
+        if (Message != '') {
+            displayMessage(Message);
+        }
 
+    });
+
+
+    //Pop up Add utilisateur
+    function AddUser() {
+
+        $('#carte').hide();
+        $('#newNom').val('');
+        $('#newPrenom').val('');
+        $('#newMail').val('');
+        $('#newMdp').val('');
+        $('#newConfirmMdp').val('');
+        $('#btnMdpOublie').prop('disabled', true);
+
+        $('#PopUpAjoutUser').show();
+    }
+
+    function ControlerChampsAjoutUser() {
+        var nom = $('#newNom').val();
+        var prenom = $('#newPrenom').val();
+        var mail = $('#newMail').val();
+        var mdp = $('#newMdp').val();
+        var confirmMdp = $('#newConfirmMdp').val();
+
+        var nbVide = 0;
+        var txt = '';
+        var upperCase= RegExp('[A-Z]');
+        var lowerCase= RegExp('[a-z]');
+        var numbers = RegExp('[0-9]');
+        var special = RegExp('[!-"-#-$-%-&-(-)-*-+-,-.-;-?-:]');
+
+        //
+        if (nom == '') {
+            nbVide++;
+            txt = 'Le nom est obligatoire';
+        }
+
+        //
+        if (prenom == '') {
+            nbVide++;
+            txt = 'Le prénom est obligatoire';
+        }
+
+        //
+        if (mail == '') {
+            nbVide++;
+            txt = "L'adresse mail est obligatoire";
+            $('#btnMdpOublie').prop('disabled', true);
+            
+        } else {
+            $('#btnMdpOublie').prop('disabled', false);
+        }
+
+        //
+        if (confirmMdp != mdp) {
+            nbVide++;
+            txt = "Le mot de passe et la confirmation ne correspondent pas";
+        }
+
+        //
+        if (mdp.length < 6) {
+            nbVide++;
+            txt = "Le mot de passe doit faire au minimum 6 caractéres";
+        }
+        else if(nbVide==0){
+            var nbErrMdp = 0;
+            var txtMdp = "Le mot de passe doit contenir au moins";
+
+            //Majuscule
+            if (!upperCase.test(mdp)) {
+                txtMdp += " une majuscule";
+                nbErrMdp++;
+                nbVide++;
+            }
+
+            //Minuscule
+            if (!lowerCase.test(mdp)) {
+                if (nbErrMdp > 0) { txtMdp += "," }
+                else {nbVide++;}
+                txtMdp += " une miniscule";
+                nbErrMdp++;
+            }
+
+            //Chiffre
+            if (!numbers.test(mdp)) {
+                if (nbErrMdp > 0) { txtMdp += "," }
+                else {nbVide++;}
+                txtMdp += " un chiffre";
+                nbErrMdp++;
+            }
+
+            //Caractére spécial
+            if (!special.test(mdp)) {
+                if (nbErrMdp > 0) { txtMdp += "," }
+                else {nbVide++;}
+                txtMdp += " un caractére spécial";
+                nbErrMdp++;
+            }
+            txt = txtMdp;
+        }
+
+        
+
+        
+
+        if (nbVide > 0) {
+            if (nbVide > 1) { txt = "Vous devez renseigner tous les champs"; }
+            $('#addUserError').show();
+            $('#addUserError').text(txt);
+            $('#btnCreerUser').prop('disabled', true);
+        }
+        else {
+            $('#addUserError').hide();
+            $('#btnCreerUser').prop('disabled', false);
+        }
+        
+        
+
+        
+
+    }
+
+
+    //Get Image du jour
+    function GetImageDuJour() {
+        var baseUrl = '@Url.Content("~/Login/GetImageDuJour/")';
+        var url = "";
+        var titre = "";
+        var description = "";
+
+        $.ajax({
+            url: baseUrl, type: "POST", async: true, dataType: "json",
+            success: function (result) {
+                url = result.Url;
+                titre = result.Titre;
+                description = result.Description;
+
+            },
+            fail: function () {
+                //$('#consoEau_txt_popup').html('Pas de données en base pour cette année');
+            },
+            complete: function () {
+
+                $('#fullPage').fadeTo('fast', 0.3, function()
+                {
+                    $(this).css('background', 'url(' + url + ') no-repeat');
+                }).fadeTo('slow', 1);
+
+                $("#titre").html(titre);
+            }
         });
+    };
+
 
 </script>
 
+<style>
+    .demo-card-square.mdl-card {
+        width: 40%;
+        height: 260px;
+    }
 
-
+    .demo-card-square.mdl-card_User {
+        width: 50%;
+        height: 320px;
+        background-color:white;
+        z-index: 4;
+    }
+</style>
 
 @{
     ViewBag.Title = "Connexion";
+    Layout = "~/Views/Shared/_LayoutBase.cshtml";
 }
 
-<h1 class="display-4">Connexion</h1><hr /><br />
-
+<!--Titre-->
+<h4 id="titre" class="titre"></h4>
 
 
 @if (Model.Authentifie)
 {
-    <h3>
-        Vous êtes déjà authentifié avec le login :
-        @Model.Utilisateur
-    </h3>
-    @Html.ActionLink("Voulez-vous vous déconnecter ?", "Deconnexion")
+<div class="centerH demo-card-square mdl-card mdl-shadow--2dp">
+
+    <div class="mdl-card__title row">
+        <div class="col-sm-12">
+           <h2 class="PurpleText mdl-card__title-text">Application Gestion</h2>
+        </div>
+    </div>
+
+
+    <div class="mdl-card__supporting-text row">
+        <div class="col-sm-12"> <br /> </div>
+        <div class="col-sm-12">
+            Vous êtes déjà authentifié avec le login :
+            @Model.Utilisateur
+        </div>
+        <div class="col-sm-12"> <br />
+            @Html.ActionLink("Voulez-vous vous déconnecter ?", "Deconnexion") 
+        <br /><br /> <br />
+        </div>
+
+    </div>
+
+    <div class="mdl-card__actions mdl-card--border row">
+        <div class="col-sm-12"> 
+            <input type="button" value="Accéder au site" class="mdl-button mdl-js-button mdl-button--primary" onclick="goToSite();" />
+        </div>
+    </div>
+
+</div>
+    
 }
 else
 {
-    <p>
-        Veuillez vous authentifier :
-    </p>
-    using (Html.BeginForm())
+<div id="carte" class="centerH demo-card-square mdl-card mdl-shadow--2dp">
+
+    <div class="mdl-card__title row">
+        <div class="col-sm-12">
+           <h2 class="PurpleText mdl-card__title-text">Application Gestion</h2>
+        </div>
+    </div>
+
+    @using (Html.BeginForm())
     {
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            @Html.TextBoxFor(m => m.Utilisateur, new { @class = "mdl-textfield__input" })
+    <div class="mdl-card__supporting-text row">
 
-            <label class="mdl-textfield__label" for="sample2">Utilisateur :</label>
-            <span class="mdl-textfield__error">Texte non valide</span>
+        <div class="col-sm-12">
+            <span>Vous devez vous identifier pour pouvoir utiliser ce site :</span>
+        </div>
+        
+        <div class="souligne col-sm-6 mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-bottom:1px">
+            <label  class="PurpleText">Utilisateur :</label>
+            @Html.TextBoxFor(m => m.Utilisateur, new { @class = " mdl-textfield__input" })
+            
+
+            
         </div>
 
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <div class="souligne col-sm-6 mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-bottom:1px">
+            <label  class="PurpleText" >Mot de passe :</label>
             @Html.PasswordFor(m => m.mdp, new { @class = "mdl-textfield__input" })
-
-            <label class="mdl-textfield__label" for="sample2">Mot de passe :</label>
-            <span class="mdl-textfield__error">Texte non valide</span>
+        </div>
+        <div class="col-sm-12">
+            <br />
         </div>
 
+    </div>
 
+    <div class="mdl-card__actions mdl-card--border">
         <input type="submit" value="Se connecter" class="mdl-button mdl-js-button mdl-button--primary" />
-        <br />
-
+    </div>
+    <div class="mdl-card__menu">
+    <button type="button" onclick="AddUser();" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect mdl-button--accent">
+      <i class="material-icons">add</i>
+    </button>
+  </div>
     }
+</div>
 }
+
+
+
+<div id="PopUpAjoutUser" class="centerH demo-card-square mdl-card_User mdl-shadow--2dp">
+@using (Html.BeginForm())
+{
+    <div class="mdl-card__title row">
+        <div class="col-sm-12">
+           <h2 class="PurpleText mdl-card__title-text">Application Gestion - Création d'un utilisateur</h2>
+        </div>
+    </div>
+
+    <div class="mdl-card__supporting-text row">
+        <div class="souligne col-sm-3 mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-bottom:1px">
+            <label  class="PurpleText">Nom :</label>
+            @Html.TextBoxFor(m => m.newNom, new { @class = " mdl-textfield__input", @onChange="ControlerChampsAjoutUser();" })
+            
+        </div>
+
+        <div class="souligne col-sm-3 mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-bottom:1px">
+            <label  class="PurpleText">Prénom :</label>
+            @Html.TextBoxFor(m => m.newPrenom, new { @class = " mdl-textfield__input", @onChange="ControlerChampsAjoutUser();" })
+        </div>
+        
+        <div class="souligne col-sm-6 mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-bottom:1px">
+            <label  class="PurpleText">Adresse Email :</label>
+            @Html.TextBoxFor(m => m.newMail, new { @class = " mdl-textfield__input", @onChange="ControlerChampsAjoutUser();" })
+        </div>
+
+        <div class="souligne col-sm-6 mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-bottom:1px">
+            <label  class="PurpleText">Mot de passe :</label>
+            @Html.TextBoxFor(m => m.newMdp, new { @class = " mdl-textfield__input", @type="password", @onChange="ControlerChampsAjoutUser();" })
+        </div>
+
+        <div class="souligne col-sm-6 mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-bottom:1px">
+            <label  class="PurpleText">Confirmation :</label>
+            @Html.TextBoxFor(m => m.newConfirmMdp, new { @class = " mdl-textfield__input", @type="password", @onChange="ControlerChampsAjoutUser();" })
+        </div>
+
+    </div>
+    
+    <div class="mdl-card__actions mdl-card--border  row">
+        <div class="col-sm-6">
+            <input id="btnCreerUser" type="submit" value="Créer un nouvel utilisateur" class="mdl-button mdl-js-button mdl-button--accent" disabled/><br />
+        </div>
+        <div class="col-sm-6">
+            <input id="btnMdpOublie" type="submit" value="Mot de passe oublié" class="mdl-button mdl-js-button mdl-button--primary" disabled/><br />
+        </div>
+
+        <div class="col-sm-12">
+            <span id="addUserError" class="RedText">Vous devez renseigner tous les champs</span>
+        </div>
+    </div>
+
+
+}
+
+</div>
+

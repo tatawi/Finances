@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BilanCarbone.cs" />
+    <Compile Include="BilanCarboneDetails.cs" />
     <Compile Include="CategorieDepense.cs" />
     <Compile Include="ConsoChauffage.cs" />
     <Compile Include="ConsoEau.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Ref_Compte.cs" />
     <Compile Include="Ref_Reconductible.cs" />
     <Compile Include="Ref_SsCategorie.cs" />
+    <Compile Include="Utilisateur.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

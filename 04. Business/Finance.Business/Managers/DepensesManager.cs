@@ -12,20 +12,22 @@ namespace Finance.Business.Managers
     public class DepensesManager
     {
 
-        public Bdd_Depense _bdd_Depense { get; set; }
+        private Bdd_Depense _bdd_Depense { get; set; }
         private bdd_Categories bdd_Cat { get; set; }
 
         public DepensesManager()
         {
             this._bdd_Depense = new Bdd_Depense();
             this.bdd_Cat = new bdd_Categories();
+            if(ApplicationManager.CurrentUser!=null)
+                _bdd_Depense.setUser(ApplicationManager.CurrentUser.UtilisateurId);
         }
 
         /// <summary>Ajoute une dépense en base</summary>
         /// <param name="d">dépense à ajouter</param>
-        public void AjouterDepenseUnitaire(Depense d, string user, bool isForPerso)
+        public void AjouterDepenseUnitaire(Depense d, bool isForPerso)
         {
-            _bdd_Depense.setUser(user);
+           
             _bdd_Depense.setCompte(isForPerso);
             _bdd_Depense.Add_Depense(d);
         }
@@ -40,24 +42,20 @@ namespace Finance.Business.Managers
 
         /// <summary>Permet de savoir si une dépense est présente en base via ses caractéristiques</summary>
         /// <param name="dep">Dépense concernée</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
         /// <returns>Vrai si une dépense correspond</returns>
-        public bool IsDepensePresente(Depense dep, string user, bool isForPerso)
+        public bool IsDepensePresente(Depense dep, bool isForPerso)
         {
-            _bdd_Depense.setUser(user);
             _bdd_Depense.setCompte(isForPerso);
             return _bdd_Depense.IsDepensePresente(dep);
         }
 
         /// <summary>Permet de savoir si une dépense est présente en base via ses caractéristiques de date et de libellé</summary>
         /// <param name="dep">Dépense concernée</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
         /// <returns>Vrai si une dépense correspond</returns>
-        public bool IsDepensePresenteByDateAndLib(Depense dep, string user, bool isForPerso)
+        public bool IsDepensePresenteByDateAndLib(Depense dep, bool isForPerso)
         {
-            _bdd_Depense.setUser(user);
             _bdd_Depense.setCompte(isForPerso);
             return _bdd_Depense.IsDepensePresenteByDateAndLib(dep);
         }
@@ -65,12 +63,10 @@ namespace Finance.Business.Managers
         /// <summary>Retourne toutes les dépenses du mois</summary>
         /// <param name="annee">Année concernée</param>
         /// <param name="mois">Mois concerné</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
         /// <returns>Liste des dépenses</returns>
-        public List<Depense> GetAllDepensesMois(int annee, int mois, string user, bool isForPerso)
+        public List<Depense> GetAllDepensesMois(int annee, int mois, bool isForPerso)
         {
-            _bdd_Depense.setUser(user);
             _bdd_Depense.setCompte(isForPerso);
             return _bdd_Depense.get_DepensesMois(annee, mois);
         }
@@ -80,12 +76,10 @@ namespace Finance.Business.Managers
         /// <param name="annee">Année concernée</param>
         /// <param name="mois">Mois concerné</param>
         /// <param name="cat">Catégorie concerné</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
         /// <returns>Liste des dépenses</returns>
-        public List<Depense> GetAllDepensesMoisForCat(int annee, int mois, string cat, string user, bool isForPerso)
+        public List<Depense> GetAllDepensesMoisForCat(int annee, int mois, string cat, bool isForPerso)
         {
-            _bdd_Depense.setUser(user);
             _bdd_Depense.setCompte(isForPerso);
             return _bdd_Depense.get_DepensesMoisByCat(annee, mois, cat);
         }
@@ -122,9 +116,9 @@ namespace Finance.Business.Managers
         /// <param name="list_DepenseMois">Liste de travail</param>
         /// <param name = "user" > Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
-        public void Calculate_TotalImpotsFor(int annee, int mois, List<Depense> list_DepenseMois, string user, bool isForPerso)
+        public void Calculate_TotalImpotsFor(int annee, int mois, List<Depense> list_DepenseMois, bool isForPerso)
         {
-            _bdd_Depense.setUser(user);
+            _bdd_Depense.setUser(ApplicationManager.CurrentUser.UtilisateurId);
             _bdd_Depense.setCompte(isForPerso);
             _bdd_Depense.Calculate_TotalImpotsFor(annee, mois, list_DepenseMois);
         }
@@ -134,11 +128,9 @@ namespace Finance.Business.Managers
         /// <param name="mois">Mois concerné</param>
         /// <param name="list_DepenseMois">Liste de travail</param>
         /// <param name="totalDepenses">Montant total dépensé du mois</param>
-        /// <param name = "user" > Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
-        public void Calculate_SoldeFor(int annee, int mois, List<Depense> list_DepenseMois, decimal totalDepenses, string user, bool isForPerso)
+        public void Calculate_SoldeFor(int annee, int mois, List<Depense> list_DepenseMois, decimal totalDepenses, bool isForPerso)
         {
-            _bdd_Depense.setUser(user);
             _bdd_Depense.setCompte(isForPerso);
             _bdd_Depense.Calculate_SoldeFor(annee, mois, list_DepenseMois, totalDepenses);
         }
@@ -147,12 +139,10 @@ namespace Finance.Business.Managers
         /// <param name="annee">Année concernée</param>
         /// <param name="mois">Mois concerné</param>
         /// <param name="list_DepenseMois">Liste de travail</param>
-        /// <param name = "user" > Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
         /// <returns>Montant</returns>
-        public decimal Calculate_TotalDepensesFor(int annee, int mois, List<Depense> list_DepenseMois, string user, bool isForPerso)
+        public decimal Calculate_TotalDepensesFor(int annee, int mois, List<Depense> list_DepenseMois, bool isForPerso)
         {
-            _bdd_Depense.setUser(user);
             _bdd_Depense.setCompte(isForPerso);
             return _bdd_Depense.Calculate_TotalDepensesFor(annee, mois, list_DepenseMois);
         }
@@ -160,12 +150,10 @@ namespace Finance.Business.Managers
         /// <summary>Retourne le montant des dépenses de la catégorie pour une année</summary>
         /// <param name="annee">Année de recherche</param>
         /// <param name="cat">Catégorie de recherche</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
         /// <returns>Montant</returns>
-        public decimal Get_MontantCatAnnee(int annee, string cat, string user, bool isForPerso)
+        public decimal Get_MontantCatAnnee(int annee, string cat, bool isForPerso)
         {
-            _bdd_Depense.setUser(user);
             _bdd_Depense.setCompte(isForPerso);
             return _bdd_Depense.get_MontantCatAnnee(annee, cat);
         }
@@ -174,12 +162,10 @@ namespace Finance.Business.Managers
         /// <param name="annee">Année de recherche</param>
         /// <param name="mois">Mois de recherche</param>
         /// <param name="ssCat">Ssous-catégorie de recherche</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
         /// <returns>Montant</returns>
-        public decimal Get_MontantSsCatAnnee(int annee, string ssCat, string user, bool isForPerso)
+        public decimal Get_MontantSsCatAnnee(int annee, string ssCat, bool isForPerso)
         {
-            _bdd_Depense.setUser(user);
             _bdd_Depense.setCompte(isForPerso);
             return _bdd_Depense.get_MontantSsCatAnnee(annee, ssCat);
         }
@@ -188,12 +174,10 @@ namespace Finance.Business.Managers
         /// <param name="annee">Année de recherche</param>
         /// <param name="mois">Mois de recherche</param>
         /// <param name="cat">catégorie de recherche</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
         /// <returns>Montant</returns>
-        public decimal Get_MontantCatMois(int annee, int mois, string cat, string user, bool isForPerso)
+        public decimal Get_MontantCatMois(int annee, int mois, string cat, bool isForPerso)
         {
-            _bdd_Depense.setUser(user);
             _bdd_Depense.setCompte(isForPerso);
             return _bdd_Depense.get_MontantCatMois(annee, mois, cat);
         }
@@ -202,12 +186,10 @@ namespace Finance.Business.Managers
         /// <param name="annee">Année de recherche</param>
         /// <param name="mois">Mois de recherche</param>
         /// <param name="ssCat">Sous-catégorie de recherche</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
         /// <returns>Montant</returns>
-        public decimal Get_MontantSsCatMois(int annee, int mois, string ssCat, string user, bool isForPerso)
+        public decimal Get_MontantSsCatMois(int annee, int mois, string ssCat, bool isForPerso)
         {
-            _bdd_Depense.setUser(user);
             _bdd_Depense.setCompte(isForPerso);
             return _bdd_Depense.get_MontantSsCatMois(annee, mois, ssCat);
         }

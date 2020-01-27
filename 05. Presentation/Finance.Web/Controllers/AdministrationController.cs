@@ -1,12 +1,16 @@
-﻿using Finance.Business.Interface.Services;
+﻿using Finance.Attributes;
+using Finance.Business.Interface.Services;
+using Finance.Business.Managers;
 using Finance.Business.Services;
+using Finance.Poco;
 using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using ViewModels.Login;
 
 namespace Finance.Controllers
 {
-    [Authorize]
+    [ApplicationAuthorize]
     public class AdministrationController : Controller
     {
         #region Variables
@@ -35,6 +39,32 @@ namespace Finance.Controllers
             return View();
         }
 
+
+        #endregion
+
+
+        #region Mon Utilisateur
+
+        // GET: Mon utilisateur
+        public ActionResult MonUtilisateur()
+        {
+            LoginVM vm = _AdministrationService.GetVmUtilisateur();
+            return View(vm);
+        }
+
+        //POST: Modification de l'identité de l'utilisateur
+        public JsonResult ModifierIdentite(LoginVM vm)
+        {
+            string result = _AdministrationService.ModifierIdentiteUtilisateur(vm);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        //POST: Modification du mot de passe de l'utilisateur
+        public JsonResult ModifierMotDePasse(LoginVM vm)
+        {
+            string result = _AdministrationService.ModifierMotDePasse(vm);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
         #endregion
 
@@ -114,7 +144,7 @@ namespace Finance.Controllers
         public JsonResult GetListAllComptes()
         {
             var result = new List<object>();
-            var list_Comptes = this._AdministrationService.GetListComptesForuser(User.Identity.Name);
+            var list_Comptes = this._AdministrationService.GetListComptes();
 
             foreach (var cpt in list_Comptes)
             {
@@ -132,7 +162,7 @@ namespace Finance.Controllers
             try
             {
                 string compte = Convert.ToString(Request.Params["paramCompte"]);
-                this._AdministrationService.AddCompteForUser(compte, User.Identity.Name);
+                this._AdministrationService.AddCompte(compte);
                 TempData["messageAjouter"] = "Compte ajouté";
             }
             catch(Exception)

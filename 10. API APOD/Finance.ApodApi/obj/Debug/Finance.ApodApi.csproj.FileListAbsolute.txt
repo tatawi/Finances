@@ -1,0 +1,11 @@
+C:\Perso\Projets\Finance\FinanceGIT\10. API APOD\Finance.ApodApi\bin\Debug\Finance.ApodApi.dll
+C:\Perso\Projets\Finance\FinanceGIT\10. API APOD\Finance.ApodApi\bin\Debug\Finance.ApodApi.pdb
+C:\Perso\Projets\Finance\FinanceGIT\10. API APOD\Finance.ApodApi\bin\Debug\Finance.ApodApi.Interface.dll
+C:\Perso\Projets\Finance\FinanceGIT\10. API APOD\Finance.ApodApi\bin\Debug\Newtonsoft.Json.dll
+C:\Perso\Projets\Finance\FinanceGIT\10. API APOD\Finance.ApodApi\bin\Debug\Finance.ApodApi.Interface.pdb
+C:\Perso\Projets\Finance\FinanceGIT\10. API APOD\Finance.ApodApi\bin\Debug\Newtonsoft.Json.xml
+C:\Perso\Projets\Finance\FinanceGIT\10. API APOD\Finance.ApodApi\obj\Debug\Finance.ApodApi.csprojAssemblyReference.cache
+C:\Perso\Projets\Finance\FinanceGIT\10. API APOD\Finance.ApodApi\obj\Debug\Finance.ApodApi.csproj.CoreCompileInputs.cache
+C:\Perso\Projets\Finance\FinanceGIT\10. API APOD\Finance.ApodApi\obj\Debug\Finance.ApodApi.csproj.CopyComplete
+C:\Perso\Projets\Finance\FinanceGIT\10. API APOD\Finance.ApodApi\obj\Debug\Finance.ApodApi.dll
+C:\Perso\Projets\Finance\FinanceGIT\10. API APOD\Finance.ApodApi\obj\Debug\Finance.ApodApi.pdb

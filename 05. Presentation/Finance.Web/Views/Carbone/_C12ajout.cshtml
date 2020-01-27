@@ -56,7 +56,216 @@
     });
 
 
-     //Ajout bilan carbonne (POST)
+    //AJAX - MAJ bilan détaillé si présent
+    function MajChampsBilanDetaille() {
+        showGif();
+        var annee = parseInt($('#ch_annee').val());
+
+        if (annee > 2000 && annee <= (new Date).getFullYear()) {
+
+            $('#btnAddBilan').prop("disabled", false);
+
+             $.ajax({
+                type: "POST", url: '@Url.Content("~/Carbone/GetBilanCarboneDetaille")',
+                data: {annee:annee}, dataType: "json",
+                success: function (result) {
+                $.each(result, function (index, itemData) {
+                    var Annee = itemData.Annee
+                    var NbPersonnes = itemData.NbPersonnes;
+                    var Surface = itemData.Surface;
+                    var ConsoElectricite = itemData.ConsoElectricite;
+                    var ConsoElectriciteVerte = itemData.ConsoElectriciteVerte;
+                    var ConsoGaz = itemData.ConsoGaz;
+                    var ConsoFioul = itemData.ConsoFioul;
+                    var ConsoEau = itemData.ConsoEau;
+                    var KmVoiture = itemData.KmVoiture;
+                    var NbDansVoiture = itemData.NbDansVoiture;
+                    var ConsoVoiture = itemData.ConsoVoiture;
+                    var HeuresAvion = itemData.HeuresAvion;
+                    var KmTrain = itemData.KmTrain;
+                    var HeuresBus = itemData.HeuresBus;
+                    var HeuresMetro = itemData.HeuresMetro;
+                    var ViandeBoeuf = itemData.ViandeBoeuf;
+                    var ViandePorc = itemData.ViandePorc;
+                    var ViandeVolaille = itemData.ViandeVolaille;
+                    var ViandePoisson = itemData.ViandePoisson;
+                    var LaitageFromage = itemData.LaitageFromage;
+                    var Laitages = itemData.Laitages;
+                    var lait = itemData.lait;
+                    var FruitsHorsSaison = itemData.FruitsHorsSaison;
+                    var FruitsAvion = itemData.FruitsAvion;
+                    var FruitsSaison = itemData.FruitsSaison;
+                    var PlatsCuisines = itemData.PlatsCuisines;
+                    var FeculentsPain = itemData.FeculentsPain;
+                    var FeculentsRiz = itemData.FeculentsRiz;
+                    var BoissonAlcool = itemData.BoissonAlcool;
+                    var BoissonSodas = itemData.BoissonSodas;
+                    var EauBouteille = itemData.EauBouteille;
+                    var DechetsOrga = itemData.DechetsOrga;
+                    var DechetsPapiers = itemData.DechetsPapiers;
+                    var DechetsPlastiques = itemData.DechetsPlastiques;
+                    var DechetsVerre = itemData.DechetsVerre;
+                    var DechetsMetal = itemData.DechetsMetal;
+                    var DechetsAutres = itemData.DechetsAutres;
+                    var BiensManufactures = itemData.BiensManufactures;
+                    var Vetements = itemData.Vetements;
+                    var Electro = itemData.Electro;
+                    var Internet = itemData.Internet;
+                    var Ordinateur = itemData.Ordinateur;
+                    var Smartphone = itemData.Smartphone;
+                    var AppPhoto = itemData.AppPhoto;
+                    var Television = itemData.Television;
+                    var BiensAutres = itemData.BiensAutres;
+                    var FinanceClassique = itemData.FinanceClassique;
+                    var FinanceVerte = itemData.FinanceVerte;
+                    var ServicePublic = itemData.ServicePublic;
+
+                    if (Annee == annee) {
+                        $('#l_nbPers').val(NbPersonnes);
+                        $('#l_surface').val(Surface);
+                        $('#l_elec').val(ConsoElectricite);
+                        $('#l_elecV').val(ConsoElectriciteVerte);
+                        $('#l_gaz').val(ConsoGaz);
+                        $('#l_Fioul').val(ConsoFioul);
+                        $('#l_eau').val(ConsoEau);
+                        $('#t_km').val(KmVoiture);
+                        $('#t_nbPers').val(NbDansVoiture);
+                        $('#t_conso').val(ConsoVoiture);
+                        $('#t_avion').val(HeuresAvion);
+                        $('#t_train').val(KmTrain);
+                        $('#t_bus').val(HeuresBus);
+                        $('#t_metro').val(HeuresMetro);
+                        $('#a_boeuf').val(ViandeBoeuf);
+                        $('#a_porc').val(ViandePorc);
+                        $('#a_volaille').val(ViandeVolaille);
+                        $('#a_poisson').val(ViandePoisson);
+                        $('#a_fromage').val(LaitageFromage);
+                        $('#a_laitages').val(Laitages);
+                        $('#a_lait').val(lait);
+                        $('#a_legumeshs').val(FruitsHorsSaison);
+                        $('#a_legumesa').val(FruitsAvion);
+                        $('#a_legumesl').val(FruitsSaison);
+                        $('#a_plats').val(PlatsCuisines);
+                        $('#a_pain').val(FeculentsPain);
+                        $('#a_riz').val(FeculentsRiz);
+                        $('#a_alcool').val(BoissonAlcool);
+                        $('#a_sodas').val(BoissonSodas);
+                        $('#a_eau').val(EauBouteille);
+                        $('#p_orga').val(DechetsOrga);
+                        $('#p_papier').val(DechetsPapiers);
+                        $('#p_plastiques').val(DechetsPlastiques);
+                        $('#p_verre').val(DechetsVerre);
+                        $('#p_metal').val(DechetsMetal);
+                        $('#p_autres').val(DechetsAutres);
+                        $('#d_manu').val(BiensManufactures);
+                        $('#d_vet').val(Vetements);
+                        $('#d_electro').val(Electro);
+                        $('#d_internet').val(Internet);
+                        $('#d_pc').val(Ordinateur);
+                        $('#d_tel').val(Smartphone);
+                        $('#d_photo').val(AppPhoto);
+                        $('#d_tv').val(Television);
+                        $('#d_autres').val(BiensAutres);
+                        $('#f_banque').val(FinanceClassique);
+                        $('#f_vert').val(FinanceVerte);
+                        $('#s_public').val(ServicePublic);
+                    }
+                });
+                },
+                fail: function () {
+                    hideGif();
+                    displayMessage('Pas de données à charger');
+                },
+                complete: function () {
+                    MajAllCO2();
+                    hideGif();
+                    displayMessage('Chargement des données effectué');
+                }
+            });
+        }
+        else {
+            $('#btnAddBilan').prop( "disabled", true );
+        }
+
+       
+    }
+
+
+    //Ajout bilan carbonne détaillé (POST)
+    function AjouterBilanCarboneDetailleAjax() {
+       
+        var data = {};
+        data['Annee'] = $('#ch_annee').val();
+        data['NbPersonnes'] = $('#l_nbPers').val();
+        data['Surface'] = $('#l_surface').val();
+        data['ConsoElectricite'] = $('#l_elec').val();
+        data['ConsoElectriciteVerte'] = $('#l_elecV').val();
+        data['ConsoGaz'] = $('#l_gaz').val();
+        data['ConsoFioul'] = $('#l_Fioul').val();
+        data['ConsoEau'] = $('#l_eau').val();
+        data['KmVoiture'] = $('#t_km').val();
+        data['NbDansVoiture'] = $('#t_nbPers').val();
+        data['ConsoVoiture'] = $('#t_conso').val();
+        data['HeuresAvion'] = $('#t_avion').val();
+        data['KmTrain'] = $('#t_train').val();
+        data['HeuresBus'] = $('#t_bus').val();
+        data['HeuresMetro'] = $('#t_metro').val();
+        data['ViandeBoeuf'] = $('#a_boeuf').val();
+        data['ViandePorc'] = $('#a_porc').val();
+        data['ViandeVolaille'] = $('#a_volaille').val();
+        data['ViandePoisson'] = $('#a_poisson').val();
+        data['LaitageFromage'] = $('#a_fromage').val();
+        data['Laitages'] = $('#a_laitages').val();
+        data['lait'] = $('#a_lait').val();
+        data['FruitsHorsSaison'] = $('#a_legumeshs').val();
+        data['FruitsAvion'] = $('#a_legumesa').val();
+        data['FruitsSaison'] = $('#a_legumesl').val();
+        data['PlatsCuisines'] = $('#a_plats').val();
+        data['FeculentsPain'] = $('#a_pain').val();
+        data['FeculentsRiz'] = $('#a_riz').val();
+        data['BoissonAlcool'] = $('#a_alcool').val();
+        data['BoissonSodas'] = $('#a_sodas').val();
+        data['EauBouteille'] = $('#a_eau').val();
+        data['DechetsOrga'] = $('#p_orga').val();
+        data['DechetsPapiers'] = $('#p_papier').val();
+        data['DechetsPlastiques'] = $('#p_plastiques').val();
+        data['DechetsVerre'] = $('#p_verre').val();
+        data['DechetsMetal'] = $('#p_metal').val();
+        data['DechetsAutres'] = $('#p_autres').val();
+        data['BiensManufactures'] = $('#d_manu').val();
+        data['Vetements'] = $('#d_vet').val();
+        data['Electro'] = $('#d_electro').val();
+        data['Internet'] = $('#d_internet').val();
+        data['Ordinateur'] = $('#d_pc').val();
+        data['Smartphone'] = $('#d_tel').val();
+        data['AppPhoto'] = $('#d_photo').val();
+        data['Television'] = $('#d_tv').val();
+        data['BiensAutres'] = $('#d_autres').val();
+        data['FinanceClassique'] = $('#f_banque').val();
+        data['FinanceVerte'] = $('#f_vert').val();
+        data['ServicePublic'] = 1283;
+
+        $.ajax({
+            type: "POST", url: '@Url.Content("~/Carbone/SauvegardeBilanCarboneDetaille")',
+            data: data, dataType: "json",
+            success: function () {
+
+            },
+            fail: function () {
+               // $('#consoEau_txt_popup').html("Echec lors de l'enregistrement");
+            },
+            complete: function () {
+                _isOngletGeneralCharge = 0;
+                _isOngletBilanCharge = 0;
+                _isOngletAjoutCharge = 0;
+                displayMessage('Données enregistrées');
+                ChangeOnglet('t_C12General', 'c_C12General');
+            }
+        });
+    }
+
+
+    //Ajout bilan carbonne (POST)
     function AjouterBilanCarboneAjax() {
         var total_l = 0.0;
         var total_t = 0.0;
@@ -66,7 +275,7 @@
         var total_f = 0.0;
         var total_e = 0.0;
 
-        //Logement
+        //Logement aa
         $('.l_co2').each(function () {
             var value = $(this).val()
             if (value != '' && value != null && value > 0) {
@@ -90,7 +299,7 @@
             }
         });
 
-        //Dépenses
+        //Dépenses aa
         $('.d_co2').each(function () {
             var value = $(this).val()
             if (value != '' && value != null && value > 0) {
@@ -106,7 +315,7 @@
             }
         });
 
-        //Finances
+        //Finances aa
         $('.f_co2').each(function () {
             var value = $(this).val()
             if (value != '' && value != null && value > 0) {
@@ -117,18 +326,19 @@
         //Etat
         total_e += 1283;
 
+
         var data = {};
         data['Annee'] = $('#ch_annee').val();
-        data['Logement'] = total_l
-        data['Transports'] = total_t;
-        data['Alimentation'] = total_a;
-        data['Dechets'] = total_p;
-        data['Achats'] = total_d;
-        data['Finance'] = total_f;
-        data['ServicePublique'] = total_e;
+        data['Logement'] = parseInt(total_l); 
+        data['Transports'] = parseInt(total_t);
+        data['Alimentation'] = parseInt(total_a);
+        data['Dechets'] = parseInt(total_p);
+        data['Achats'] = parseInt(total_d);
+        data['Finance'] = parseInt(total_f);
+        data['ServicePublique'] = parseInt(total_e);
 
         $.ajax({
-            type: "POST", url: '@Url.Content("~/Carbone/PostCBilanCarbone")',
+            type: "POST", url: '@Url.Content("~/Carbone/SauvegardeBilanCarbone")',
             data: data, dataType: "json",
             success: function () {
 
@@ -137,12 +347,26 @@
                // $('#consoEau_txt_popup').html("Echec lors de l'enregistrement");
             },
             complete: function () {
+                AjouterBilanCarboneDetailleAjax();
+               // _isOngletGeneralCharge = 0;
               //  $('#modal_addConsoEau').hide();
               //  GetDonneesConsoEau();
             }
         });
     }
 
+    function MajAllCO2() {
+
+         //Logement aa
+        $('input').each(function () {
+            var id = $(this).attr('id');
+            x_onChange(id);
+        });
+        
+        d_onInternetChange();
+        onBouteilleChange();
+        t_voitureChange();
+    }
 
     //Get valeurs référentiels
     function GetValueRefFromCode(code) {
@@ -217,7 +441,7 @@
 <div class="col-sm-2 form-group">
     <label class="PurpleText">Année :</label>
     <div class="valeur">
-        <input id="ch_annee" placeholder="Année" class="mdl-textfield__input">
+        <input id="ch_annee" class="mdl-textfield__input" maxlength="4" pattern="^0[1-9]|[1-9]\d$" onchange="MajChampsBilanDetaille();" placeholder="Année">
     </div>
 </div>
 
@@ -724,7 +948,7 @@
         <div class="col-sm-4 form-group">
             <label class="PurpleText">Forfait individuel identique pour tous :</label>
             <div class="valeur">
-                <span class="e_co2" value="1283">1283</span> kg CO<sub>2</sub>
+                <span class="e_co2" id="s_public" value="1283">1283</span> kg CO<sub>2</sub>
             </div>
         </div>
         <div class="col-sm-4"></div>
@@ -732,6 +956,6 @@
 </div>
 
 <div class="col-sm-12">
-    <center><button class="mdl-button mdl-js-button mdl-button--accent" onclick="AjouterBilanCarboneAjax()">Ajouter mon bilan</button></center>
+    <center><button id="btnAddBilan" class="mdl-button mdl-js-button mdl-button--accent" onclick="AjouterBilanCarboneAjax()">Ajouter mon bilan</button></center>
 </div>
 

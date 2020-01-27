@@ -3,13 +3,11 @@
     ViewBag.Title = "Index";
 }
 
-<!--TITRE-->
+
+
 <div>
     <h1 id="titre" class="display-4">Administration</h1>
 </div>
 <br /><br /><br />
 
-
-<a class="mdl-button mdl-js-button mdl-button--primary" href="@Url.Content("~/Administration/CoorespondanceCategoriesDepenses")">Correspondance Catégories / Dépenses</a>
-<br />
-<a class="mdl-button mdl-js-button mdl-button--primary" href="@Url.Content("~/Administration/ComptesEpargne")">Comptes Epargnes</a>
+@Html.Partial("_AdministrationListElements")

@@ -153,7 +153,6 @@
     //AJAX - Enregistrer épargne
    function EnregistrerMontantsAjax() {
 
-
         MajListeComptes();
         var data = {};
             
@@ -165,6 +164,9 @@
                 url: '@Url.Content("~/Epargne/SauvegarderMontantEpargne")',
                 data: data, dataType: "json",
                 success: function () {
+                    
+                },
+                complete: function () {
                     var modal = document.getElementById('modal_AddEpargne');
                     modal.style.display = "none";
 

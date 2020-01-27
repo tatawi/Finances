@@ -2,6 +2,7 @@
 
     $(document).ready(function () {
 
+        //CHargement des tableaux
         GetDonneesBilans();
     });
 
@@ -48,14 +49,38 @@
                 //$('#consoEau_txt_popup').html('Pas de données en base pour cette année');
             },
             complete: function () {
-                var graphBilans = document.getElementById("ch_BilansCarbones").getContext('2d');
-                DisplayGraphConsoEauMontants (graphBilans, tab_Annee, tab_Logement, tab_Transports, tab_Alimentation, tab_Dechets, tab_Achats, tab_Finance, tab_ServicePublique, tab_Total)
+                //Graph total
+                var graphTotal = document.getElementById("ch_BilansCarboneTotal").getContext('2d');
+                DisplayGraphCarboneTotal(graphTotal, tab_Annee, tab_Total);
+
+                //Graph détails
+                var graphDetails = document.getElementById("ch_BilansCarboneDetails").getContext('2d');
+                DisplayGraphCarboneDetails (graphDetails, tab_Annee, tab_Logement, tab_Transports, tab_Alimentation, tab_Dechets, tab_Achats, tab_Finance, tab_ServicePublique)
             }
         });
     };
 
-    //DisplayGraphConsoEauMontants
-    function DisplayGraphConsoEauMontants (chart, tab_Annee, tab_Logement, tab_Transports, tab_Alimentation, tab_Dechets, tab_Achats, tab_Finance, tab_ServicePublique, tab_Total) {
+    //Graphique total
+    function DisplayGraphCarboneTotal (chart, tab_Annee, tab_Total) {
+        //var ctx = document.getElementById("ch_ConsoEauDetailM").getContext('2d');
+        var chart = new Chart(chart, {
+            // The type of chart we want to create
+            type: 'line',
+            // The data for our dataset
+            data: {
+                labels: tab_Annee,
+                datasets: [
+                        { label: "Total", fill: true, borderColor: '#F44336', data: tab_Total, }
+                    ]
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+    }
+
+    //Graphique détails
+    function DisplayGraphCarboneDetails (chart, tab_Annee, tab_Logement, tab_Transports, tab_Alimentation, tab_Dechets, tab_Achats, tab_Finance, tab_ServicePublique) {
         //var ctx = document.getElementById("ch_ConsoEauDetailM").getContext('2d');
         var chart = new Chart(chart, {
             // The type of chart we want to create
@@ -74,26 +99,10 @@
                     ]
             },
 
-             //{ label: "Logement", fill: false, borderColor: '#3F51B5', data: tab_Logement, },
-             //           { label: "Alimentaire", fill: false, borderColor: '#9C27B0', data: tab_Alimentaire, },
-             //           { label: "Voiture", fill: false, borderColor: '#607D8B', data: tab_Voiture, },
-             //           { label: "Transport", fill: false, borderColor: '#424242', data: tab_Transport, },
-             //           { label: "Loisirs", fill: false, borderColor: '#FF5722', data: tab_Loisirs, },
-             //           { label: "Voyage", fill: false, borderColor: '#4CAF50', data: tab_Voyage, },
-             //           { label: "Cadeaux", fill: false, borderColor: '#00BCD4', data: tab_Cadeaux, },
-             //           { label: "Achats", fill: false, borderColor: '#795548', data: tab_Achats, },
-             //           { label: "Vétements", fill: false, borderColor: '#A1887F', data: tab_Vetements, },
-             //           { label: "Santé", fill: false, borderColor: '#FFEB3B', data: tab_Sante, },
-             //           { label: "Impôts", fill: false, borderColor: '#F44336', data: tab_Impots, },
-             //           { label: "Frais Bancaires", fill: false, borderColor: '#EF9A9A', data: tab_Frais, },
-             //           { label: "Emprunt", fill: false, borderColor: '#B39DDB', data: tab_Emprunt, }
-
             // Configuration options go here
             options: {}
         });
-
     }
-
 
 </script>
 
@@ -107,7 +116,22 @@
         <!--Graph total-->
         <div class="col-sm-2"></div>
         <div class="col-sm-8">
-            <canvas id="ch_BilansCarbones"></canvas>
+            <canvas id="ch_BilansCarboneTotal"></canvas>
+        </div>
+        <div class="col-sm-2"></div>
+
+    </div>
+</div><br />
+
+
+<h4 class="col-sm-12 titre-bloc">Détails</h4>
+<div class="sous-partie">
+    <div class="row">
+
+        <!--Graph détails-->
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+            <canvas id="ch_BilansCarboneDetails"></canvas>
         </div>
         <div class="col-sm-2"></div>
 

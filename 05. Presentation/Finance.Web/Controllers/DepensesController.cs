@@ -1,4 +1,6 @@
-﻿using Finance.Business.Interface.Services;
+﻿using Finance.Attributes;
+using Finance.Business.Interface.Services;
+using Finance.Business.Managers;
 using Finance.Business.Services;
 using System;
 using System.Collections.Generic;
@@ -9,6 +11,7 @@ using ViewModels.Depenses;
 
 namespace Finance.Controllers
 {
+    [ApplicationAuthorize]
     public class DepensesController : Controller
     {
         private IDepensesService _DepensesService { get; set; }
@@ -51,9 +54,9 @@ namespace Finance.Controllers
             List<Poco.Depense> list_Depense = new List<Poco.Depense>();
 
             if (paramCat.Equals("All"))
-                list_Depense = _DepensesService.GetAllDepensesMois(paramAnnee, paramMois, User.Identity.Name, this.isComptePerso());
+                list_Depense = _DepensesService.GetAllDepensesMois(paramAnnee, paramMois, this.isComptePerso());
             else
-                list_Depense = _DepensesService.GetAllDepensesMoisForCat(paramAnnee, paramMois, paramCat, User.Identity.Name, this.isComptePerso());
+                list_Depense = _DepensesService.GetAllDepensesMoisForCat(paramAnnee, paramMois, paramCat, this.isComptePerso());
 
             var result = new List<object>();
             foreach (Poco.Depense dep in list_Depense)
@@ -117,7 +120,7 @@ namespace Finance.Controllers
         {
             int annee = Convert.ToInt16(Request.Params["paramAnnee"]);
             int mois = Convert.ToInt16(Request.Params["paramMois"]);
-            string msg = _DepensesService.DupliquerDepensesCommunesVersPerso(annee, mois, User.Identity.Name);
+            string msg = _DepensesService.DupliquerDepensesCommunesVersPerso(annee, mois);
 
             var result = new List<object>();
             result.Add( new { msg });
@@ -228,7 +231,7 @@ namespace Finance.Controllers
             if (TempData["ListeDesDepensesAjoutees"] != null)
                 list_DepenseAutoCalcule = (List<Poco.Depense>)TempData["ListeDesDepensesAjoutees"];
 
-            _DepensesService.AjouterDepensesMasse(list_DepenseAutoCalcule, User.Identity.Name, this.isComptePerso());
+            _DepensesService.AjouterDepensesMasse(list_DepenseAutoCalcule, this.isComptePerso());
         }
 
 

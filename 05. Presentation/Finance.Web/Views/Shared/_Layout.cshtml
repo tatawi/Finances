@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Mon application ASP.NET</title>
+    <title>Gestion - @ViewBag.Title</title>
 
     <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/hover-min.css")" rel="stylesheet" type="text/css" />
@@ -37,8 +37,7 @@
     //---------------------------------------------------------------------------------------------------------
     //------------- AJAX -----------------------
 
-
-
+        //ChargerTypeCompte
         function ChargerTypeCompte() {
         var baseUrl = '@Url.Content("~/Home/GetCompteAjax/")';
 
@@ -49,32 +48,26 @@
                     var select = document.getElementById('selectComptes');
                     var lbSelect = document.getElementById('lbSelectComptes');
 
-
                     if (isComptePerso) {
 
                         select.checked = false;
                         TYPEdeCOMPTE = "perso";
                         return "perso";
-                       }
+                    }
                     else {
                         lbSelect.classList.add("is-checked");
                         select.checked = true;
                         TYPEdeCOMPTE = "commun";
                         return "commun";
-                       }
-
-
-
+                    }
                 });
-        });
-
-    };
-
+            });
+        };
 
 
+        //ChangementComptes
         function ChangementComptes(selecteur)
         {
-
             var compteChoisi;
             var title = document.getElementById("titre");
 
@@ -95,8 +88,6 @@
                 }
             }
 
-
-
             var data = {
                 'paramCompte': compteChoisi
             };
@@ -110,18 +101,24 @@
                     EffectuerRecherche();
                 }
             });
-
-
         }
 
-
-        //ajouter une dépense
+        //Affichage d'un message
         function displayMessage(message) {
-            document.getElementById('MessageFlottant').innerText = message;
-            document.getElementById('MessageFlottant').style.display = 'none';
-            document.getElementById('MessageFlottant').removeAttribute("hidden");
-            $('#MessageFlottant').fadeIn('fast');
-            $('#MessageFlottant').delay(3000).fadeOut('slow');
+            if (message.includes("[Erreur]")) {
+                message.replace("[Erreur]", "");
+                document.getElementById('MessageFlottantErreur').innerText = message;
+                document.getElementById('MessageFlottantErreur').style.display = 'none';
+                document.getElementById('MessageFlottantErreur').removeAttribute("hidden");
+                $('#MessageFlottantErreur').fadeIn('fast');
+                $('#MessageFlottantErreur').delay(3000).fadeOut('slow');
+            } else {
+                document.getElementById('MessageFlottant').innerText = message;
+                document.getElementById('MessageFlottant').style.display = 'none';
+                document.getElementById('MessageFlottant').removeAttribute("hidden");
+                $('#MessageFlottant').fadeIn('fast');
+                $('#MessageFlottant').delay(3000).fadeOut('slow');
+            }
         }
 
     </script>
@@ -135,7 +132,7 @@
         <header class="mdl-layout__header">
             <div class="mdl-layout__header-row" id="nav_liens">
                 <!-- Title -->
-                <a class="mdl-layout-title colorWhite" href="/Finance/">Finance</a>
+                <a class="mdl-layout-title colorWhite" href="/Finance/">Gestion</a>
 
                 <!-- Navigation. We hide it in small screens. -->
                 <nav class="mdl-navigation mdl-layout--large-screen-only">
@@ -178,32 +175,35 @@
         </header>
 
         <div class="mdl-layout__drawer" id="nav_menu">
-            <a class="mdl-layout-title mdl-button--accent" href="/">Finance</a>
+            <a class="mdl-layout-title mdl-button--accent" href="/">Gestion</a>
             <nav class="mdl-navigation">
                 <div class="mdl-navigation__link">
-                    <a class="mdl-button--primary" href="@Url.Content("~/Home/Graph")">Graphs</a><br />
-                    <span>Représentation visuelle des données.</span>
+                    <a class="mdl-button--primary" href="@Url.Content("~/Appartement/index")">Appartement</a><br />
+                    <span>Informations sur l'apartement.</span>
                 </div>
                 <div class="mdl-navigation__link">
-                    <a class="mdl-button--primary" href="@Url.Content("~/Home/RecapGeneral")">Recap Général</a><br />
-                    <span>Récapitulatif général par catégories et par années.</span>
+                    <a class="mdl-button--primary" href="@Url.Content("~/Consolidation/ConsoGenerale")">Recap Général</a><br />
+                    <span>Récapitulatif général des dépenses.</span>
                 </div>
                 <div class="mdl-navigation__link">
-                    <a class="mdl-button--primary" href="@Url.Content("~/Home/RecapAnnuel")">Recap Annuel</a><br />
-                    <span>Récapitulatif de l'année.</span>
+                    <a class="mdl-button--primary" href="@Url.Content("~/Consolidation/ConsoAnnuelle")">Recap Annuel</a><br />
+                    <span>Récapitulatif des dépenses par années.</span>
                 </div>
                 <div class="mdl-navigation__link">
-                    <a class="mdl-button--primary" href="@Url.Content("~/Home/Recap")">Recap Mensuel</a><br />
-                    <span>Récapitulatif d'un mois. Permet d'ajouter des dépenses rapidement.</span>
+                    <a class="mdl-button--primary" href="@Url.Content("~/Consolidation/Graphiques")">Graphiques</a><br />
+                    <span>Représentation visuelle des dépenses.</span>
+                </div>
+                
+                
+                <div class="mdl-navigation__link">
+                    <a class="mdl-button--primary" href="@Url.Content("~/Epargne/index")">Epargne</a><br />
+                    <span>Gestion de l'épargne.</span>
                 </div>
                 <div class="mdl-navigation__link">
-                    <a class="mdl-button--primary" href="@Url.Content("~/Home/Ajouter")">Dépenses Unitaires</a><br />
-                    <span>Liste précise des dépenses. Permet d'ajouter des dépenses.</span>
+                    <a class="mdl-button--primary" href="@Url.Content("~/Carbone/index")">Bilan carbone</a><br />
+                    <span>Gestion des bilans carbones.</span>
                 </div>
-                <div class="mdl-navigation__link">
-                    <a class="mdl-button--primary" href="@Url.Content("~/Appartement/Appartement")">Appartement</a><br />
-                    <span>Informations concernant le gestion de l'appartement.</span>
-                </div>
+                
                 <div class="mdl-navigation__link">
                     <a class="mdl-button--primary" href="@Url.Content("~/Administration/Index")">Administration</a><br />
                 </div>
@@ -212,6 +212,8 @@
 
 
         <span id="MessageFlottant" class="messageFlottant" hidden>Message</span>
+        <span id="MessageFlottantErreur" class="messageFlottantErreur" hidden>Message</span>
+        
         <label id="lbSelectComptes" class="PositionRight mdl-switch mdl-js-switch mdl-js-ripple-effect" for="selectComptes">
             <input type="checkbox" id="selectComptes" class="mdl-switch__input" onchange="ChangementComptes(this)">
         </label>

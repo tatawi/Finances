@@ -1,0 +1,297 @@
+﻿@model ViewModels.Login.LoginVM
+@{
+    ViewBag.Title = "MonUtilisateur";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+        $('#newMdp').val('');
+        $('#newConfirmMdp').val('');
+
+        ControlerChampsUser();
+        ControlerChampsMdp();
+
+    });
+
+    //Controler les champs Identités
+    function ControlerChampsUser() {
+        var nom = $('#newNom').val();
+        var prenom = $('#newPrenom').val();
+        var nbVide = 0;
+        var txt = '';
+       
+        //Champ Nom
+        if (nom == '') {
+            nbVide++;
+            txt = 'Le nom est obligatoire';
+        }
+
+        //Champ Prénom
+        if (prenom == '') {
+            nbVide++;
+            txt = 'Le prénom est obligatoire';
+        }
+
+        if (nbVide > 0) {
+            if (nbVide > 1) { txt = "Vous devez renseigner tous les champs"; }
+            $('#addUserError').show();
+            $('#addUserError').text(txt);
+            $('#btnSaveUser').prop('disabled', true);
+        }
+        else {
+            $('#addUserError').hide();
+            $('#btnSaveUser').prop('disabled', false);
+        } 
+    }
+
+    //Controler champs Mot de passe
+    function ControlerChampsMdp() {
+        var mdp = $('#newMdp').val();
+        var confirmMdp = $('#newConfirmMdp').val();
+
+        var nbVide = 0;
+        var txt = '';
+        var upperCase= RegExp('[A-Z]');
+        var lowerCase= RegExp('[a-z]');
+        var numbers = RegExp('[0-9]');
+        var special = RegExp('[!-"-#-$-%-&-(-)-*-+-,-.-;-?-:]');   
+        var allFieldsGood = true;
+
+
+        //Majuscule
+        if (upperCase.test(mdp)) {
+            ConditionOK($('#c_maj'), true);
+        } else {
+            ConditionOK($('#c_maj'), false);
+            allFieldsGood = false;
+        }
+
+        //Minuscule
+        if (lowerCase.test(mdp)) {
+            ConditionOK($('#c_min'), true);
+        } else {
+            ConditionOK($('#c_min'), false);
+            allFieldsGood = false;
+        }
+
+        //Chiffre
+        if (numbers.test(mdp)) {
+            ConditionOK($('#c_chiffre'), true);
+        } else {
+            ConditionOK($('#c_chiffre'), false);
+            allFieldsGood = false;
+        }
+
+        //Caractére spécial
+         if (special.test(mdp)) {
+            ConditionOK($('#c_spe'), true);
+        } else {
+            ConditionOK($('#c_spe'), false);
+            allFieldsGood = false;
+        }
+
+        //Longueur
+        if (mdp.length<8) {
+            ConditionOK($('#c_long'), false);
+            allFieldsGood = false;
+        } else {
+            ConditionOK($('#c_long'), true);
+        }
+
+        //Correspondance mdp
+        if (mdp==confirmMdp) {
+            ConditionOK($('#c_corresp'), true);
+            $('#c_corresp').text("Le mot de passe correspond au champ vérification");
+        } else {
+            ConditionOK($('#c_corresp'), false);
+            $('#c_corresp').text("Le mot de passe ne correspond pas au champ vérification");
+            allFieldsGood = false;
+        }
+
+        //Gestion bouton
+        if (allFieldsGood) {
+            $('#btnModifierMdp').prop( "disabled", false );
+        } else {
+            $('#btnModifierMdp').prop( "disabled", true );
+        }
+       
+
+
+    }
+
+    //Fonction control condition
+    function ConditionOK(span, result) {
+        if (result) {
+            span.removeClass('PinkText');
+            span.addClass('GreenText');
+        }
+        else {
+            span.removeClass('GreenText');
+            span.addClass('PinkText');
+        }
+    }
+
+    //ACTION POST - Enregistrement identité
+    function modifierIdentite() {
+        var baseUrl = '@Url.Content("~/Administration/ModifierIdentite/")';
+        var Message = "";
+        var data = {};
+        data['newNom'] = $('#newNom').val();
+        data['newPrenom'] = $('#newPrenom').val();
+
+         $.ajax({
+            url: baseUrl, type: "POST", async: true, data: data, dataType: "json",
+            success: function (result) {
+                Message = result;
+            },
+            fail: function () {
+                displayMessage(Message);
+            },
+            complete: function () {
+                displayMessage(Message);
+            }
+        });
+    }
+
+    //ACTION POST - Enregistrement Mot de passe
+    function modifierMdp() {
+        var baseUrl = '@Url.Content("~/Administration/ModifierMotDePasse/")';
+        var Message = "";
+        var data = {};
+        data['newMdp'] = $('#newMdp').val();
+        data['newConfirmMdp'] = $('#newConfirmMdp').val();
+
+         $.ajax({
+            url: baseUrl, type: "POST", async: true, data: data, dataType: "json",
+            success: function (result) {
+                Message = result;
+            },
+            fail: function () {
+                displayMessage(Message);
+            },
+            complete: function () {
+                displayMessage(Message);
+            }
+        });
+    }
+
+</script>
+
+
+
+<div class="row">
+
+    <!--TITRE-->
+    <div class="col-sm-12">
+        <h1 id="titre" class="display-4">Administration</h1>
+    </div>
+    <!--MENU Admin de gauche-->
+    <div class="col-sm-4">
+        @Html.Partial("_AdministrationListElements")
+    </div>
+
+
+    <!--Page-->
+    <div class="col-sm-8">
+
+        <h2 id="titre" class="display-6">Modifier mes informations</h2>
+        <hr />
+
+        <!---->
+        <h4 class="titre-bloc">Identité</h4>
+        <div class="sous-partie">
+            <div class="row">
+                <!--Nom-->
+                <div class="souligne col-sm-6 mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-bottom:1px">
+                    <label  class="PurpleText">Nom :</label>
+                    @Html.TextBoxFor(m => m.newNom, new { @class = " mdl-textfield__input", @onChange = "ControlerChampsUser();" })
+                </div>
+
+                <!--Prénom-->
+                <div class="souligne col-sm-6 mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-bottom:1px">
+                    <label  class="PurpleText">Prénom :</label>
+                    @Html.TextBoxFor(m => m.newPrenom, new { @class = " mdl-textfield__input", @onChange = "ControlerChampsUser();" })
+                </div>
+
+                <!--Mail-->
+                <div class="col-sm-12 mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-bottom:1px">
+                    <label  class="PurpleText">Adresse Email :</label><br />
+                    @Html.DisplayFor(m => m.newMail, new { @class = " mdl-textfield__input"})
+                </div>
+                <br />
+
+                <!--Bouton-->
+                <div class="col-sm-12">
+                    <center>
+                        <input id="btnSaveUser" type="button" onclick="modifierIdentite();" value="Sauvegarder" class="mdl-button mdl-js-button mdl-button--accent" disabled/><br />
+                    </center>
+                </div>
+                
+
+                <!--Message-->
+                <div class="col-sm-12">
+                    <span id="addUserError" class="RedText">Vous devez renseigner tous les champs</span>
+                </div>
+            </div>
+        </div><br />
+
+        <!---->
+        <h4 class="col-sm-12 titre-bloc">Changer mot de passe</h4>
+        <div class="sous-partie">
+            <div class="row">
+
+                <!--Champs-->
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="souligne col-sm-12 mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-bottom:1px">
+                            <label  class="PurpleText">Nouveau Mot de passe :</label>
+                            @Html.TextBoxFor(m => m.newMdp, new { @class = " mdl-textfield__input", @type = "password", @onkeyup = "ControlerChampsMdp();" })
+                        </div>
+
+                        <div class="souligne col-sm-12 mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-bottom:1px">
+                            <label  class="PurpleText">Vérification :</label>
+                            @Html.TextBoxFor(m => m.newConfirmMdp, new { @class = " mdl-textfield__input", @type = "password", @onkeyup = "ControlerChampsMdp();" })
+                        </div>
+                    </div>
+                </div>
+
+                <!--Vérification-->
+                <div class="col-sm-6">
+                    <span>Le nouveau mot de passe doit avoir au moins :</span>
+                    <br /><span>- </span><span class="PinkText" id="c_maj">Une majuscule</span>
+                    <br /><span>- </span><span class="PinkText" id="c_min">Une minuscule</span>
+                    <br /><span>- </span><span class="PinkText" id="c_chiffre">Un chiffre</span>
+                    <br /><span>- </span><span class="PinkText" id="c_spe">Un caractére spécial (@@ . ! & _ ? -   ; = : ^  $ # * () % )</span>
+                    <br /><span>- </span><span class="PinkText" id="c_long">Une longeur de 8</span>
+                    <br /><span>- </span><span class="PinkText" id="c_corresp">Correspondre au champ vérification</span>
+                </div>
+
+                <!--Bouton-->
+                <div class="col-sm-12">
+                    <br />
+                    <center>
+                        <input id="btnModifierMdp" onclick="modifierMdp();" type="button" value="Changer le mot de passe" class="mdl-button mdl-js-button mdl-button--accent" disabled/><br />
+                    </center>
+                </div>
+
+            </div>
+
+        </div>
+
+
+            
+
+            
+
+        
+
+    </div>
+</div>
+
+
+
+

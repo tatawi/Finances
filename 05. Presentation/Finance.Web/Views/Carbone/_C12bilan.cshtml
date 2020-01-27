@@ -1,1 +1,202 @@
-﻿Bilan !
+﻿
+<script>
+
+    $(document).ready(function () {
+
+        $('#chp_bilan_annee').html((new Date).getFullYear());
+        $('#c12bilan_spAnnee').html((new Date).getFullYear());
+        GetDonneesBilans();
+    });
+
+
+
+
+    //Modification année
+    function ChangerAnneeViaImage(plusOuMoins) {
+        var champ = document.getElementById('chp_bilan_annee');
+        var annee = parseInt(champ.innerText);
+        if (plusOuMoins == 1) {
+            champ.innerText = (annee + 1);
+        }
+        else {
+            champ.innerText = (annee - 1);
+        }
+
+        $('#c12bilan_spAnnee').html(champ.innerText);
+        //showGif();
+        GetDonneesBilans();
+        //hideGif();
+    }
+
+
+
+    //Get Donnees bilans carbones
+    function GetDonneesBilans() {
+        var baseUrl = '@Url.Content("~/Carbone/GetBilanAnnee/")';
+        var an = parseInt($("#chp_bilan_annee").text());
+        var Logement;
+        var Transports;
+        var Alimentation;
+        var Dechets;
+        var Achats;
+        var Finance;
+        var ServicePublique;
+        var Total;
+
+        $.ajax({
+            url: baseUrl, data: {annee:an}, type: "POST", async: true, dataType: "json",
+            success: function (result) {
+                $.each(result, function (index, itemData) {
+                    var vLogement = itemData.Logement;
+                    var vTransports = itemData.Transports;
+                    var vAlimentation = itemData.Alimentation;
+                    var vDechets = itemData.Dechets;
+                    var vAchats = itemData.Achats;
+                    var vFinance = itemData.Finance;
+                    var vServicePublique = itemData.ServicePublique;
+                    var vTotal = itemData.Total;
+
+                    Logement = vLogement;
+                    Transports = vTransports;
+                    Alimentation = vAlimentation;
+                    Dechets = vDechets;
+                    Achats = vAchats;
+                    Finance = vFinance;
+                    ServicePublique = vServicePublique;
+                    Total = vTotal;
+                });
+            },
+            fail: function () {
+
+            },
+            complete: function () {
+
+                $('#c12bilan_sptotal').html(Total.toLocaleString()+" kg CO<sub>2</sub>");
+
+                var graphBarBilanBar = document.getElementById("ch_graphBarBilan").getContext('2d');
+                DisplayGraphBilan_Bar(graphBarBilanBar, Logement, Transports, Alimentation, Dechets, Achats, Finance, ServicePublique);
+
+                var graphBarBilanRadar = document.getElementById("ch_graphRadarBilan").getContext('2d');
+                DisplayGraphBilan_Radar(graphBarBilanRadar, Logement, Transports, Alimentation, Dechets, Achats, Finance, ServicePublique);
+            }
+        });
+    };
+
+    //Graphine bar bilan
+    function DisplayGraphBilan_Bar(chart, Logement, Transports, Alimentation, Dechets, Achats, Finance, ServicePublique) {
+        //var ctx = document.getElementById("ch_ConsoEauDetailM").getContext('2d');
+        var chart = new Chart(chart, {
+            // The type of chart we want to create
+            type: 'horizontalBar',
+            // The data for our dataset
+            data: {
+                labels: ["Logement", "Transports", "Alimentation", "Dechets", "Achats", "Finance", "ServicePublic"],
+                datasets: [{
+                    label: "Emissions équivalent kg co2",
+                    data: [Logement, Transports, Alimentation, Dechets, Achats, Finance, ServicePublique],
+                    fill: false,
+                    borderWidth: 1,
+                    backgroundColor: ["rgba(255, 159, 64, 0.2)",
+                        "rgba(201, 203, 207, 0.2)",
+                        "rgba(75, 192, 192, 0.2)",
+                        "rgba(255, 205, 86, 0.2)",
+                        "rgba(54, 162, 235, 0.2)",
+                        "rgba(153, 102, 255, 0.2)",
+                        "rgba(255, 99, 132, 0.2)"],
+                    borderColor: ["rgb(255, 159, 64)",
+                        "rgb(201, 203, 207)",
+                        "rgb(75, 192, 192)",
+                        "rgb(255, 205, 86)",
+                        "rgb(54, 162, 235)",
+                        "rgb(153, 102, 255)",
+                        "rgb(255, 99, 132)"]
+                }]
+            },
+            // Configuration options go here
+            options: {
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+    }
+
+    //Graphique Radar bilan
+    //DisplayGraphConsoEauMontants
+    function DisplayGraphBilan_Radar(chart, Logement, Transports, Alimentation, Dechets, Achats, Finance, ServicePublique) {
+        //var ctx = document.getElementById("ch_ConsoEauDetailM").getContext('2d');
+        var chart = new Chart(chart, {
+            // The type of chart we want to create
+            type: 'radar',
+            // The data for our dataset
+
+            data: {
+                labels: ["Logement", "Transports", "Alimentation", "Dechets", "Achats", "Finance", "ServicePublic"],
+                datasets: [{
+                    label: "Emissions équivalent kg co2",
+                    data: [Logement, Transports, Alimentation, Dechets, Achats, Finance, ServicePublique],
+                    fill: true,
+                    backgroundColor: "rgba(255, 99, 132, 0.2)",
+                    pointBackgroundColor:"rgba(255, 99, 132)",
+	                pointBorderColor:"rgba(0, 0, 0)",
+	                pointHoverBackgroundColor:"rgba(0, 0, 0)",
+	                pointHoverBorderColor:"rgba(255, 99, 132)"
+                     }]
+            },
+            options: {
+                elements: {
+                    line: {
+                        tension: 0,
+                        borderWidth: 3
+                    }
+                }
+            }
+        });
+
+
+    }
+
+
+
+</script>
+
+
+
+
+
+<!--ANNEE COURANTE-->
+    <h4 class="col-sm-12 titre-bloc">Bilan carbonne <span id="c12bilan_spAnnee"></span></h4>
+    <div class="sous-partie">
+        <div class="row">
+
+            <!--tab Année-->
+            <div class="col-sm-5">
+                <center>
+                    <img onClick="ChangerAnneeViaImage(-1)" src='@Url.Content("~/Content/Previous_Violet_50.png")' />
+                    <span id="chp_bilan_annee">2019</span>
+                    <img onClick="ChangerAnneeViaImage(1)" src='@Url.Content("~/Content/Next_Violet_50.png")' />
+                </center>
+                <br />
+
+                <span class="mdl-button mdl-js-button mdl-button--primary">Total des emissions : </span>
+                <span id="c12bilan_sptotal" class="mdl-button mdl-js-button mdl-button--accent"></span>
+
+
+                <canvas id="ch_graphRadarBilan"></canvas>
+
+            </div>
+
+            <!--Graph Année-->
+            <div class="col-sm-7">
+                <canvas id="ch_graphBarBilan"></canvas>
+            </div>
+
+            
+
+        </div>
+    </div><br />

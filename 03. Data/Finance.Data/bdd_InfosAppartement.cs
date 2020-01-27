@@ -11,7 +11,7 @@ namespace Finance.Data.bdd
 {
     public class bdd_InfosAppartement : bdd
     {
-        public string userName;
+        public int utilisateurId;
 
 
         public bdd_InfosAppartement()
@@ -20,15 +20,14 @@ namespace Finance.Data.bdd
         }
 
 
-        public bdd_InfosAppartement(string paramUserName)
+        public bdd_InfosAppartement(int paramUserName)
         {
-            //this.connectionString = ConfigurationManager.ConnectionStrings["FinanceConnection"].ConnectionString;
-            this.userName = paramUserName;
+            this.utilisateurId = paramUserName;
         }
 
-        public void SetUser(string paramUserName)
+        public void SetUser(int paramUserName)
         {
-            this.userName = paramUserName;
+            this.utilisateurId = paramUserName;
         }
 
         //------------------------------------------------------------------------------------------------------------
@@ -39,14 +38,14 @@ namespace Finance.Data.bdd
         public int Get_ValeurApptPourAnnee(int annee)
         {
             decimal montant = 0;
-            string sql = "SELECT TOP(1) Montant FROM InfosAppartement WHERE UserName = @paramUser AND Year(Date) = @paramAnnee ORDER BY Date desc";
+            string sql = "SELECT TOP(1) Montant FROM InfosAppartement WHERE UtilisateurId = @paramUserId AND Year(Date) = @paramAnnee ORDER BY Date desc";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("paramUser", this.userName);
+                    cmd.Parameters.AddWithValue("paramUserId", this.utilisateurId);
                     cmd.Parameters.AddWithValue("paramAnnee", annee);
 
                     using (var reader = cmd.ExecuteReader())
@@ -66,14 +65,14 @@ namespace Finance.Data.bdd
         public List<InfoAppartement> Get_InfosAppartementForType(string type)
         {
             List<InfoAppartement> list_infos = new List<InfoAppartement>();
-            string sql = "SELECT InfosAppartementId, Montant, Date, Description, Type FROM InfosAppartement WHERE  UserName = @paramUser AND Type = @paramType ";
+            string sql = "SELECT InfosAppartementId, Montant, Date, Description, Type FROM InfosAppartement WHERE  UtilisateurId = @paramUserId AND Type = @paramType ";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("paramUser", this.userName);
+                    cmd.Parameters.AddWithValue("paramUserId", this.utilisateurId);
                     cmd.Parameters.AddWithValue("paramType", type);
 
                     using (var reader = cmd.ExecuteReader())
@@ -101,14 +100,14 @@ namespace Finance.Data.bdd
         public List<InfoAppartement> get_InfosAppartementForTypeAndYear(string type, int annee)
         {
             List<InfoAppartement> list_infos = new List<InfoAppartement>();
-            string sql = "SELECT InfosAppartementId, Montant, Date, Description, Type FROM InfosAppartement WHERE  UserName = @paramUser AND Type = @paramType AND Year(Date) = @paramDate order by Date";
+            string sql = "SELECT InfosAppartementId, Montant, Date, Description, Type FROM InfosAppartement WHERE  UtilisateurId = @paramUserId AND Type = @paramType AND Year(Date) = @paramDate order by Date";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("paramUser", this.userName);
+                    cmd.Parameters.AddWithValue("paramUserId", this.utilisateurId);
                     cmd.Parameters.AddWithValue("paramType", type);
                     cmd.Parameters.AddWithValue("paramDate", annee);
 
@@ -143,14 +142,14 @@ namespace Finance.Data.bdd
             using (SqlConnection conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                string sql = "INSERT INTO InfosAppartement VALUES(@Montant, @Date, @Description, @UserName, @Type)";
+                string sql = "INSERT INTO InfosAppartement VALUES(@Montant, @Date, @Description, @Type, @paramUserId)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add("@Montant", SqlDbType.Decimal).Value = info.Montant;
                 cmd.Parameters.Add("@Date", SqlDbType.DateTime).Value = info.Date;
                 cmd.Parameters.Add("@Description", SqlDbType.VarChar).Value = info.Description;
-                cmd.Parameters.Add("@UserName", SqlDbType.VarChar).Value = this.userName;
                 cmd.Parameters.Add("@Type", SqlDbType.VarChar).Value = info.Type;
+                cmd.Parameters.Add("@paramUserId", SqlDbType.VarChar).Value = this.utilisateurId;
 
 
                 cmd.CommandType = CommandType.Text;

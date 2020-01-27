@@ -1,4 +1,5 @@
-﻿using Finance.Business.Interface.Services;
+﻿using Finance.Attributes;
+using Finance.Business.Interface.Services;
 using Finance.Business.Services;
 using Newtonsoft.Json;
 using System;
@@ -10,7 +11,7 @@ using ViewModels.Epargne;
 namespace Finance.Controllers
 {
 
-    [Authorize]
+    [ApplicationAuthorize]
     public class EpargneController : Controller
     {
         private IEpargneService _EpargneService { get; set; }
@@ -40,7 +41,7 @@ namespace Finance.Controllers
         public JsonResult GetLastMontantEpargne()
         {
             var result = new List<object>();
-            var listComptes = _EpargneService.GetDernierMontantComptes(User.Identity.Name);
+            var listComptes = _EpargneService.GetDernierMontantComptes();
             
             foreach (var cpt in listComptes)
             {
@@ -77,7 +78,7 @@ namespace Finance.Controllers
         public JsonResult GetMontantEpargneAnnee(int Annee)
         {
             //List<Epargne> list_epargne = getEpargneparMois(Annee);
-            var list_epargne = _EpargneService.GetEpargneparMois(Annee, User.Identity.Name);
+            var list_epargne = _EpargneService.GetEpargneparMois(Annee);
 
             var result = new List<object>();
             foreach (var info in list_epargne)
@@ -110,7 +111,7 @@ namespace Finance.Controllers
 
             for (int annee = anneeDebut; annee <= anneeCourante; annee++)
             {
-                var list_epargne = _EpargneService.GetEpargneparMois(annee, User.Identity.Name);
+                var list_epargne = _EpargneService.GetEpargneparMois(annee);
                 int Montant = list_epargne.Sum(m => m.Montant).Value;
                 String AnneeStr = annee.ToString();
                 result.Add(new { AnneeStr, Montant });
@@ -142,11 +143,11 @@ namespace Finance.Controllers
                 String AnneeStr = annee.ToString();
 
                 //Epargne
-                var list_epargne = _EpargneService.GetEpargneTotaleAnnee(annee, User.Identity.Name);
+                var list_epargne = _EpargneService.GetEpargneTotaleAnnee(annee);
                 int MontantTotalEpargne = list_epargne.Sum(e => e.Montant).Value;
 
                 //Appt
-                int MontantAppartement = _AppartementService.GetListeValeurApptPourAnnee(annee, User.Identity.Name);
+                int MontantAppartement = _AppartementService.GetListeValeurApptPourAnnee(annee);
 
                 //Total
                 int Total = MontantTotalEpargne + MontantAppartement;

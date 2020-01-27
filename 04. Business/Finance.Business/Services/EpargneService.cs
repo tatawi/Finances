@@ -19,10 +19,10 @@ namespace Finance.Business.Services
 
 
         //Retourne le montant total épargné pour chaque mois de l'année
-        public List<Epargne> GetEpargneparMois(int annee, string user)
+        public List<Epargne> GetEpargneparMois(int annee)
         {
             List<Epargne> list_epargne = new List<Epargne>();
-            List<Epargne> list_all = _EpargneManager.GetEpargnesForYearAndDecember(annee, user);
+            List<Epargne> list_all = _EpargneManager.GetEpargnesForYearAndDecember(annee);
             int montantMoisprecedent = 0;
 
             for (int mois = 1; mois <= 12; mois++)
@@ -52,17 +52,17 @@ namespace Finance.Business.Services
 
 
         //Retourne la liste des comptes avec les derniers montants en base
-        public List<Epargne> GetDernierMontantComptes(string user)
+        public List<Epargne> GetDernierMontantComptes()
         {
-            return _EpargneManager.GetDernierMontantComptes(user);
+            return _EpargneManager.GetDernierMontantComptes();
         }
 
 
         //Récupére l'épargne max de chaque comtpe pour une année
-        public List<Epargne> GetEpargneTotaleAnnee(int annee, string user, bool AfficherCompte=false)
+        public List<Epargne> GetEpargneTotaleAnnee(int annee, bool AfficherCompte=false)
         {
             List<Epargne> listeEpargneTotale = new List<Epargne>();
-            List<Ref_Compte> listeComtpes = _EpargneManager.GetListComptesForUser(user);
+            List<Ref_Compte> listeComtpes = _EpargneManager.GetListComptes();
 
             foreach(var cpt in listeComtpes)
             {

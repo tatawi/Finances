@@ -12,5 +12,19 @@ namespace ViewModels.Login
         public string mdp { get; set; }
 
         public bool Authentifie { get; set; }
+
+
+
+
+        //Ajout nouvel utilisateur
+        public string newNom { get; set; }
+        public string newPrenom { get; set; }
+        public string newMail { get; set; }
+        public string newMdp { get; set; }
+        public string newConfirmMdp { get; set; }
+        public bool isActif { get; set; }
+        public string Message { get; set; }
+
+
     }
 }

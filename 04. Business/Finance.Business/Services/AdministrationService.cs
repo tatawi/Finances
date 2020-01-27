@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViewModels.Login;
 
 namespace Finance.Business.Services
 {
@@ -14,13 +15,95 @@ namespace Finance.Business.Services
     {
         private CategorieDepenseManager _CategorieDepenseManager { get; set; }
         private EpargneManager _EpargneManager { get; set; }
+        private UtilisateurManager _UtilisateurManager { get; set; }
+        private MailService mailService { get; set; }
 
 
         public AdministrationService()
         {
             this._CategorieDepenseManager = new CategorieDepenseManager();
             this._EpargneManager = new EpargneManager();
+            this._UtilisateurManager = new UtilisateurManager();
+            this.mailService = new MailService();
         }
+
+
+        #region Mon Utilisateur
+
+        //Get vm page
+        public LoginVM GetVmUtilisateur()
+        {
+            LoginVM vm = new LoginVM();
+            Utilisateur monUser = ApplicationManager.CurrentUser;
+            vm.newNom = monUser.Nom;
+            vm.newPrenom = monUser.Prenom;
+            vm.newMail = monUser.Email;
+            vm.isActif = monUser.IsActif;
+
+            return vm;
+        }
+        
+        //Modification identité utilisateur
+        public string ModifierIdentiteUtilisateur(LoginVM vm)
+        {
+            if(vm==null)
+                return "[Erreur]Une erreur est survenue";
+
+            if (vm.newNom != "" && vm.newPrenom != "")
+            {
+                Utilisateur user = ApplicationManager.CurrentUser;
+
+                if(user.Nom != vm.newNom)
+                    user.Nom = vm.newNom;
+
+                if(user.Prenom != vm.newPrenom)
+                    user.Prenom = vm.newPrenom;
+
+                bool result = _UtilisateurManager.MajUtilisateur(user);
+
+                if (result)
+                    return "L'utilisateur a bien été modifié";
+                else
+                    return "[Erreur]Erreur lors de la mise à jour de l'utilisateur";
+            }
+            else
+                return "[Erreur]Cette action n'est pas autorisée";
+        }
+
+        //Modification mot de passe utilisateur
+        public string ModifierMotDePasse(LoginVM vm)
+        {
+            if (vm == null)
+                return "[Erreur]Une erreur est survenue";
+
+            if(vm.newMdp == "" || vm.newConfirmMdp == "")
+                return "[Erreur]Une erreur est survenue";
+
+            if (!_UtilisateurManager.IsMotDePasseConforme(vm.newMdp))
+                return "[Erreur]Le mot de passe n'est pas valide";
+
+            //Utilisateur
+            Utilisateur user = ApplicationManager.CurrentUser;
+
+            //Maj MDP
+            user.MotDePasse = _UtilisateurManager.Encrypt(vm.newMdp);
+
+
+            bool result = _UtilisateurManager.MajUtilisateur(user);
+
+            if (result)
+            {
+                //Envoie mail
+                mailService.MailChangementMdp(user.Email);
+                return "Le mot de passe a été changé";
+            }
+            else
+                return "[Erreur]Erreur lors de la mise à jour du mot de passe";
+        }
+
+        #endregion
+
+
 
         #region Catégories dépenses
         //Retourne la liste des cathégories
@@ -63,19 +146,18 @@ namespace Finance.Business.Services
         #region Epargne
 
         //Get list comptes utilisateur
-        public List<Ref_Compte> GetListComptesForuser(string user)
+        public List<Ref_Compte> GetListComptes()
         {
-            return this._EpargneManager.GetListComptesForUser(user);
+            return this._EpargneManager.GetListComptes();
         }
 
         //Ajout d'un compte
-        public void AddCompteForUser(string libelleCompte, string user)
+        public void AddCompte(string libelleCompte)
         {
             Ref_Compte cpt = new Ref_Compte();
             cpt.Compte = libelleCompte;
             cpt.Montant = 0;
             cpt.IsActif = true;
-            cpt.UserName = user;
 
             this._EpargneManager.AjouterCompte(cpt);
         }

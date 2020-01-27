@@ -15,28 +15,25 @@ namespace Finance.Business.Managers
         public ConsoElecManager()
         {
             this._bddConsoElec = new bdd_Electricite();
+            _bddConsoElec.setUser(ApplicationManager.CurrentUser.UtilisateurId);
         }
 
 
         //Retourne toutes les consommations d'électricité
-        public List<Electricite> GetAllElectricite(string user)
+        public List<Electricite> GetAllElectricite()
         {
-            _bddConsoElec.setUser(user);
             return _bddConsoElec.get_All();
         }
 
         //Retourne les consommations d'électricité d'une année
-        public List<Electricite> GetAllElectriciteForYear(int annee, string user)
+        public List<Electricite> GetAllElectriciteForYear(int annee)
         {
-            _bddConsoElec.setUser(user);
             return _bddConsoElec.get_ElectriciteForYear(annee);
         }
 
         //Ajoute une consommation d'électricité
-        public bool AjouterConsommation(Electricite conso, string user)
+        public bool AjouterConsommation(Electricite conso)
         {
-            _bddConsoElec.setUser(user);
-
             try
             {
                 if (_bddConsoElec.IsElectricitePresente(conso))

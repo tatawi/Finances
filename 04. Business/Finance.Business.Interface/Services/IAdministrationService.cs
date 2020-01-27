@@ -4,11 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViewModels.Login;
 
 namespace Finance.Business.Interface.Services
 {
     public interface IAdministrationService
     {
+
+        /// <summary>Retourne les informations de l'utilisateur courant</summary>
+        /// <returns>ViewModel au format <LoginVm/></returns>
+        LoginVM GetVmUtilisateur();
+
+        string ModifierIdentiteUtilisateur(LoginVM vm);
+
+        string ModifierMotDePasse(LoginVM vm);
+
+
+
 
         /// <summary>Retourne toutes les catégories de dépenses</summary>
         /// <returns>Liste</returns>
@@ -21,15 +33,17 @@ namespace Finance.Business.Interface.Services
         /// <returns>Vrai si ajout</returns>
         bool AjouterCategorieDepense(string libelle, string nomCat, string nomSsCat);
 
+
+
+
+
         /// <summary>Retourne la liste des comptes d'un utilisateur</summary>
-        /// <param name="user">Utilisateur concerné</param> 
         /// <returns>Liste de comptes</returns>
-        List<Ref_Compte> GetListComptesForuser(string user);
+        List<Ref_Compte> GetListComptes();
 
         /// <summary>Ajoute un nouveau compte</summary>
         /// <param name="libelleCompte">Nom du compte</param> 
-        /// <param name="user">Utilisateur concerné</param> 
-        void AddCompteForUser(string libelleCompte, string user);
+        void AddCompte(string libelleCompte);
 
         /// <summary>Suppression un nouveau compte</summary>
         /// <param name="compteId">Id du compte à supprimer</param> 

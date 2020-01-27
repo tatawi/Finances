@@ -11,21 +11,21 @@ namespace Finance.Data.bdd
     public class bdd_Epargne : bdd
     {
 
-        public string userName;
+        public int utilisateurId;
 
 
-        public bdd_Epargne(string paramUserName)
+        public bdd_Epargne(int paramUserName)
         {
-            this.userName = paramUserName;
+            this.utilisateurId = paramUserName;
         }
 
         public bdd_Epargne()
         {
         }
 
-        public void SetUser(string paramUserName)
+        public void SetUser(int paramUserName)
         {
-            this.userName = paramUserName;
+            this.utilisateurId = paramUserName;
         }
 
 
@@ -38,14 +38,14 @@ namespace Finance.Data.bdd
         public List<Ref_Compte> Get_Comptes()
         {
             List<Ref_Compte> list_cpt = new List<Ref_Compte>();
-            string sql = "SELECT Ref_CompteId, Compte, IsActif, Montant FROM Ref_Compte WHERE  UserName = @paramUser";
+            string sql = "SELECT Ref_CompteId, Compte, IsActif, Montant FROM Ref_Compte WHERE  UtilisateurId = @paramUserId";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("paramUser", this.userName);
+                    cmd.Parameters.AddWithValue("paramUserId", this.utilisateurId);
 
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -294,11 +294,11 @@ namespace Finance.Data.bdd
             using (SqlConnection conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                string sql = "INSERT INTO Ref_Compte (Compte, UserName, IsActif, Montant) VALUES(@Compte, @UserName, @IsActif, @Montant)";
+                string sql = "INSERT INTO Ref_Compte (Compte, UtilisateurId, IsActif, Montant) VALUES(@Compte, @UserId, @IsActif, @Montant)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add("@Compte", SqlDbType.VarChar).Value = cpt.Compte;
-                cmd.Parameters.Add("@UserName", SqlDbType.VarChar).Value = this.userName;
+                cmd.Parameters.Add("@UserId", SqlDbType.VarChar).Value = this.utilisateurId;
                 cmd.Parameters.Add("@IsActif", SqlDbType.Bit).Value = cpt.IsActif;
                 cmd.Parameters.Add("@Montant", SqlDbType.Int).Value = cpt.Montant;
 

@@ -1,4 +1,5 @@
 ﻿using Finance.Business.Interface.Services;
+using Finance.Business.Managers;
 using Finance.Business.Services;
 using System;
 using System.Collections.Generic;
@@ -21,5 +22,31 @@ namespace Finance
 
 
         }
+
+
+        protected void Session_Start()
+        {
+            //Set Current User in session
+            if (Request.IsAuthenticated)
+            {
+
+                ApplicationManager.SetupUser(HttpContext.Current.User.Identity.Name);
+
+                //if(currentUser==null)
+                //{
+                //    Server.ClearError();
+                //    Response.Clear();
+                //    Response.Redirect("~/Login/index");
+                //}
+                
+
+                //if (currentUser != null && !ApplicationManager.CurrentUser.IsActif)
+                //    throw new HttpException(401, "Ce compte utilisateur a été désactivé.");
+
+            }
+
+        }
+
+
     }
 }

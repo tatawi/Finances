@@ -79,8 +79,8 @@
       <HintPath>..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -142,6 +142,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Attributes\ApplicationAuthorizeAttribute.cs" />
     <Compile Include="Content\Enums\EnumCategorie.cs" />
     <Compile Include="Content\Enums\EnumReconductible.cs" />
     <Compile Include="Content\Enums\EnumSousCategorie.cs" />
@@ -172,6 +173,8 @@
     <Content Include="Content\Icones\ImpotsTOTAUX_full.png" />
     <Content Include="Content\Icones\SOLDE_full.png" />
     <Content Include="Content\Icones\TOTALdépenses_full.png" />
+    <Content Include="Content\img_hivers.jpg" />
+    <Content Include="Content\JS\graphPie.js" />
     <Content Include="Content\material.indigo-pink.min.css" />
     <Content Include="Scripts\jquery-1.12.4.js" />
     <Content Include="Content\jquery-ui-1.12.1.css" />
@@ -266,6 +269,9 @@
     <Content Include="Views\Carbone\_C12general.cshtml" />
     <Content Include="Views\Carbone\_C12bilan.cshtml" />
     <Content Include="Views\Carbone\_C12ajout.cshtml" />
+    <Content Include="Views\Shared\_LayoutBase.cshtml" />
+    <Content Include="Views\Administration\MonUtilisateur.cshtml" />
+    <Content Include="Views\Administration\_AdministrationListElements.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -294,6 +300,14 @@
       <Project>{F67E84E6-F699-4D14-8F77-130DF4C8F5BC}</Project>
       <Name>ViewModels</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\10. API APOD\Finance.ApodApi.Interface\Finance.ApodApi.Interface.csproj">
+      <Project>{E72B3A0C-908B-40F4-AA50-D184D9F32C22}</Project>
+      <Name>Finance.ApodApi.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\10. API APOD\Finance.ApodApi\Finance.ApodApi.csproj">
+      <Project>{814887DE-CFF7-47B3-8424-0137DAE094CA}</Project>
+      <Name>Finance.ApodApi</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -312,7 +326,7 @@
     </ItemGroup>
     <MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
     <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
-</Target>
+  </Target>
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">

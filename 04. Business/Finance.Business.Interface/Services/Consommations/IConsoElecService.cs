@@ -10,10 +10,10 @@ namespace Finance.Business.Interface.Services
     public interface IConsoElecService
     {
 
-        List<ConsommationElecAnnuelle> GetAllConsosElec(string user);
+        List<ConsommationElecAnnuelle> GetAllConsosElec();
 
-        ConsommationElecAnnuelle GetConsoElecAnnee(int annee, string user);
+        ConsommationElecAnnuelle GetConsoElecAnnee(int annee);
 
-        bool PostConsommationAnnee(_ConsoElec_POST vm, string user);
+        bool PostConsommationAnnee(_ConsoElec_POST vm);
     }
 }

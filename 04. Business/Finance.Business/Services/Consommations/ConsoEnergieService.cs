@@ -32,10 +32,10 @@ namespace Finance.Business.Services
         }
 
 
-        public List<ConsommationEnergieAnnuelleVM> GetConsoEnergie(string user)
+        public List<ConsommationEnergieAnnuelleVM> GetConsoEnergie()
         {
             List<ConsommationEnergieAnnuelleVM> list = new List<ConsommationEnergieAnnuelleVM>();
-            List<Electricite> listElec = _ConsoElecManager.GetAllElectricite(user);
+            List<Electricite> listElec = _ConsoElecManager.GetAllElectricite();
             List<ConsoEau> listEau = _ConsoEauManager.GetAllConsoEau();
             List<ConsoChauffage> listChauff = _ConsoChauffageManager.GetAllInfosChauffage();
 

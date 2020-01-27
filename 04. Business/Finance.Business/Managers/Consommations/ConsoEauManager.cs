@@ -15,6 +15,7 @@ namespace Finance.Business.Managers
         public ConsoEauManager()
         {
             _bddConsoEau = new bdd_ConsoEau();
+            _bddConsoEau.setUser(ApplicationManager.CurrentUser.UtilisateurId);
         }
 
 

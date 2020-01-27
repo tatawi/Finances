@@ -18,9 +18,8 @@ namespace Finance.Business.Interface.Services
 
         /// <summary>Ajoute une liste de dépenses en base</summary>
         /// <param name="listDepenses">Liste des dépenses à ajouter</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
-        void AjouterDepensesMasse(List<Depense> listDepenses, string user, bool isForPerso);
+        void AjouterDepensesMasse(List<Depense> listDepenses, bool isForPerso);
 
         /// <summary>Supprimer une dépense en base</summary>
         /// <param name="d">dépense à supprimer</param>
@@ -33,19 +32,17 @@ namespace Finance.Business.Interface.Services
         /// <summary>Retourne toutes les dépenses du mois</summary>
         /// <param name="annee">Année concernée</param>
         /// <param name="mois">Mois concerné</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
         /// <returns>Liste des dépenses</returns>
-        List<Depense> GetAllDepensesMois(int annee, int mois, string user, bool isForPerso);
+        List<Depense> GetAllDepensesMois(int annee, int mois, bool isForPerso);
 
         /// <summary>Retourne toutes les dépenses du mois de la catégorie</summary>
         /// <param name="annee">Année concernée</param>
         /// <param name="mois">Mois concerné</param>
         /// <param name="cat">Catégorie concerné</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="isForPerso">Affichage compte perso ou commun</param>
         /// <returns>Liste des dépenses</returns>
-        List<Depense> GetAllDepensesMoisForCat(int annee, int mois, string cat, string user, bool isForPerso);
+        List<Depense> GetAllDepensesMoisForCat(int annee, int mois, string cat, bool isForPerso);
 
         /// <summary>Retourne le nom des sous catégories de la catégorie</summary>
         /// <param name="cat">Categorie concernée</param>
@@ -55,9 +52,8 @@ namespace Finance.Business.Interface.Services
         /// <summary>Duplique les dépenses communes du mois en dépenses persos (/2)</summary>
         /// <param name="annee">Année concernée</param>
         /// <param name="mois">Mois concerné</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <returns>Message informatif</returns>
-        string DupliquerDepensesCommunesVersPerso(int annee, int mois, string user);
+        string DupliquerDepensesCommunesVersPerso(int annee, int mois);
 
         /// <summary>Traite les données d'import en masse</summary>
         /// <param name="vm">ViewModel avec les données d'import</param>

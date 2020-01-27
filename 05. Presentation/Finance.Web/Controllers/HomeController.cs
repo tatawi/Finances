@@ -5,18 +5,24 @@ using Finance.Code.Enums;
 using Finance.Business.Interface.Services;
 using Finance.Business.Services;
 using ViewModels.Consolidation;
+using Finance.ApodApi.Interface.ViewModel;
+using Finance.ApodApi.Interface.Services;
+using Finance.ApodApi.Services;
+using Finance.Attributes;
 
 namespace Finance.Controllers
 {
-    [Authorize]
+    [ApplicationAuthorize]
     public class HomeController : Controller
     {
 
         private IConsolidationService _ConsolidationService { get; set; }
+        private IApodApiService _ApodApiService { get; set; }
 
         public HomeController()
         {
             this._ConsolidationService = new ConsolidationService();
+            this._ApodApiService = new ApodApiService();
         }
 
 
@@ -27,40 +33,27 @@ namespace Finance.Controllers
             return View();
         }
 
-
-        public JsonResult GetGraphiqueCurrentDepensesPie()
+        public JsonResult GetImageDuJour()
         {
-            var result = new List<object>();
-            string user = User.Identity.Name;
-            int Annee = DateTime.Now.Year;
-            int Mois = DateTime.Now.Month-1;
-            if (Mois == 0) { Mois = 12; Annee--; }
+            ApodApiJsonGet result = new ApodApiJsonGet();
 
+            if (Session["HomeApod"] != null)
+            {
+                result = (ApodApiJsonGet)Session["HomeApod"];
+            }
+            else
+            {
+                //Get données
+                result = _ApodApiService.GetImageDuJour();
+                Session["HomeApod"] = result;
+            }
             
 
-            //si on a pas de données pour le mois courant, on prend le mois rpécédent
-            decimal Logement = Math.Abs(_ConsolidationService.GetMontantCatMois(Annee, Mois, EnumCategorie.Logement, user));
-            decimal Alimentaire = Math.Abs(_ConsolidationService.GetMontantCatMois(Annee, Mois, EnumCategorie.Alimentaire, user));
-            decimal Voiture = Math.Abs(_ConsolidationService.GetMontantCatMois(Annee, Mois, EnumCategorie.Voiture, user));
-            decimal Transport = Math.Abs(_ConsolidationService.GetMontantCatMois(Annee, Mois, EnumCategorie.Transport, user));
-            decimal Loisirs = Math.Abs(_ConsolidationService.GetMontantCatMois(Annee, Mois, EnumCategorie.Loisirs, user));
-            decimal Voyage = Math.Abs(_ConsolidationService.GetMontantCatMois(Annee, Mois, EnumCategorie.Voyages, user));
-            decimal Cadeaux = Math.Abs(_ConsolidationService.GetMontantCatMois(Annee, Mois, EnumCategorie.Cadeaux, user));
-            decimal Achats = Math.Abs(_ConsolidationService.GetMontantCatMois(Annee, Mois, EnumCategorie.Achats, user));
-            decimal Vetements = Math.Abs(_ConsolidationService.GetMontantCatMois(Annee, Mois, EnumCategorie.Vetements, user));
-            decimal Sante = Math.Abs(_ConsolidationService.GetMontantCatMois(Annee, Mois, EnumCategorie.Sante, user));
-            decimal Impots = Math.Abs(_ConsolidationService.GetMontantCatMois(Annee, Mois, EnumCategorie.Impots, user));
-            decimal Frais = Math.Abs(_ConsolidationService.GetMontantCatMois(Annee, Mois, EnumCategorie.FraisBancaires, user));
-            decimal Emprunt = Math.Abs(_ConsolidationService.GetMontantCatMois(Annee, Mois, EnumCategorie.Emprunts, user));
-
-            result.Add( new { Annee, Logement, Alimentaire, Voiture, Transport, Loisirs, Voyage, Cadeaux,
-                              Achats, Vetements, Sante, Impots, Frais, Emprunt });
-
+            //Affichage
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
 
-       
         #endregion
 
 

@@ -14,15 +14,13 @@ namespace Finance.Business.Interface.Services
 
         /// <summary>Retourne le montant total épargné pour chaque mois de l'année</summary>
         /// <param name="annee">Année de recherche</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <returns>Un objet par mois de l'année avec la date et le montant épargné</returns>
-        List<Epargne> GetEpargneparMois(int annee, string user);
+        List<Epargne> GetEpargneparMois(int annee);
 
 
         /// <summary>Retourne la liste des comptes avec les derniers montants en base</summary>
-        /// <param name="user">Utilisateur concerné</param>
         /// <returns>Liste de tous les comptes de l'utilisateur avec le montant reneigné</returns>
-        List<Epargne> GetDernierMontantComptes(string user);
+        List<Epargne> GetDernierMontantComptes();
 
 
         /// <summary>Sauvegarde une liste d'épargne pour une date donnée</summary>
@@ -32,9 +30,8 @@ namespace Finance.Business.Interface.Services
 
         /// <summary>Retourne la liste des derniers montants pour chaque compte sur une année</summary>
         /// <param name="annee">Année concernée</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <param name="AfficherCompte">Permet de renseigner l'object Compte de chaque Epargnes dans la liste</param>
         /// <returns>Liste des derniers comptes renseignés</returns>
-        List<Epargne> GetEpargneTotaleAnnee(int annee, string user, bool AfficherCompte = false);
+        List<Epargne> GetEpargneTotaleAnnee(int annee, bool AfficherCompte = false);
     }
 }

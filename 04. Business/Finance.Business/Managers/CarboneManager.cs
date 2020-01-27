@@ -16,28 +16,26 @@ namespace Finance.Business.Managers
         public CarboneManager()
         {
             this._bddBilanCarbone = new bdd_BilanCarbone();
+            _bddBilanCarbone.SetUser(ApplicationManager.CurrentUser.UtilisateurId);
         }
 
-        //Retourne les consommations d'eau pour une année
-        public BilanCarbone GetBilanCarboneAnnee(int annee, string user)
+        //Retourne le bilan carbone d'une année
+        public BilanCarbone GetBilanCarboneAnnee(int annee)
         {
-            _bddBilanCarbone.SetUser(user);
             return _bddBilanCarbone.Get_BilanCarboneForYear(annee);
         }
 
 
-        //Retourne les consommations d'eau pour une année
-        public List<BilanCarbone> GetAllBilanCarbone(string user)
+        //Retourne tous les bilans carbone de l'utilisateur
+        public List<BilanCarbone> GetAllBilanCarbone()
         {
-            _bddBilanCarbone.SetUser(user);
             return _bddBilanCarbone.Get_All();
         }
 
 
-        //Ajout d'une consommation d'eau
-        public bool AjouterBilanCarbone(BilanCarbone conso, string user)
+        //Ajout d'un bilan carbone
+        public bool AjouterBilanCarbone(BilanCarbone conso)
         {
-            _bddBilanCarbone.SetUser(user);
             try
             {
                 if (_bddBilanCarbone.IsBilanCarbonePresent(conso))

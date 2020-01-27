@@ -11,21 +11,21 @@ namespace Finance.Data.bdd
     public class bdd_BilanCarbone : bdd
     {
 
-        public string userName;
+        public int utilisateurId;
 
 
         public bdd_BilanCarbone()
         {
         }
 
-        public bdd_BilanCarbone(string paramUserName)
+        public bdd_BilanCarbone(int paramUserName)
         {
-            this.userName = paramUserName;
+            this.utilisateurId = paramUserName;
         }
 
-        public void SetUser(string user)
+        public void SetUser(int user)
         {
-            this.userName = user;
+            this.utilisateurId = user;
         }
 
 
@@ -37,14 +37,14 @@ namespace Finance.Data.bdd
         public List<BilanCarbone> Get_All()
         {
             List<BilanCarbone> list_vals = new List<BilanCarbone>();
-            string sql = "SELECT BilanCarboneId, Annee, Logement, Transports, Alimentation, Dechets, Achats, Finance, ServicePublique FROM BilanCarbone WHERE UserName = @paramUser";
+            string sql = "SELECT BilanCarboneId, Annee, Logement, Transports, Alimentation, Dechets, Achats, Finance, ServicePublique FROM BilanCarbone WHERE UtilisateurId = @paramUserId";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("paramUser", this.userName);
+                    cmd.Parameters.AddWithValue("paramUserId", this.utilisateurId);
 
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -77,14 +77,14 @@ namespace Finance.Data.bdd
         public BilanCarbone Get_BilanCarboneForYear(int annee)
         {
             BilanCarbone info = new BilanCarbone();
-            string sql = "SELECT BilanCarboneId, Annee, Logement, Transports, Alimentation, Dechets, Achats, Finance, ServicePublique FROM BilanCarbone WHERE UserName = @paramUser AND Year(Date) = @paramDate";
+            string sql = "SELECT BilanCarboneId, Annee, Logement, Transports, Alimentation, Dechets, Achats, Finance, ServicePublique FROM BilanCarbone WHERE UtilisateurId = @paramUserId AND Annee = @paramDate";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("paramUser", this.userName);
+                    cmd.Parameters.AddWithValue("paramUserId", this.utilisateurId);
                     cmd.Parameters.AddWithValue("paramDate", annee);
 
                     using (var reader = cmd.ExecuteReader())
@@ -120,7 +120,7 @@ namespace Finance.Data.bdd
             using (SqlConnection conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                string sql = "INSERT INTO BilanCarbone (Annee, Logement, Transports, Alimentation, Dechets, Achats, Finance, ServicePublique) VALUES(@Annee, @Logement, @Transports, @Alimentation, @Dechets, @Achats, @Finance, @ServicePublique)";
+                string sql = "INSERT INTO BilanCarbone (Annee, Logement, Transports, Alimentation, Dechets, Achats, Finance, ServicePublique, UtilisateurId) VALUES(@Annee, @Logement, @Transports, @Alimentation, @Dechets, @Achats, @Finance, @ServicePublique, @paramUserId)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add("@Annee", SqlDbType.Int).Value = info.Annee;
@@ -131,7 +131,7 @@ namespace Finance.Data.bdd
                 cmd.Parameters.Add("@Achats", SqlDbType.Decimal).Value = info.Achats;
                 cmd.Parameters.Add("@Finance", SqlDbType.Decimal).Value = info.Finance;
                 cmd.Parameters.Add("@ServicePublique", SqlDbType.Decimal).Value = info.ServicePublique;
-                cmd.Parameters.Add("@UserName", SqlDbType.VarChar).Value = this.userName;
+                cmd.Parameters.Add("@paramUserId", SqlDbType.VarChar).Value = this.utilisateurId;
 
                 cmd.CommandType = CommandType.Text;
                 cmd.ExecuteNonQuery();
@@ -150,18 +150,18 @@ namespace Finance.Data.bdd
             {
                 conn.Open();
                 string sql = "UPDATE BilanCarbone SET Logement=@Logement, Transports=@Transports, Alimentation=@Alimentation, Dechets=@Dechets," +
-                    " Achats=@Achats, Finance=@Finance, ServicePublique=@ServicePublique WHERE Annee=@Annee AND UserName=@user";
+                    " Achats=@Achats, Finance=@Finance, ServicePublique=@ServicePublique WHERE Annee=@Annee AND UtilisateurId=@paramUserId";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add("@Logement", SqlDbType.Decimal).Value = bilan.Logement;
                 cmd.Parameters.Add("@Transports", SqlDbType.Decimal).Value = bilan.Transports;
-                cmd.Parameters.Add("@Alimentation", SqlDbType.DateTime).Value = bilan.Alimentation;
-                cmd.Parameters.Add("@Dechets", SqlDbType.Int).Value = bilan.Dechets;
-                cmd.Parameters.Add("@Achats", SqlDbType.Int).Value = bilan.Achats;
-                cmd.Parameters.Add("@Finance", SqlDbType.Int).Value = bilan.Finance;
-                cmd.Parameters.Add("@ServicePublique", SqlDbType.Int).Value = bilan.ServicePublique;
+                cmd.Parameters.Add("@Alimentation", SqlDbType.Decimal).Value = bilan.Alimentation;
+                cmd.Parameters.Add("@Dechets", SqlDbType.Decimal).Value = bilan.Dechets;
+                cmd.Parameters.Add("@Achats", SqlDbType.Decimal).Value = bilan.Achats;
+                cmd.Parameters.Add("@Finance", SqlDbType.Decimal).Value = bilan.Finance;
+                cmd.Parameters.Add("@ServicePublique", SqlDbType.Decimal).Value = bilan.ServicePublique;
                 cmd.Parameters.Add("@Annee", SqlDbType.Int).Value = bilan.Annee;
-                cmd.Parameters.Add("@user", SqlDbType.VarChar).Value = this.userName;
+                cmd.Parameters.Add("@paramUserId", SqlDbType.VarChar).Value = this.utilisateurId;
 
                 cmd.CommandType = CommandType.Text;
                 cmd.ExecuteNonQuery();
@@ -182,10 +182,10 @@ namespace Finance.Data.bdd
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                using (var cmd = new SqlCommand("SELECT Count(*) FROM BilanCarbone WHERE Annee=@Annee AND UserName=@user", conn))
+                using (var cmd = new SqlCommand("SELECT Count(*) FROM BilanCarbone WHERE Annee=@Annee AND UtilisateurId=@paramUserId", conn))
                 {
                     cmd.Parameters.AddWithValue("Annee", c.Annee);
-                    cmd.Parameters.AddWithValue("user", this.userName);
+                    cmd.Parameters.AddWithValue("paramUserId", this.utilisateurId);
 
                     Int32 count = (Int32)cmd.ExecuteScalar();
                     if (count == 0) isPresent = false;

@@ -11,12 +11,19 @@ namespace Finance.Data.bdd
 {
     public class bdd_ConsoEau : bdd
     {
+
+        public int utilisateurId;
+
+
         public bdd_ConsoEau()
         {
 
         }
 
-
+        public void setUser(int user)
+        {
+            this.utilisateurId = user;
+        }
 
 
         //------------------------------------------------------------------------------------------------------------
@@ -27,13 +34,14 @@ namespace Finance.Data.bdd
         public List<ConsoEau> get_AllListConsoEau()
         {
             List<ConsoEau> list_infos = new List<ConsoEau>();
-            string sql = "SELECT ConsoEauId, Annee, Type, Emplacement, Consommation, Montant FROM ConsoEau";
+            string sql = "SELECT ConsoEauId, Annee, Type, Emplacement, Consommation, Montant FROM ConsoEau WHERE UtilisateurId = @paramUserId";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
+                    cmd.Parameters.AddWithValue("paramUserId", this.utilisateurId);
 
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -63,7 +71,7 @@ namespace Finance.Data.bdd
         public List<ConsoEau> get_ListConsoEauForYear(int annee)
         {
             List<ConsoEau> list_infos = new List<ConsoEau>();
-            string sql = "SELECT ConsoEauId, Annee, Type, Emplacement, Consommation, Montant FROM ConsoEau WHERE Annee = @paramDate";
+            string sql = "SELECT ConsoEauId, Annee, Type, Emplacement, Consommation, Montant FROM ConsoEau WHERE UtilisateurId = @paramUserId AND Annee = @paramDate";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
@@ -71,6 +79,7 @@ namespace Finance.Data.bdd
                 using (var cmd = new SqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("paramDate", annee);
+                    cmd.Parameters.AddWithValue("paramUserId", this.utilisateurId);
 
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -105,7 +114,7 @@ namespace Finance.Data.bdd
             using (SqlConnection conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                string sql = "INSERT INTO ConsoEau (Annee, Type, Emplacement, Consommation, Montant) VALUES(@Annee, @Type, @Emplacement, @Conso, @Montant)";
+                string sql = "INSERT INTO ConsoEau (Annee, Type, Emplacement, Consommation, Montant, UtilisateurId) VALUES(@Annee, @Type, @Emplacement, @Conso, @Montant, @userId)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add("@Annee", SqlDbType.Int).Value = conso.Annee;
@@ -113,6 +122,7 @@ namespace Finance.Data.bdd
                 cmd.Parameters.Add("@Emplacement", SqlDbType.VarChar).Value = conso.Emplacement;
                 cmd.Parameters.Add("@Conso", SqlDbType.Decimal).Value = conso.Conso;
                 cmd.Parameters.Add("@Montant", SqlDbType.Decimal).Value = conso.Montant;
+                cmd.Parameters.Add("@userId", SqlDbType.Int).Value = this.utilisateurId;
 
 
                 cmd.CommandType = CommandType.Text;
@@ -132,7 +142,7 @@ namespace Finance.Data.bdd
             using (SqlConnection conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                string sql = "UPDATE ConsoEau SET Consommation=@Conso, Montant=@Montant WHERE Annee=@Annee AND Type=@Type AND Emplacement=@Emplacement";
+                string sql = "UPDATE ConsoEau SET Consommation=@Conso, Montant=@Montant WHERE UtilisateurId = @userId AND Annee=@Annee AND Type=@Type AND Emplacement=@Emplacement";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add("@Annee", SqlDbType.Int).Value = conso.Annee;
@@ -140,7 +150,7 @@ namespace Finance.Data.bdd
                 cmd.Parameters.Add("@Emplacement", SqlDbType.VarChar).Value = conso.Emplacement;
                 cmd.Parameters.Add("@Conso", SqlDbType.Decimal).Value = conso.Conso;
                 cmd.Parameters.Add("@Montant", SqlDbType.Decimal).Value = conso.Montant;
-
+                cmd.Parameters.Add("@userId", SqlDbType.Int).Value = this.utilisateurId;
 
                 cmd.CommandType = CommandType.Text;
                 cmd.ExecuteNonQuery();
@@ -162,8 +172,9 @@ namespace Finance.Data.bdd
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                using (var cmd = new SqlCommand("SELECT Count(*) FROM ConsoEau WHERE Annee=@paramAnnee AND Type=@paramType AND Emplacement=@paramEmplacement", conn))
+                using (var cmd = new SqlCommand("SELECT Count(*) FROM ConsoEau WHERE UtilisateurId = @paramUserId AND Annee=@paramAnnee AND Type=@paramType AND Emplacement=@paramEmplacement", conn))
                 {
+                    cmd.Parameters.AddWithValue("paramUserId", this.utilisateurId);
                     cmd.Parameters.AddWithValue("paramAnnee", c.Annee);
                     cmd.Parameters.AddWithValue("paramType", c.Type);
                     cmd.Parameters.AddWithValue("paramEmplacement", c.Emplacement);

@@ -74,6 +74,7 @@
     <Compile Include="Services\IDepensesService.cs" />
     <Compile Include="Services\IEpargneService.cs" />
     <Compile Include="Services\ILoginService.cs" />
+    <Compile Include="Services\IMailService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\03. Data\Finance.Poco\Finance.Poco.csproj">

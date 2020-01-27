@@ -9,6 +9,8 @@ namespace Finance.Business.Interface.Services
 {
     public interface IConsoEnergieService
     {
-        List<ConsommationEnergieAnnuelleVM> GetConsoEnergie(string user);
+        /// <summary></summary>
+        /// <returns></returns>
+        List<ConsommationEnergieAnnuelleVM> GetConsoEnergie();
     }
 }

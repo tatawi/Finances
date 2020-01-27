@@ -26,10 +26,10 @@ namespace Finance.Business.Services
         #region Conso Mensuelle
 
         //Get liste consolidation mensuelle des catégories et sous catégories
-        public List<ConsolidationVM> GetListConsoMensuelle(int annee, int mois, bool displaySsCat, string user, bool isForPerso)
+        public List<ConsolidationVM> GetListConsoMensuelle(int annee, int mois, bool displaySsCat, bool isForPerso)
         {
             List<ConsolidationVM> list_libelles = new List<ConsolidationVM>();
-            List<Depense> list_Depense = _DepensesManager.GetAllDepensesMois(annee, mois, user, isForPerso);
+            List<Depense> list_Depense = _DepensesManager.GetAllDepensesMois(annee, mois, isForPerso);
             List<string>list_nomsCat = _CategoriesManager.GetAllListSsCategoriesString();
 
             foreach (string cat in list_nomsCat)
@@ -62,14 +62,14 @@ namespace Finance.Business.Services
         #region Conso Annuelle
 
         //Get liste consolidée des catégories pour une année
-        public List<ConsolidationAnnuelleVM> GetListConsoAnnuelle(int annee, string user, bool isForPerso)
+        public List<ConsolidationAnnuelleVM> GetListConsoAnnuelle(int annee, bool isForPerso)
         {
             List<ConsolidationAnnuelleVM> list_Conso = new List<ConsolidationAnnuelleVM>();
             List<ConsolidationAnnuelleVM> list_ConsoTemp = new List<ConsolidationAnnuelleVM>();
 
             for (int mois = 1; mois < 13; mois++)
             {
-                List<ConsolidationVM> list_ConsoMois = this.GetListConsoMensuelle(annee, mois, true, user, isForPerso);
+                List<ConsolidationVM> list_ConsoMois = this.GetListConsoMensuelle(annee, mois, true, isForPerso);
                 list_Conso.Clear();
 
                 foreach (ConsolidationVM c in list_ConsoMois)
@@ -195,7 +195,7 @@ namespace Finance.Business.Services
                         conso.Libelle = cat;
                         conso.Cat = cat;
                         conso.isCat = true;
-                        conso.Montant = _DepensesManager.Get_MontantCatAnnee(annee, cat, vm.User, vm.IsForperso);
+                        conso.Montant = _DepensesManager.Get_MontantCatAnnee(annee, cat, vm.IsForperso);
                         recapAnnuel.list_Consos.Add(conso);
 
                         #region Moyenne
@@ -216,7 +216,7 @@ namespace Finance.Business.Services
                                 sousConso.Libelle = ssCat;
                                 sousConso.isCat = false;
                                 sousConso.Cat = cat;
-                                sousConso.Montant = _DepensesManager.Get_MontantSsCatAnnee(annee, ssCat, vm.User, vm.IsForperso);
+                                sousConso.Montant = _DepensesManager.Get_MontantSsCatAnnee(annee, ssCat, vm.IsForperso);
                                 recapAnnuel.list_Consos.Add(sousConso);
 
                                 #region Moyenne
@@ -250,21 +250,21 @@ namespace Finance.Business.Services
         #region Graphiques
 
         //Get montant sous-catégorie de l'année
-        public decimal GetMontantSsCatAnnee(int annee, string ssCat, string user)
+        public decimal GetMontantSsCatAnnee(int annee, string ssCat)
         {
-            return _DepensesManager.Get_MontantSsCatAnnee(annee, ssCat, user, true);
+            return _DepensesManager.Get_MontantSsCatAnnee(annee, ssCat, true);
         }
 
         //Get montant sous-catégorie de l'année
-        public decimal GetMontantCatAnnee(int annee, string cat, string user)
+        public decimal GetMontantCatAnnee(int annee, string cat)
         {
-            return _DepensesManager.Get_MontantCatAnnee(annee, cat, user, true);
+            return _DepensesManager.Get_MontantCatAnnee(annee, cat, true);
         }
 
         //Get montant catégorie du mois
-        public decimal GetMontantCatMois(int annee, int mois, string cat, string user)
+        public decimal GetMontantCatMois(int annee, int mois, string cat)
         {
-            return _DepensesManager.Get_MontantCatMois(annee, mois, cat, user, true);
+            return _DepensesManager.Get_MontantCatMois(annee, mois, cat, true);
         }
 
 
@@ -289,16 +289,16 @@ namespace Finance.Business.Services
         }
 
         //Calcul les champs calculables pour un mois donné
-        public string Calculer_TOTAUX(int annee, int mois, string user, bool isForPerso)
+        public string Calculer_TOTAUX(int annee, int mois, bool isForPerso)
         {
             try
             {
                 List<Depense> list_DepenseMois = new List<Depense>();
-                list_DepenseMois = _DepensesManager.GetAllDepensesMois(annee, mois, user, isForPerso);
+                list_DepenseMois = _DepensesManager.GetAllDepensesMois(annee, mois, isForPerso);
 
-                _DepensesManager.Calculate_TotalImpotsFor(annee, mois, list_DepenseMois, user, isForPerso);
-                decimal dep = _DepensesManager.Calculate_TotalDepensesFor(annee, mois, list_DepenseMois, user, isForPerso);
-                _DepensesManager.Calculate_SoldeFor(annee, mois, list_DepenseMois, dep, user, isForPerso);
+                _DepensesManager.Calculate_TotalImpotsFor(annee, mois, list_DepenseMois, isForPerso);
+                decimal dep = _DepensesManager.Calculate_TotalDepensesFor(annee, mois, list_DepenseMois, isForPerso);
+                _DepensesManager.Calculate_SoldeFor(annee, mois, list_DepenseMois, dep, isForPerso);
 
                 return "Calcul des TOTAUX effectué";
             }
@@ -309,17 +309,17 @@ namespace Finance.Business.Services
         }
 
         //Duplique les dépenses communes vers les dépenses persos
-        public void DupliquerDepensesVersPerso(int paramAnnee, int paramMois, string user)
+        public void DupliquerDepensesVersPerso(int paramAnnee, int paramMois)
         {
-            List<Depense> listDepensesCommunes = _DepensesManager.GetAllDepensesMois(paramAnnee, paramMois, user, false);
+            List<Depense> listDepensesCommunes = _DepensesManager.GetAllDepensesMois(paramAnnee, paramMois, false);
 
             foreach (Depense dep in listDepensesCommunes)
             {
-                if (!_DepensesManager.IsDepensePresenteByDateAndLib(dep, user, true))
+                if (!_DepensesManager.IsDepensePresenteByDateAndLib(dep, true))
                 {
                     dep.Libelle = "[Commun]" + dep.Libelle;
                     dep.Montant = dep.Montant / 2;
-                    _DepensesManager.AjouterDepenseUnitaire(dep, user, true);
+                    _DepensesManager.AjouterDepenseUnitaire(dep, true);
                 }
             }
         }

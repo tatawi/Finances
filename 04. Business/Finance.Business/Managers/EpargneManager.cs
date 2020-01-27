@@ -13,17 +13,16 @@ namespace Finance.Business.Managers
         public EpargneManager()
         {
             _bddEpargne = new bdd_Epargne();
+            _bddEpargne.SetUser(ApplicationManager.CurrentUser.UtilisateurId);
         }
 
 
         #region GET
 
         /// <summary>Recupére la liste des comptes de l'utilisateur</summary>
-        /// <param name="user">Utilisateur concerné</param>
         /// <returns>Liste de comptes</returns>
-        public List<Ref_Compte> GetListComptesForUser(string user)
+        public List<Ref_Compte> GetListComptes()
         {
-            _bddEpargne.SetUser(user);
             return _bddEpargne.Get_Comptes();
         }
 
@@ -39,11 +38,9 @@ namespace Finance.Business.Managers
 
         /// <summary>Retourne le montant total épargné pour chaque mois de l'année</summary>
         /// <param name="annee">Année de recherche</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <returns>Un objet par mois de l'année avec la date et le montant épargné</returns>
-        public List<Epargne> GetEpargnesForYearAndDecember(int annee, string user)
+        public List<Epargne> GetEpargnesForYearAndDecember(int annee)
         {
-            _bddEpargne.SetUser(user);
             return _bddEpargne.Get_EpargnesForYearAndDecember(annee);
         }
 
@@ -67,11 +64,9 @@ namespace Finance.Business.Managers
 
 
         /// <summary>Retourne la liste des comptes avec les derniers montants en base</summary>
-        /// <param name="user">Utilisateur concerné</param>
         /// <returns>Liste de tous les comptes de l'utilisateur avec le montant reneigné</returns>
-        public List<Epargne> GetDernierMontantComptes(string user)
+        public List<Epargne> GetDernierMontantComptes()
         {
-            _bddEpargne.SetUser(user);
             List<Epargne> list_MontantComtpes = new List<Epargne>();
             List<Ref_Compte> list_comtpes = _bddEpargne.Get_Comptes();
 
@@ -90,7 +85,6 @@ namespace Finance.Business.Managers
 
         /// <summary>Retourne le montant total épargné pour chaque mois de l'année</summary>
         /// <param name="annee">Année de recherche</param>
-        /// <param name="user">Utilisateur concerné</param>
         /// <returns>Un objet par mois de l'année avec la date et le montant épargné</returns>
         public Epargne GetEpargneTotalComptePourAnnee(int annee, int compteId)
         {
