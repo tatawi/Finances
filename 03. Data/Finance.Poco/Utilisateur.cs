@@ -14,7 +14,9 @@ namespace Finance.Poco
         public string Email { get; set; }
         public string MotDePasse { get; set; }
         public bool DoitChangerMdp { get; set; }
+        public bool IsAdmin { get; set; }
         public bool IsActif { get; set; }
+
 
     }
 }

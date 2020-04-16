@@ -21,7 +21,7 @@ namespace Finance.Controllers
         }
 
         // GET - PAGE PRINCIPALE
-        public ActionResult Index()
+        public ActionResult MonCarbone()
         {
             return View();
         }

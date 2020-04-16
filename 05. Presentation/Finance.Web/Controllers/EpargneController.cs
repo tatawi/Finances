@@ -24,15 +24,9 @@ namespace Finance.Controllers
         }
 
 
-        // GET: Epargne
-        public ActionResult Epargne()
-        {
-            return View();
-        }
-
 
         // GET: Epargne page principale
-        public ActionResult index()
+        public ActionResult MonEpargne()
         {
             return View();
         }

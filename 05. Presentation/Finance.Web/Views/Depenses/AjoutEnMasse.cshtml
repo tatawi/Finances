@@ -1,5 +1,7 @@
 ﻿@model ViewModels.Depenses.AjouterDepensesMasseVM
-
+@{
+    ViewBag.Title = "Dépenses multiples";
+}
 
 
 <script type="text/javascript">
@@ -183,7 +185,6 @@
         });
     }
 
-
     //AJAX - Ajouter dépenses auto
     function AjouterDepenseAutoCalculees(button) {
 
@@ -194,7 +195,6 @@
                 }
         });
     }
-
 
     //AJAX - Selection catégorie
     function selectionnerCategorie(object, id) {
@@ -252,11 +252,6 @@
 
             });
         });
-
-
-
-
-
     }
 
     //Sélection sous-catégorie
@@ -276,8 +271,6 @@
 
     }
 
-
-
 </script>
 
 
@@ -285,74 +278,96 @@
 
 <!--TITRE-->
 <div>
-    <h1 id="titre" class="display-4">Ajouter une liste de dépenses</h1>
+    <h1 id="titre" class="display-4">Ajouter une liste de dépenses</h1><hr /><br />
 </div>
 
+<!--AJOUT-->
+<h4 class="col-sm-12 titre-bloc">Liste des dépenses</h4>
+<div class="sous-partie">
+        <div class="row">
+
+            <!--Champ Ajout-->
+            <div class="col-sm-12">
+                <span class="mdl-button--primary">Format :</span>
+                <span>Texte inutile</span>
+                <span class="mdl-button--accent"> ; </span>
+                <span>Date[JJ/MM/AAAA]</span>
+                <span class="mdl-button--accent"> ; </span>
+                <span>Libellé</span>
+                <span class="mdl-button--accent"> ; </span>
+                <span>Montant</span>
+                <span class="mdl-button--accent"> ; </span>
+            </div>
+
+            <!--Champ Ajout-->
+            <div class="col-sm-11">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:90%">
+                    <input class="mdl-textfield__input" id="chp_txt" name="Texte" type="text" value="">
+                    <label class="mdl-textfield__label" for="chp_txt">Liste des dépenses à ajouter </label>
+                </div>
+            </div>
+
+            <div class="col-sm-1">
+                <input class="mdl-button mdl-js-button mdl-button--accent" id="btn_addPopUpMany" type="button" value="Vérifier" style="margin-top:10px" onClick="AjouterManyDepensesAjax();" />
+            </div>
+
+            <!--Message erreur intégration-->
+            <div class="col-sm-12">
+                <label id="MessageIntegration" class="messageErreur" style="display:none"></label>
+            </div>
+        </div>
+    </div>
+<br />
+    
 
 
-<div id="Recherche" class="row">
+<!--DEPENSES AUTO-->
+<h4 class="col-sm-12 titre-bloc">Dépenses calculées automatiquement</h4>
+<div class="sous-partie">
+        <div id="BlockTabDepensesAjoutees" class="row" style="display:none">
+            <center>
+                <table id="tabDepensesAjoutees" class="mdl-data-table mdl-js-data-table">
+                    <thead class="toto">
+                        <tr>
+                            <th class="mdl-data-table__cell--non-numeric">Date</th>
+                            <th class="mdl-data-table__cell--non-numeric">Libellé</th>
+                            <th>Montant</th>
+                            <th class="mdl-data-table__cell--non-numeric">Catégorie</th>
+                            <th class="mdl-data-table__cell--non-numeric">Sous-catégorie</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <input class="mdl-button mdl-js-button mdl-button--accent"  type="button" value="Ajouter ces dépenses" style="margin-top:10px" onClick="AjouterDepenseAutoCalculees(this);" />
+            </center>
+            <br /><hr /><br />
+        </div>
+    </div>
+<br />
 
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:90%">
-        <input class="mdl-textfield__input" id="chp_txt" name="Texte" type="text" value="">
-        <label class="mdl-textfield__label" for="chp_txt">Liste des dépenses à ajouter </label>
+
+
+<!--DEPENSES-->
+<h4 class="col-sm-12 titre-bloc">Dépenses à ajouter</h4>
+<div class="sous-partie">
+        <div id="BlockTabDepenses" class="row" style="display:none">
+            <center>
+                <table id="tabDepenses" class="mdl-data-table mdl-js-data-table">
+                    <thead class="toto">
+                        <tr>
+                            <th class="mdl-data-table__cell--non-numeric">Date</th>
+                            <th class="mdl-data-table__cell--non-numeric">Libellé</th>
+                            <th>Montant</th>
+                            <th class="mdl-data-table__cell--non-numeric">Catégorie</th>
+                            <th class="mdl-data-table__cell--non-numeric">Sous-catégorie</th>
+                            <th class="mdl-data-table__cell--non-numeric">Ajouter</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </center>
+        </div>
     </div>
 
-    <div class="col-sm-1">
-        <input class="mdl-button mdl-js-button mdl-button--accent" id="btn_addPopUpMany" type="button" value="Vérifier" style="margin-top:10px" onClick="AjouterManyDepensesAjax();" />
-    </div>
-
-</div>
 
 
-<!--Message erreur intégration-->
-<div class="row">
-    <br />
-    <label id="MessageIntegration" class="messageErreur" style="display:none"></label>
-    <br />
-</div>
-
-
-<!--Tab cat auto calculées-->
-<div id="BlockTabDepensesAjoutees" class="row" style="display:none">
-    <h3>Dépenses calculées automatiquement</h3>
-    <center>
-        <table id="tabDepensesAjoutees" class="mdl-data-table mdl-js-data-table">
-            <thead class="toto">
-                <tr>
-                    <th class="mdl-data-table__cell--non-numeric">Date</th>
-                    <th class="mdl-data-table__cell--non-numeric">Libellé</th>
-                    <th>Montant</th>
-                    <th class="mdl-data-table__cell--non-numeric">Catégorie</th>
-                    <th class="mdl-data-table__cell--non-numeric">Sous-catégorie</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <input class="mdl-button mdl-js-button mdl-button--accent"  type="button" value="Ajouter ces dépenses" style="margin-top:10px" onClick="AjouterDepenseAutoCalculees(this);" />
-    </center>
-    <br /><hr /><br />
-</div>
-
-
-
-
-
-<!--Tab cat a modifier-->
-<div id="BlockTabDepenses" class="row" style="display:none">
-    <h3>Dépenses à ajouter</h3>
-    <center>
-        <table id="tabDepenses" class="mdl-data-table mdl-js-data-table">
-            <thead class="toto">
-                <tr>
-                    <th class="mdl-data-table__cell--non-numeric">Date</th>
-                    <th class="mdl-data-table__cell--non-numeric">Libellé</th>
-                    <th>Montant</th>
-                    <th class="mdl-data-table__cell--non-numeric">Catégorie</th>
-                    <th class="mdl-data-table__cell--non-numeric">Sous-catégorie</th>
-                    <th class="mdl-data-table__cell--non-numeric">Ajouter</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </center>
-</div>

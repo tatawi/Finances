@@ -98,8 +98,6 @@ namespace Finance.Data.bdd
             return cpt;
         }
 
-       
-
         public int Get_MontantCompte(int compteId)
         {
             int montant = 0;
@@ -192,20 +190,19 @@ namespace Finance.Data.bdd
         }
 
 
-
-
-
-
         public List<Epargne> get_EpargnesForYear(int annee)
         {
             List<Epargne> list_cpt = new List<Epargne>();
-            string sql = "SELECT EpargneId, CompteId, Montant, Date FROM Epargne WHERE Year(Date) = @paramDate order by Date";
+            string sql = "SELECT ep.EpargneId, ep.CompteId, ep.Montant, ep.Date FROM Epargne ep " +
+                "JOIN Ref_Compte cpt on cpt.Ref_CompteId=ep.CompteId" +
+                "WHERE cpt.UtilisateurId=@paramUserId AND Yearep.Date) = @paramDate order by ep.Date";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
+                    cmd.Parameters.AddWithValue("paramUserId", this.utilisateurId);
                     cmd.Parameters.AddWithValue("paramDate", annee);
 
                     using (var reader = cmd.ExecuteReader())
@@ -229,16 +226,20 @@ namespace Finance.Data.bdd
             return list_cpt;
         }
 
+
         public List<Epargne> Get_EpargnesForYearAndDecember(int annee)
         {
             List<Epargne> list_cpt = new List<Epargne>();
-            string sql = "SELECT EpargneId, CompteId, Montant, Date FROM Epargne WHERE Year(Date) = @paramDate OR (Year(Date) = @paramDate2 and Month(Date)=12) order by Date";
+            string sql = "SELECT ep.EpargneId, ep.CompteId, ep.Montant, ep.Date FROM Epargne ep " +
+                "JOIN Ref_Compte cpt on cpt.Ref_CompteId=ep.CompteId " +
+                "WHERE cpt.UtilisateurId=@paramUserId AND ( Year(ep.Date) = @paramDate OR (Year(ep.Date) = @paramDate2 and Month(ep.Date)=12)) order by ep.Date";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
+                    cmd.Parameters.AddWithValue("paramUserId", this.utilisateurId);
                     cmd.Parameters.AddWithValue("paramDate", annee);
                     cmd.Parameters.AddWithValue("paramDate2", annee-1);
 

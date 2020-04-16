@@ -25,11 +25,45 @@ namespace Finance.Data.bdd
         // GET 
         //------------------------------------------------------------------------------------------------------------
 
+        //Get Utilisateurs
+        public List<Utilisateur> Get_All()
+        {
+            List<Utilisateur> list = new List<Utilisateur>(); ;
+            string sql = "SELECT UtilisateurId, Nom, Prenom, Email, MotDePasse, DoitChangerMdp, IsAdmin, IsActif FROM Utilisateur";
+
+            using (var conn = new SqlConnection(this.connectionString))
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Utilisateur user = new Utilisateur();
+                            user.UtilisateurId = reader.GetInt32(0);
+                            user.Nom = reader.GetString(1);
+                            user.Prenom = reader.GetString(2);
+                            user.Email = reader.GetString(3);
+                            user.MotDePasse = reader.GetString(4);
+                            user.DoitChangerMdp = reader.GetBoolean(5);
+                            user.IsAdmin = reader.GetBoolean(6);
+                            user.IsActif = reader.GetBoolean(7);
+                            list.Add(user);
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            return list;
+        }
+
         //Get Utilisateur via login (email)
         public Utilisateur Get_Utilisateur(string email)
         {
             Utilisateur user = null;
-            string sql = "SELECT UtilisateurId, Nom, Prenom, Email, MotDePasse, DoitChangerMdp, IsActif FROM Utilisateur WHERE Email = @paramMail";
+            string sql = "SELECT UtilisateurId, Nom, Prenom, Email, MotDePasse, DoitChangerMdp, IsAdmin, IsActif FROM Utilisateur WHERE Email = @paramMail";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
@@ -37,8 +71,6 @@ namespace Finance.Data.bdd
                 using (var cmd = new SqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("paramMail", email);
-                    cmd.Parameters.AddWithValue("paramActif", true);
-                    
 
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -51,7 +83,8 @@ namespace Finance.Data.bdd
                             user.Email = reader.GetString(3);
                             user.MotDePasse = reader.GetString(4);
                             user.DoitChangerMdp = reader.GetBoolean(5);
-                            user.IsActif = reader.GetBoolean(6);
+                            user.IsAdmin = reader.GetBoolean(6);
+                            user.IsActif = reader.GetBoolean(7);
                         }
                     }
                 }
@@ -69,7 +102,7 @@ namespace Finance.Data.bdd
             using (SqlConnection conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                string sql = "INSERT INTO Utilisateur (Nom, Prenom, Email, MotDePasse, DoitChangerMdp, IsActif) VALUES(@Nom, @Prenom, @Email, @MotDePasse, @DoitChangerMdp, @IsActif)";
+                string sql = "INSERT INTO Utilisateur (Nom, Prenom, Email, MotDePasse, DoitChangerMdp, IsAdmin, IsActif) VALUES(@Nom, @Prenom, @Email, @MotDePasse, @DoitChangerMdp, @IsAdmin, @IsActif)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add("@Nom", SqlDbType.VarChar).Value = user.Nom;
@@ -77,6 +110,7 @@ namespace Finance.Data.bdd
                 cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = user.Email;
                 cmd.Parameters.Add("@MotDePasse", SqlDbType.VarChar).Value = user.MotDePasse;
                 cmd.Parameters.Add("@DoitChangerMdp", SqlDbType.Bit).Value = user.DoitChangerMdp;
+                cmd.Parameters.Add("@IsAdmin", SqlDbType.Bit).Value = user.IsAdmin;
                 cmd.Parameters.Add("@IsActif", SqlDbType.Bit).Value = user.IsActif;
 
                 cmd.CommandType = CommandType.Text;
@@ -98,7 +132,7 @@ namespace Finance.Data.bdd
             {
                 conn.Open();
                 string sql = "UPDATE Utilisateur SET Nom=@Nom, Prenom=@Prenom, MotDePasse=@MotDePasse, DoitChangerMdp=@DoitChangerMdp," +
-                    " IsActif=@IsActif WHERE Email=@Email";
+                    " IsActif=@IsActif, IsAdmin=@IsAdmin WHERE Email=@Email";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add("@Nom", SqlDbType.VarChar).Value = user.Nom;
@@ -106,6 +140,7 @@ namespace Finance.Data.bdd
                 cmd.Parameters.Add("@MotDePasse", SqlDbType.VarChar).Value = user.MotDePasse;
                 cmd.Parameters.Add("@DoitChangerMdp", SqlDbType.Bit).Value = user.DoitChangerMdp;
                 cmd.Parameters.Add("@IsActif", SqlDbType.Bit).Value = user.IsActif;
+                cmd.Parameters.Add("@IsAdmin", SqlDbType.Bit).Value = user.IsAdmin;
                 cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = user.Email;
 
                 cmd.CommandType = CommandType.Text;

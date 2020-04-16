@@ -173,7 +173,7 @@ namespace Finance.Controllers
 
 
         #region Général
-        //GET PAGE AJOUTER
+        //GET PAGE
         public ActionResult ConsoGenerale()
         {
             ConsoGeneraleVM model = new ConsoGeneraleVM();
@@ -181,6 +181,20 @@ namespace Finance.Controllers
             model.IsForperso = this.isComptePerso();
             model = _ConsolidationService.GET_RecapGeneral(model, false);
             return View(model);
+        }
+
+        //Chargemnt onglet 3
+        public ActionResult ChargementConsoGeneralTotal()
+        {
+            return PartialView("_ConsoGeneraleTotal");
+        }
+
+
+        // GET (AJAX) - Chargement du tableau de valeur de l'appartement
+        public JsonResult GetConsoGenerelTotal()
+        {
+            var result = _ConsolidationService.GET_RecapGeneralTotal(this.isComptePerso());
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         #endregion
@@ -310,14 +324,14 @@ namespace Finance.Controllers
         {
             var result = new List<object>();
 
-            decimal Salaire = _ConsolidationService.GetMontantSsCatAnnee(Annee, EnumSousCategorie.Revenus_Salaire);
-            decimal Entreprise = _ConsolidationService.GetMontantSsCatAnnee(Annee, EnumSousCategorie.Revenus_Entreprise);
-            decimal Aides = _ConsolidationService.GetMontantSsCatAnnee(Annee, EnumSousCategorie.Revenus_Aides);
-            decimal Interets = _ConsolidationService.GetMontantSsCatAnnee(Annee, EnumSousCategorie.Revenus_InteretsFi);
-            decimal Vente = _ConsolidationService.GetMontantSsCatAnnee(Annee, EnumSousCategorie.Revenus_Vente);
-            decimal Airbnb = _ConsolidationService.GetMontantSsCatAnnee(Annee, EnumSousCategorie.Revenus_Bnb);
-            decimal Cadeaux = _ConsolidationService.GetMontantSsCatAnnee(Annee, EnumSousCategorie.Revenus_Cadeaux);
-
+            List<decimal> Salaire = _ConsolidationService.GetListMontantSsCatAnnee(Annee, EnumSousCategorie.Revenus_Salaire);
+            List<decimal> Entreprise = _ConsolidationService.GetListMontantSsCatAnnee(Annee, EnumSousCategorie.Revenus_Entreprise);
+            List<decimal> Aides = _ConsolidationService.GetListMontantSsCatAnnee(Annee, EnumSousCategorie.Revenus_Aides);
+            List<decimal> Interets = _ConsolidationService.GetListMontantSsCatAnnee(Annee, EnumSousCategorie.Revenus_InteretsFi);
+            List<decimal> Vente = _ConsolidationService.GetListMontantSsCatAnnee(Annee, EnumSousCategorie.Revenus_Vente);
+            List<decimal> Airbnb = _ConsolidationService.GetListMontantSsCatAnnee(Annee, EnumSousCategorie.Revenus_Bnb);
+            List<decimal> Cadeaux = _ConsolidationService.GetListMontantSsCatAnnee(Annee, EnumSousCategorie.Revenus_Cadeaux);
+            //decimal Cadeaux = _ConsolidationService.GetMontantSsCatAnnee(Annee, EnumSousCategorie.Revenus_Cadeaux);
             result.Add( new { Annee, Salaire, Entreprise, Aides, Interets, Vente, Airbnb, Cadeaux });
 
             return Json(result, JsonRequestBehavior.AllowGet);
@@ -328,19 +342,19 @@ namespace Finance.Controllers
         {
             var result = new List<object>();
 
-            decimal Logement = Math.Abs(_ConsolidationService.GetMontantCatAnnee(Annee, EnumCategorie.Logement));
-            decimal Alimentaire = Math.Abs(_ConsolidationService.GetMontantCatAnnee(Annee, EnumCategorie.Alimentaire));
-            decimal Voiture = Math.Abs(_ConsolidationService.GetMontantCatAnnee(Annee, EnumCategorie.Voiture));
-            decimal Transport = Math.Abs(_ConsolidationService.GetMontantCatAnnee(Annee, EnumCategorie.Transport));
-            decimal Loisirs = Math.Abs(_ConsolidationService.GetMontantCatAnnee(Annee, EnumCategorie.Loisirs));
-            decimal Voyage = Math.Abs(_ConsolidationService.GetMontantCatAnnee(Annee, EnumCategorie.Voyages));
-            decimal Cadeaux = Math.Abs(_ConsolidationService.GetMontantCatAnnee(Annee, EnumCategorie.Cadeaux));
-            decimal Achats = Math.Abs(_ConsolidationService.GetMontantCatAnnee(Annee, EnumCategorie.Achats));
-            decimal Vetements = Math.Abs(_ConsolidationService.GetMontantCatAnnee(Annee, EnumCategorie.Vetements));
-            decimal Sante = Math.Abs(_ConsolidationService.GetMontantCatAnnee(Annee, EnumCategorie.Sante));
-            decimal Impots = Math.Abs(_ConsolidationService.GetMontantCatAnnee(Annee, EnumCategorie.Impots));
-            decimal Frais = Math.Abs(_ConsolidationService.GetMontantCatAnnee(Annee, EnumCategorie.FraisBancaires));
-            decimal Emprunt = Math.Abs(_ConsolidationService.GetMontantCatAnnee(Annee, EnumCategorie.Emprunts));
+            List<decimal> Logement = _ConsolidationService.GetListMontantCatAnnee(Annee, EnumCategorie.Logement);
+            List<decimal> Alimentaire =_ConsolidationService.GetListMontantCatAnnee(Annee, EnumCategorie.Alimentaire);
+            List<decimal> Voiture =_ConsolidationService.GetListMontantCatAnnee(Annee, EnumCategorie.Voiture);
+            List<decimal> Transport = _ConsolidationService.GetListMontantCatAnnee(Annee, EnumCategorie.Transport);
+            List<decimal> Loisirs = _ConsolidationService.GetListMontantCatAnnee(Annee, EnumCategorie.Loisirs);
+            List<decimal> Voyage = _ConsolidationService.GetListMontantCatAnnee(Annee, EnumCategorie.Voyages);
+            List<decimal> Cadeaux = _ConsolidationService.GetListMontantCatAnnee(Annee, EnumCategorie.Cadeaux);
+            List<decimal> Achats = _ConsolidationService.GetListMontantCatAnnee(Annee, EnumCategorie.Achats);
+            List<decimal> Vetements = _ConsolidationService.GetListMontantCatAnnee(Annee, EnumCategorie.Vetements);
+            List<decimal> Sante = _ConsolidationService.GetListMontantCatAnnee(Annee, EnumCategorie.Sante);
+            List<decimal> Impots = _ConsolidationService.GetListMontantCatAnnee(Annee, EnumCategorie.Impots);
+            List<decimal> Frais = _ConsolidationService.GetListMontantCatAnnee(Annee, EnumCategorie.FraisBancaires);
+            List<decimal> Emprunt = _ConsolidationService.GetListMontantCatAnnee(Annee, EnumCategorie.Emprunts);
 
             result.Add( new { Annee, Logement, Alimentaire, Voiture, Transport, Loisirs, Voyage, Cadeaux,
                               Achats, Vetements, Sante, Impots, Frais, Emprunt });

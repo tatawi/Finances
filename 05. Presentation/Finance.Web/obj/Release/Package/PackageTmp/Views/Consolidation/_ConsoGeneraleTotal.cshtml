@@ -1,0 +1,97 @@
+﻿<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        RefreshTableauDepensesTotales();
+    });
+
+
+    function RefreshTableauDepensesTotales(annee) {
+        var baseUrl = '@Url.Content("~/Consolidation/GetConsoGenerelTotal/")';
+        $('#tabDepensesTotal > tbody').empty();
+        $('#tabDepensesTotalDetails > tbody').empty();
+        
+
+            $.getJSON(baseUrl, { paramAnnee: annee }, function (result) {
+                $.each(result, function (index, itemData) {
+                    var Libelle = itemData.Libelle;
+                    var isCat = itemData.isCat;
+                    var Montant = thousandSeparator(itemData.Montant);
+                    var Cat = itemData.Cat;
+                    var rowDetails = "<tr>";
+                    var rowGen = "<tr>";
+
+                    if (isCat) {
+                        rowGen += "<td class='tableListDepensesLib tableCat Fond_" + Cat + "'>" + Libelle + "</td>";
+                        rowGen += "<td class='tableListDepensesMontant tableCat Fond_" + Cat + "' >" + Montant + "</td>";
+                    
+                        rowDetails += "<td class='tableListDepensesLib tableCat Fond_" + Cat + "'>" + Libelle + "</td>";
+                        rowDetails += "<td class='tableListDepensesMontant tableCat Fond_" + Cat + "' >" + Montant + "</td>";
+                    }
+                    else {
+                        rowDetails += "<td class='tableListDepensesLib tableSsCat FondTransparent_" + Cat + "'>" + Libelle + "</td>";
+                        rowDetails += "<td class='tableListDepensesMontant tableSsCat FondTransparent_" + Cat + "' >" + Montant + "</td>";
+                    }
+                    rowGen+= "</tr>";
+                    rowDetails += "</tr>";
+
+                    $('#tabDepensesTotal > tbody').append(rowGen);
+                    $('#tabDepensesTotalDetails > tbody').append(rowDetails);
+
+                });
+        });
+
+    };
+
+    function thousandSeparator(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")+" €";
+    }
+
+
+</script>
+
+
+
+
+<br />
+
+
+
+<!--PAGE-->
+<div class="row">
+
+    <!--Tableau gen-->
+    <div class="col-sm-6">
+        <center>
+            <table id="tabDepensesTotal" class="tableListDepenses">
+                <thead>
+                    <tr>
+                        <th class="mdl-data-table__cell--non-numeric">Description</th>
+                        <th class="mdl-data-table__cell--non-numeric">Montant</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </center>
+    </div>
+
+    <!--Tableau détails-->
+    <div class="col-sm-6">
+        <center>
+            <table id="tabDepensesTotalDetails" class="tableListDepenses">
+                <thead>
+                    <tr>
+                        <th class="mdl-data-table__cell--non-numeric">Description</th>
+                        <th class="mdl-data-table__cell--non-numeric">Montant</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </center>
+    </div>
+  
+</div>
+
+
+
+

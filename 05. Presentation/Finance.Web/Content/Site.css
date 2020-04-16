@@ -713,7 +713,7 @@ pre {
 .fullPage {
     margin: 0;
     padding: 0;
-
+    background-image: ;
     background-size: cover; /* version standardisée */
 }
 
@@ -723,7 +723,30 @@ pre {
     top: 50%; /* poussé de la moitié de hauteur du référent */
     transform: translateY(-50%); /* tiré de la moitié de sa propre hauteur */
     box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7), -1px 2px 20px rgba(255, 255, 255, 0.6) inset;
-    opacity: 0.97;
+    opacity: 0.50;
+    animation-name: fadeMasquerBox;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 0.4s;
+}
+    .centerH:hover {
+        opacity: 0.95;
+        animation-name: fadeAffichageBox;
+        animation-iteration-count: 1;
+        animation-timing-function: ease-in;
+        animation-duration: 0.4s;
+    }
+
+
+@keyframes fadeAffichageBox {
+    0% { opacity: 0.50; }
+    100% { opacity: 0.95; }
+}
+
+@keyframes fadeMasquerBox {
+    0% { opacity: 0.95; }
+
+    100% { opacity: 0.50; }
 }
 
 
@@ -759,6 +782,8 @@ pre {
         left: 0;
         right: 0;
     }
+
+
 
 .titre {
     color: #ffffff;

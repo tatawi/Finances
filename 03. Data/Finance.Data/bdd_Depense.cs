@@ -248,6 +248,73 @@ namespace Finance.Data.bdd
         // CALCUL MONTANTS
         //------------------------------------------------------------------------------------------------------------
 
+        public decimal get_MontantCat(string cat)
+        {
+            decimal montant = 0;
+            string sql = "SELECT sum(Montant) FROM Depense WHERE UtilisateurId = @paramUserId AND compte = @paramCompte AND Categorie = @paramCat";
+
+            using (var conn = new SqlConnection(this.connectionString))
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("paramUserId", this.userId);
+                    cmd.Parameters.AddWithValue("paramCompte", this.compte);
+                    cmd.Parameters.AddWithValue("paramCat", cat);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            try
+                            {
+                                montant = reader.GetDecimal(0);
+                            }
+                            catch (Exception)
+                            {
+                                montant = 0;
+                            }
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            return montant;
+        }
+
+        public decimal get_MontantSsCat(string ssCat)
+        {
+            decimal montant = 0;
+            string sql = "SELECT sum(Montant) FROM Depense WHERE UtilisateurId = @paramUserId AND compte = @paramCompte AND SousCategorie = @paramSsCat";
+
+            using (var conn = new SqlConnection(this.connectionString))
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("paramUserId", this.userId);
+                    cmd.Parameters.AddWithValue("paramCompte", this.compte);
+                    cmd.Parameters.AddWithValue("paramSsCat", ssCat);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            try
+                            {
+                                montant = reader.GetDecimal(0);
+                            }
+                            catch (Exception)
+                            {
+                                montant = 0;
+                            }
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            return montant;
+        }
+
+        //Retourne le total annuel de la cat
         public decimal get_MontantCatAnnee(int annee, string cat)
         {
             decimal montant = 0;
@@ -270,7 +337,7 @@ namespace Finance.Data.bdd
                             {
                                 montant = reader.GetDecimal(0);
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 montant = 0;
                             }
@@ -280,6 +347,44 @@ namespace Finance.Data.bdd
                 conn.Close();
             }
             return montant;
+        }
+
+        //Retourne une liste de total annuel par mois pour une cat
+        public List<MontantMois> get_ListMontantCatAnnee(int annee, string cat)
+        {
+            List<MontantMois> ListeMontants = new List<MontantMois>();
+            string sql = "SELECT Month(Date), sum(Montant) FROM Depense WHERE UtilisateurId = @paramUserId AND compte = @paramCompte AND Categorie = @paramCat AND YEAR(Date) = @paramAnnee GROUP BY Month(Date)";
+
+            using (var conn = new SqlConnection(this.connectionString))
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("paramUserId", this.userId);
+                    cmd.Parameters.AddWithValue("paramCompte", this.compte);
+                    cmd.Parameters.AddWithValue("paramAnnee", annee);
+                    cmd.Parameters.AddWithValue("paramCat", cat);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            try
+                            {
+                                MontantMois lect = new MontantMois();
+                                lect.Mois = reader.GetInt32(0);
+                                lect.Montant = reader.GetDecimal(1);
+                                ListeMontants.Add(lect);
+                            }
+                            catch (Exception)
+                            {
+                                return new List<MontantMois>();
+                            }
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            return ListeMontants;
         }
 
         public decimal get_MontantCatMois(int annee, int mois, string cat)
@@ -305,7 +410,7 @@ namespace Finance.Data.bdd
                             {
                                 montant = reader.GetDecimal(0);
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 montant = 0;
                             }
@@ -317,6 +422,7 @@ namespace Finance.Data.bdd
             return montant;
         }
 
+        //Retourne le total annuel de la sous cat
         public decimal get_MontantSsCatAnnee(int annee, string ssCat)
         {
             decimal montant = 0;
@@ -339,7 +445,7 @@ namespace Finance.Data.bdd
                             {
                                 montant = reader.GetDecimal(0);
                             }
-                            catch(Exception ex)
+                            catch(Exception)
                             {
                                 montant = 0;
                             }
@@ -350,6 +456,47 @@ namespace Finance.Data.bdd
             }
             return montant;
         }
+
+        //Retourne une liste de total annuel par mois pour une sous cat
+        public List<MontantMois> get_ListMontantSsCatAnnee(int annee, string ssCat)
+        {
+            List<MontantMois> ListeMontants = new List<MontantMois>();
+
+            string sql = "SELECT Month(Date), sum(Montant) FROM Depense WHERE UtilisateurId = @paramUserId AND compte = @paramCompte AND SousCategorie = @paramSsCat AND YEAR(Date) = @paramAnnee GROUP BY Month(Date)";
+
+            using (var conn = new SqlConnection(this.connectionString))
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("paramUserId", this.userId);
+                    cmd.Parameters.AddWithValue("paramCompte", this.compte);
+                    cmd.Parameters.AddWithValue("paramAnnee", annee);
+                    cmd.Parameters.AddWithValue("paramSsCat", ssCat);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            try
+                            {
+                                MontantMois lect = new MontantMois();
+                                lect.Mois = reader.GetInt32(0);
+                                lect.Montant = reader.GetDecimal(1);
+                                ListeMontants.Add(lect);
+                            }
+                            catch (Exception)
+                            {
+                                return new List<MontantMois>();
+                            }
+                        }
+                    }
+                }
+                conn.Close();
+            }
+
+            return ListeMontants;
+        }
+
 
         public decimal get_MontantSsCatMois(int annee, int mois, string ssCat)
         {
@@ -374,7 +521,7 @@ namespace Finance.Data.bdd
                             {
                                 montant = reader.GetDecimal(0);
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 montant = 0;
                             }
@@ -587,6 +734,13 @@ namespace Finance.Data.bdd
 
 
 
+
+
+        public struct MontantMois
+        {
+            public int Mois { get; set; }
+            public decimal Montant { get; set; }
+        }
 
     }
 }

@@ -22,7 +22,7 @@
     });
 
 
-    
+    //Chargement onglet
     function ChangeOnglet(onglet, contenu) {
 
         document.getElementById('c_InfosG').style.display = 'none';
@@ -75,7 +75,7 @@
         if (onglet == 'tab_ConsoChauffage' && _isConsoChauffageCharge != 1) {
             var url = '@Url.Action("ChargementChauffage", "Appartement")';
             _isConsoChauffageCharge = 1;
-            $('#tab_ConsoChauffage').load(url); 
+            $('#c_ConsoChauffage').load(url); 
         }
         
     }

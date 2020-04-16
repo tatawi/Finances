@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViewModels.Administration;
 using ViewModels.Login;
 
 namespace Finance.Business.Services
@@ -103,7 +104,53 @@ namespace Finance.Business.Services
 
         #endregion
 
+        #region Utilisateurs
 
+        public UtilisateursVM GetUtilisateursVm()
+        {
+            UtilisateursVM vm = new UtilisateursVM();
+            vm.listUsers = _UtilisateurManager.GetUtilisateurs();
+
+            return vm;
+        }
+
+        public string ModifierUtilisateur(Utilisateur user)
+        {
+            if (user == null || user.Email == "")
+                return "[Erreur]Une erreur est survenue";
+
+            //Get user
+            Utilisateur userToMaj = _UtilisateurManager.GetUtilisateur(user.Email);
+
+            if(userToMaj == null || userToMaj.UtilisateurId != user.UtilisateurId)
+                return "[Erreur]Impossile de trouver l'utilisateur à mettre à jour";
+
+            //Maj user
+            #region Maj
+            if (user.Nom != userToMaj.Nom)
+                userToMaj.Nom = user.Nom;
+            if (user.Prenom != userToMaj.Prenom)
+                userToMaj.Prenom = user.Prenom;
+            if (user.DoitChangerMdp != userToMaj.DoitChangerMdp)
+                userToMaj.DoitChangerMdp = user.DoitChangerMdp;
+            if (user.IsActif != userToMaj.IsActif)
+                userToMaj.IsActif = user.IsActif;
+            if (user.IsAdmin != userToMaj.IsAdmin)
+                userToMaj.IsAdmin = user.IsAdmin;
+            #endregion
+
+            //Mise à jour
+            bool result = _UtilisateurManager.MajUtilisateur(userToMaj);
+
+            if(result)
+                return "Mise à jour effectuée";
+            else
+                return "[Erreur]Une erreur est survenue lors de la mise à jour de l'utilisateur";
+
+
+        }
+
+        #endregion
 
         #region Catégories dépenses
         //Retourne la liste des cathégories

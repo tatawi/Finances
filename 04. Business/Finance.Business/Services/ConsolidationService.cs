@@ -244,6 +244,34 @@ namespace Finance.Business.Services
             }
         }
 
+
+        public List<ConsolidationVM> GET_RecapGeneralTotal(bool isForPerso)
+        {
+            List<ConsolidationVM> list = new List<ConsolidationVM>();
+            List<string> list_nomsCat = _CategoriesManager.GetAllListSsCategoriesString();
+
+            foreach (string cat in list_nomsCat)
+            {
+                ConsolidationVM conso = new ConsolidationVM();
+                conso.Libelle = cat;
+                conso.isCat = true;
+                conso.Cat = cat;
+                conso.Montant = _DepensesManager.Get_MontantCat(cat, isForPerso);
+                list.Add(conso);
+
+                foreach (string ssCat in _CategoriesManager.GetListSsCategoriesStringFromCategorie(cat))
+                {
+                    ConsolidationVM sousConso = new ConsolidationVM();
+                    sousConso.Libelle = ssCat;
+                    sousConso.isCat = false;
+                    sousConso.Cat = cat;
+                    sousConso.Montant = _DepensesManager.Get_MontantSsCat(ssCat, isForPerso);
+                    list.Add(sousConso);
+                }
+            }
+            return list;
+        }
+
         #endregion
 
 
@@ -255,11 +283,25 @@ namespace Finance.Business.Services
             return _DepensesManager.Get_MontantSsCatAnnee(annee, ssCat, true);
         }
 
+        //Get montant sous-catégorie de l'année par mois
+        public List<decimal> GetListMontantSsCatAnnee(int annee, string ssCat)
+        {
+            return _DepensesManager.Get_ListMontantSsCatAnnee(annee, ssCat, true);
+        }
+
+
         //Get montant sous-catégorie de l'année
         public decimal GetMontantCatAnnee(int annee, string cat)
         {
             return _DepensesManager.Get_MontantCatAnnee(annee, cat, true);
         }
+
+        //Get montant sous-catégorie de l'année par mois
+        public List<decimal> GetListMontantCatAnnee(int annee, string ssCat)
+        {
+            return _DepensesManager.Get_ListMontantCatAnnee(annee, ssCat, true);
+        }
+        
 
         //Get montant catégorie du mois
         public decimal GetMontantCatMois(int annee, int mois, string cat)

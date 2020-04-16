@@ -34,9 +34,11 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -155,6 +157,7 @@
     <Compile Include="Controllers\EpargneController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\VoitureController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -170,12 +173,40 @@
     <Content Include="Content\Icones\Delete_Red_25.png" />
     <Content Include="Content\Icones\Emprunts_empty.png" />
     <Content Include="Content\Icones\Emprunts_full.png" />
+    <Content Include="Content\Icones\essence_98.png" />
+    <Content Include="Content\Icones\essence_98_full.png" />
+    <Content Include="Content\Icones\essence_e10.png" />
+    <Content Include="Content\Icones\essence_e10_full.png" />
+    <Content Include="Content\Icones\essence_ethanol.png" />
+    <Content Include="Content\Icones\essence_ethanol_full.png" />
+    <Content Include="Content\Icones\essence_gazole.png" />
+    <Content Include="Content\Icones\essence_gazole_full.png" />
+    <Content Include="Content\Icones\essence_gpl.png" />
+    <Content Include="Content\Icones\essence_gpl_full.png" />
+    <Content Include="Content\Icones\essence_hydrogene.png" />
+    <Content Include="Content\Icones\essence_hydrogene_full.png" />
     <Content Include="Content\Icones\ImpotsTOTAUX_full.png" />
     <Content Include="Content\Icones\SOLDE_full.png" />
     <Content Include="Content\Icones\TOTALdépenses_full.png" />
+    <Content Include="Content\Icones\voiture_Accessoires.png" />
+    <Content Include="Content\Icones\voiture_Accessoires_big.png" />
+    <Content Include="Content\Icones\voiture_Accessoires_big_full.png" />
+    <Content Include="Content\Icones\voiture_Assurance.png" />
+    <Content Include="Content\Icones\voiture_Assurance_big.png" />
+    <Content Include="Content\Icones\voiture_Assurance_big_full.png" />
+    <Content Include="Content\Icones\voiture_Nettoyage.png" />
+    <Content Include="Content\Icones\voiture_Nettoyage_big.png" />
+    <Content Include="Content\Icones\voiture_Nettoyage_big_full.png" />
+    <Content Include="Content\Icones\voiture_Réparations.png" />
+    <Content Include="Content\Icones\voiture_Réparations_big.png" />
+    <Content Include="Content\Icones\voiture_Réparations_big_full.png" />
+    <Content Include="Content\Icones\voiture_Vidange.png" />
+    <Content Include="Content\Icones\voiture_Vidange_big.png" />
+    <Content Include="Content\Icones\voiture_Vidange_big_full.png" />
     <Content Include="Content\img_hivers.jpg" />
     <Content Include="Content\JS\graphPie.js" />
     <Content Include="Content\material.indigo-pink.min.css" />
+    <Content Include="Scripts\FinanceScripts.js" />
     <Content Include="Scripts\jquery-1.12.4.js" />
     <Content Include="Content\jquery-ui-1.12.1.css" />
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
@@ -241,7 +272,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Login\Authent.cshtml" />
     <Content Include="Views\Administration\Index.cshtml" />
     <Content Include="Views\Administration\CoorespondanceCategoriesDepenses.cshtml" />
     <Content Include="Views\Appartement\_ConsoEau.cshtml" />
@@ -249,7 +280,7 @@
     <Content Include="Views\Appartement\_Valeur.cshtml" />
     <Content Include="Views\Appartement\_ConsoChauffage.cshtml" />
     <Content Include="Views\Administration\ComptesEpargne.cshtml" />
-    <Content Include="Views\Epargne\index.cshtml" />
+    <Content Include="Views\Epargne\MonEpargne.cshtml" />
     <Content Include="Views\Epargne\_EpargneAnnuelle.cshtml" />
     <Content Include="Views\Epargne\_EpargneTotale.cshtml" />
     <Content Include="Views\Epargne\_Comptes.cshtml" />
@@ -265,13 +296,19 @@
     <Content Include="Views\Consolidation\_GraphsGeneraux.cshtml" />
     <Content Include="Views\Consolidation\_GraphsAnnuels.cshtml" />
     <Content Include="Views\Appartement\_ConsoEnergie.cshtml" />
-    <Content Include="Views\Carbone\index.cshtml" />
+    <Content Include="Views\Carbone\MonCarbone.cshtml" />
     <Content Include="Views\Carbone\_C12general.cshtml" />
     <Content Include="Views\Carbone\_C12bilan.cshtml" />
     <Content Include="Views\Carbone\_C12ajout.cshtml" />
     <Content Include="Views\Shared\_LayoutBase.cshtml" />
     <Content Include="Views\Administration\MonUtilisateur.cshtml" />
     <Content Include="Views\Administration\_AdministrationListElements.cshtml" />
+    <Content Include="Views\Administration\Utilisateurs.cshtml" />
+    <Content Include="Views\Consolidation\_ConsoGeneraleTotal.cshtml" />
+    <Content Include="Views\Voiture\MaVoiture.cshtml" />
+    <Content Include="Views\Voiture\_General.cshtml" />
+    <Content Include="Views\Voiture\_Entretien.cshtml" />
+    <Content Include="Views\Voiture\_Essence.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

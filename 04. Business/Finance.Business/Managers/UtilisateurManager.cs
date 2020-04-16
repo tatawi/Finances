@@ -35,6 +35,19 @@ namespace Finance.Business.Managers
 
         }
 
+        //Retourne tous les utilisateurs de l'application
+        public List<Utilisateur> GetUtilisateurs()
+        {
+            try
+            {
+                return this.bdd_Utilisateur.Get_All();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
 
         //Ajout d'un utilisateur en base de données
         public bool AddUtilisateur(Utilisateur user)

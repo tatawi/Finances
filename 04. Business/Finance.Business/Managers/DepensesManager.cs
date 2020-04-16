@@ -147,6 +147,26 @@ namespace Finance.Business.Managers
             return _bdd_Depense.Calculate_TotalDepensesFor(annee, mois, list_DepenseMois);
         }
 
+        /// <summary>Retourne le montant des dépenses de la catégorie</summary>
+        /// <param name="cat">Catégorie de recherche</param>
+        /// <param name="isForPerso">Affichage compte perso ou commun</param>
+        /// <returns>Montant</returns>
+        public decimal Get_MontantCat(string cat, bool isForPerso)
+        {
+            _bdd_Depense.setCompte(isForPerso);
+            return _bdd_Depense.get_MontantCat(cat);
+        }
+
+        /// <summary>Retourne le montant des dépenses de la sous-catégories</summary>
+        /// <param name="ssCat">Ssous-catégorie de recherche</param>
+        /// <param name="isForPerso">Affichage compte perso ou commun</param>
+        /// <returns>Montant</returns>
+        public decimal Get_MontantSsCat(string ssCat, bool isForPerso)
+        {
+            _bdd_Depense.setCompte(isForPerso);
+            return _bdd_Depense.get_MontantSsCat(ssCat);
+        }
+
         /// <summary>Retourne le montant des dépenses de la catégorie pour une année</summary>
         /// <param name="annee">Année de recherche</param>
         /// <param name="cat">Catégorie de recherche</param>
@@ -158,7 +178,30 @@ namespace Finance.Business.Managers
             return _bdd_Depense.get_MontantCatAnnee(annee, cat);
         }
 
-        /// <summary>Retourne le montant des dépenses de la sous-catégorie pour un mois</summary>
+        /// <summary>Retourne la liste des montants mensuels des dépenses de la catégorie pour une année</summary>
+        /// <param name="annee">Année de recherche</param>
+        /// <param name="cat">Catégorie de recherche</param>
+        /// <param name="isForPerso">Affichage compte perso ou commun</param>
+        /// <returns>Montant</returns>
+        public List<decimal> Get_ListMontantCatAnnee(int annee, string cat, bool isForPerso)
+        {
+            _bdd_Depense.setCompte(isForPerso);
+            List<Bdd_Depense.MontantMois> liste = _bdd_Depense.get_ListMontantCatAnnee(annee, cat);
+            List<decimal> listeMontants = new List<decimal>();
+
+            for (int mois = 1; mois <= 12; mois++)
+            {
+                if (liste.Any(v => v.Mois == mois))
+
+                    listeMontants.Add(Math.Abs(liste.First(v => v.Mois == mois).Montant));
+                else
+                    listeMontants.Add(0);
+            }
+
+            return listeMontants;
+        }
+
+        /// <summary>Retourne le montant annuel des dépenses de la sous-catégorie pour un mois</summary>
         /// <param name="annee">Année de recherche</param>
         /// <param name="mois">Mois de recherche</param>
         /// <param name="ssCat">Ssous-catégorie de recherche</param>
@@ -168,6 +211,30 @@ namespace Finance.Business.Managers
         {
             _bdd_Depense.setCompte(isForPerso);
             return _bdd_Depense.get_MontantSsCatAnnee(annee, ssCat);
+        }
+
+        /// <summary>Retourne la liste annuel des montant des dépenses par mois de la sous-catégorie pour un mois</summary>
+        /// <param name="annee">Année de recherche</param>
+        /// <param name="mois">Mois de recherche</param>
+        /// <param name="ssCat">Ssous-catégorie de recherche</param>
+        /// <param name="isForPerso">Affichage compte perso ou commun</param>
+        /// <returns>Montant</returns>
+        public List<decimal> Get_ListMontantSsCatAnnee(int annee, string ssCat, bool isForPerso)
+        {
+            _bdd_Depense.setCompte(isForPerso);
+            List<Bdd_Depense.MontantMois> liste = _bdd_Depense.get_ListMontantSsCatAnnee(annee, ssCat);
+            List<decimal> listeMontants = new List<decimal>();
+
+            for (int mois = 1; mois <= 12; mois++)
+            {
+                if (liste.Any(v => v.Mois == mois))
+
+                    listeMontants.Add(liste.First(v => v.Mois == mois).Montant);
+                else
+                    listeMontants.Add(0);
+            }
+
+            return listeMontants;
         }
 
         /// <summary>Retourne le montant des dépenses de la catégorie pour un mois</summary>

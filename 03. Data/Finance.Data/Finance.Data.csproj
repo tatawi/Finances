@@ -50,8 +50,10 @@
     <Compile Include="bdd_Depense.cs" />
     <Compile Include="bdd_BilanCarbone.cs" />
     <Compile Include="bdd_Electricite.cs" />
+    <Compile Include="bdd_EntretienVoiture.cs" />
     <Compile Include="bdd_Epargne.cs" />
     <Compile Include="bdd_InfosAppartement.cs" />
+    <Compile Include="bdd_PleinEssence.cs" />
     <Compile Include="bdd_Utilisateur.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -10,16 +10,16 @@
     var IS_GRAPH_2017_CHARGE = false;
     var IS_GRAPH_2018_CHARGE = false;
     var IS_GRAPH_2019_CHARGE = false;
+    var IS_GRAPH_2020_CHARGE = false;
 
 
     $(document).ready(function () {
-        ChangeSsOnglet('ssTab_6', 'ssContent_6', 6);
+        ChangeSsOnglet('ssTab_7', 'ssContent_7', 7);
     });
 
 
-    //ChangeSsOnglet
-    function ChangeSsOnglet(onglet, contenu, numOnglet) {
-        
+    //Click sur onglet
+    function ChangeSsOnglet(onglet, contenu, numOnglet) { 
         var anneeDebut = '@Model.AnneeDebut';
         var nbAnnee = parseInt('@Model.nbAnnees');
         var anneeOnglet = @Model.AnneeDebut + numOnglet;
@@ -61,7 +61,11 @@
             if (anneeOnglet == 2019 && !IS_GRAPH_2019_CHARGE) {
                 LoadGraphRevenusPie(anneeOnglet); LoadGraphDepensesPie(anneeOnglet);
                 IS_GRAPH_2019_CHARGE = true;
-            }  
+            } 
+            if (anneeOnglet == 2020 && !IS_GRAPH_2020_CHARGE) {
+                LoadGraphRevenusPie(anneeOnglet); LoadGraphDepensesPie(anneeOnglet);
+                IS_GRAPH_2020_CHARGE = true;
+            } 
         }
     }
 
@@ -69,37 +73,44 @@
     //Chargement
     function LoadGraphRevenusPie(annee) {
         var baseUrl = '@Url.Content("~/Consolidation/GetGraphiqueRevenusPie/")';
-
-        var tab_Annees = 0;
-        var tab_Salaire = 0;
-        var tab_Entreprise = 0;
-        var tab_Aides = 0;
-        var tab_Interets = 0;
-        var tab_Vente = 0;
-        var tab_AirBnb = 0;
-        var tab_Cadeaux = 0;
+        var Salaire= 0;
+        var Entreprise= 0;
+        var Aides= 0;
+        var Interets= 0;
+        var Vente= 0;
+        var Airbnb= 0;
+        var Cadeaux = 0;
+        var result;
 
         $.getJSON(baseUrl, { Annee: annee}, function (result) {
             $.each(result, function (index, itemData) {
-                tab_Annees=(itemData.Annee);
-                tab_Salaire=(itemData.Salaire);
-                tab_Entreprise=(itemData.Entreprise);
-                tab_Aides=(itemData.Aides);
-                tab_Interets=(itemData.Interets);
-                tab_Vente=(itemData.Vente);
-                tab_AirBnb=(itemData.Airbnb);
-                tab_Cadeaux=(itemData.Cadeaux);
+                result = itemData;
+
+                $.each(result.Salaire, function () { Salaire += parseFloat(this) || 0; });
+                $.each(result.Entreprise, function () { Entreprise += parseFloat(this) || 0; });
+                $.each(result.Aides, function () { Aides += parseFloat(this) || 0; });
+                $.each(result.Interets, function () { Interets += parseFloat(this) || 0; });
+                $.each(result.Vente, function () { Vente += parseFloat(this) || 0; });
+                $.each(result.Airbnb, function () { Airbnb += parseFloat(this) || 0; });
+                $.each(result.Cadeaux, function () { Cadeaux+=parseFloat(this) || 0;});
             });
 
-            DisplayTableRevenusPie(annee, tab_Annees, tab_Salaire, tab_Entreprise, tab_Aides, tab_Interets, tab_Vente, tab_AirBnb, tab_Cadeaux);
+            //Graph Pie
+            var graph = document.getElementById('ch_RevenusPie-' + annee).getContext('2d');
+            DisplayTableRevenusPie(graph, Salaire, Entreprise, Aides, Interets, Vente, Airbnb, Cadeaux);
+
+            //Graph courbes
+            var graph = document.getElementById('ch_RevenusLine-' + annee).getContext('2d');
+            DisplayTableRevenusLine(graph, result);
+
         });
     }
 
     //Affichage
-    function DisplayTableRevenusPie(annee, tbAnnees, tab_Salaire, tab_Entreprise, tab_Aides, tab_Interets, tab_Vente, tab_AirBnb, tab_Cadeaux) {
-        var graphName = 'ch_RevenusPie-' + annee;
-        var ctx = document.getElementById(graphName).getContext('2d');
-        var chart = new Chart(ctx, {
+    function DisplayTableRevenusPie(graph, tab_Salaire, tab_Entreprise, tab_Aides, tab_Interets, tab_Vente, tab_AirBnb, tab_Cadeaux) {
+        //var graphName = 'ch_RevenusPie-' + annee;
+        //var ctx = document.getElementById(graphName).getContext('2d');
+        var chart = new Chart(graph, {
             type: 'doughnut',
             data: {
                 datasets: [{
@@ -135,7 +146,31 @@
                 }
             }
         });
+    }
 
+    //Affichage
+    function DisplayTableRevenusLine(graph, result) {
+                    var chart = new Chart(graph, {
+                        // The type of chart we want to create
+                        type: 'line',
+
+                        // The data for our dataset
+                        data: {
+                            labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre',],
+                            datasets: [
+                                { label: "Salaire", fill: false, borderColor: '#81C784', data: result.Salaire, },
+                                { label: "Entreprise", fill: false,borderColor: '#AED581', data: result.Entreprise, },
+                                { label: "Aides", fill: false,borderColor: '#A5D6A7', data: result.Aides, },
+                                { label: "Intêrets", fill: false,borderColor: '#4DB6AC', data: result.Interets, },
+                                { label: "Vente", fill: false,borderColor: '#C5E1A5', data: result.Vente, },
+                                { label: "Airbnb", fill: false,borderColor: '#DCE775', data: result.Airbnb, },
+                                { label: "Cadeaux", fill: false,borderColor: '#80CBC4', data: result.Cadeaux, }
+                            ]
+                        },
+
+                        // Configuration options go here
+                        options: {}
+                    });
 
     }
 
@@ -144,50 +179,57 @@
     //Chargement
     function LoadGraphDepensesPie(annee) {
         var baseUrl = '@Url.Content("~/Consolidation/GetGraphiqueDepensesPie/")';
-
-        var tab_Annees = 0;
-        var tab_Logement = 0;
-        var tab_Entreprise = 0;
-        var tab_Alimentaire = 0;
-        var tab_Voiture = 0;
-        var tab_Transport = 0;
-        var tab_Loisirs = 0;
-        var tab_Voyage = 0;
-        var tab_Cadeaux = 0;
-        var tab_Vetements = 0;
-        var tab_Sante = 0;
-        var tab_Impots = 0;
-        var tab_Frais = 0;
-        var tab_Emprunt = 0;
+        var Logement= 0;
+        var Alimentaire= 0;
+        var Voiture= 0;
+        var Transport= 0;
+        var Loisirs= 0;
+        var Voyage= 0;
+        var Cadeaux= 0;
+        var Achats= 0;
+        var Vetements= 0;
+        var Sante= 0;
+        var Impots= 0;
+        var Frais= 0;
+        var Emprunt = 0;
+        var result;
 
         $.getJSON(baseUrl, { Annee: annee}, function (result) {
             $.each(result, function (index, itemData) {
-                tab_Annees=(itemData.Annee);
-                tab_Logement=(itemData.Logement);
-                tab_Alimentaire=(itemData.Alimentaire);
-                tab_Voiture=(itemData.Voiture);
-                tab_Transport=(itemData.Transport);
-                tab_Loisirs=(itemData.Loisirs);
-                tab_Voyage=(itemData.Voyage);
-                tab_Cadeaux=(itemData.Cadeaux);
-                tab_Achats=(itemData.Achats);
-                tab_Vetements=(itemData.Vetements);
-                tab_Sante=(itemData.Sante);
-                tab_Impots=(itemData.Impots);
-                tab_Frais=(itemData.Frais);
-                tab_Emprunt=(itemData.Emprunt);
+                result = itemData;
+
+                $.each(result.Logement, function () { Logement += parseFloat(this) || 0; });
+                $.each(result.Alimentaire, function () { Alimentaire += parseFloat(this) || 0; });
+                $.each(result.Voiture, function () { Voiture += parseFloat(this) || 0; });
+                $.each(result.Transport, function () { Transport += parseFloat(this) || 0; });
+                $.each(result.Loisirs, function () { Loisirs += parseFloat(this) || 0; });
+                $.each(result.Voyage, function () { Voyage += parseFloat(this) || 0; });
+                $.each(result.Cadeaux, function () { Cadeaux += parseFloat(this) || 0; });
+                $.each(result.Achats, function () { Achats += parseFloat(this) || 0; });
+                $.each(result.Vetements, function () { Vetements += parseFloat(this) || 0; });
+                $.each(result.Sante, function () { Sante += parseFloat(this) || 0; });
+                $.each(result.Impots, function () { Impots += parseFloat(this) || 0; });
+                $.each(result.Frais, function () { Frais += parseFloat(this) || 0; });
+                $.each(result.Emprunt, function () { Emprunt+=parseFloat(this) || 0;});
+
             });
 
+            //Graph Pie
+            var graph = document.getElementById('ch_DepensesPie-' + annee).getContext('2d');
+            DisplayTableDepensesPie(graph, Logement, Alimentaire, Voiture, Transport, Loisirs, Voyage, Cadeaux, Achats, Vetements, Sante, Impots, Frais, Emprunt);
 
-            DisplayTableDepensesPie(annee, tab_Annees, tab_Logement, tab_Alimentaire, tab_Voiture, tab_Transport, tab_Loisirs, tab_Voyage, tab_Cadeaux, tab_Achats, tab_Vetements, tab_Sante, tab_Impots, tab_Frais, tab_Emprunt);
+            //Graph courbes
+            var graph = document.getElementById('ch_DepensesLine-' + annee).getContext('2d');
+            DisplayTableDepensesLine(graph, result);
+
+
+
         });
     }
 
     //Affichage
-    function DisplayTableDepensesPie(annee, tab_Annees, tab_Logement, tab_Alimentaire, tab_Voiture, tab_Transport, tab_Loisirs, tab_Voyage, tab_Cadeaux, tab_Achats, tab_Vetements, tab_Sante, tab_Impots, tab_Frais, tab_Emprunt){
-        var graphName = 'ch_DepensesPie-' + annee;
-        var ctx = document.getElementById(graphName).getContext('2d');
-        var chart = new Chart(ctx, {
+    function DisplayTableDepensesPie(graph, tab_Logement, tab_Alimentaire, tab_Voiture, tab_Transport, tab_Loisirs, tab_Voyage, tab_Cadeaux, tab_Achats, tab_Vetements, tab_Sante, tab_Impots, tab_Frais, tab_Emprunt){
+        var chart = new Chart(graph, {
             type: 'doughnut',
             data: {
                 datasets: [{
@@ -200,10 +242,8 @@
                 labels: [
                     'Logement', 'Alimentaire', 'Voiture', 'Transport',
                     'Loisirs', 'Voyage', 'Cadeaux', 'Achats',
-                    'Vétements', 'Santé', 'Impôts', 'Frais Bancaires',
-                    'Emprunt'
+                    'Vétements', 'Santé', 'Impôts', 'Frais Bancaires','Emprunt'
                 ]
-                
             },
             options: {
                 responsive: true,
@@ -221,8 +261,38 @@
 
     }
 
+    //Affichage
+    function DisplayTableDepensesLine(graph, result) {
+                    var chart = new Chart(graph, {
+                        // The type of chart we want to create
+                        type: 'line',
+                        // The data for our dataset
+                        data: {
+                            labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre',],
+                            datasets: [
+                                { label: "Logement", fill: false, borderColor: '#9FA8DA', data: result.Logement, },
+                                { label: "Alimentaire", fill: false,borderColor: '#CE93D8', data: result.Alimentaire, },
+                                { label: "Voiture", fill: false,borderColor: '#B0BEC5', data: result.Voiture, },
+                                { label: "Transport", fill: false,borderColor: '#616161', data: result.Transport, },
+                                { label: "Loisirs", fill: false,borderColor: '#FFAB91', data: result.Loisirs, },
+                                { label: "Voyage", fill: false, borderColor: '#A5D6A7', data: result.Voyage, },
+                                { label: "Cadeaux", fill: false, borderColor: '#B2EBF2', data: result.Cadeaux, },
+                                { label: "Achats", fill: false, borderColor: '#BCAAA4', data: result.Achats, },
+                                { label: "Vetements", fill: false, borderColor: '#AFB42B', data: result.Vetements, },
+                                { label: "Sante", fill: false, borderColor: '#FFF59D', data: result.Sante, },
+                                { label: "Impots", fill: false, borderColor: '#EF9A9A', data: result.Impots, },
+                                { label: "Frais", fill: false, borderColor: '#F8BBD0', data: result.Frais, },
+                                { label: "Emprunt", fill: false,borderColor: '#E1BEE7', data: result.Emprunt, }
+                            ]
+                        },
 
-    
+                        // Configuration options go here
+                        options: {}
+                    });
+
+    }
+
+
 </script>
 
 
@@ -263,6 +333,21 @@
                     <div style="width:100%">
                         <center><h3>Dépenses @annee</h3></center>
                         <canvas id="ch_DepensesPie-@annee"></canvas>
+                    </div>
+                </div>
+
+                <!--graph Revenus-->
+                <div class="col-sm-6">
+                    <div style="width:100%">
+                        <canvas id="ch_RevenusLine-@annee"></canvas>
+                    </div>
+                </div>
+
+                <!--graph Dépenses-->
+                <div class="col-sm-6">
+
+                    <div style="width:100%">
+                        <canvas id="ch_DepensesLine-@annee"></canvas>
                     </div>
                 </div>
             </div>

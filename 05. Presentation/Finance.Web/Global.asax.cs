@@ -32,16 +32,6 @@ namespace Finance
 
                 ApplicationManager.SetupUser(HttpContext.Current.User.Identity.Name);
 
-                //if(currentUser==null)
-                //{
-                //    Server.ClearError();
-                //    Response.Clear();
-                //    Response.Redirect("~/Login/index");
-                //}
-                
-
-                //if (currentUser != null && !ApplicationManager.CurrentUser.IsActif)
-                //    throw new HttpException(401, "Ce compte utilisateur a été désactivé.");
 
             }
 

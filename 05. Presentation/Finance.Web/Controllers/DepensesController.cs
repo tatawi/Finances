@@ -49,16 +49,11 @@ namespace Finance.Controllers
         }
 
         // GET (AJAX) - Chargement tableau dépenses
-        public JsonResult GetDepensesMois(int paramAnnee, int paramMois, string paramCat)
+        public JsonResult GetDepensesMois(int paramAnnee, int paramMois)
         {
-            List<Poco.Depense> list_Depense = new List<Poco.Depense>();
-
-            if (paramCat.Equals("All"))
-                list_Depense = _DepensesService.GetAllDepensesMois(paramAnnee, paramMois, this.isComptePerso());
-            else
-                list_Depense = _DepensesService.GetAllDepensesMoisForCat(paramAnnee, paramMois, paramCat, this.isComptePerso());
-
             var result = new List<object>();
+            List<Poco.Depense> list_Depense = _DepensesService.GetAllDepensesMois(paramAnnee, paramMois, this.isComptePerso());
+
             foreach (Poco.Depense dep in list_Depense)
             {
                 string str_date = dep.Date.Value.ToShortDateString();

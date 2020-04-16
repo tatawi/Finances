@@ -1,0 +1,511 @@
+﻿
+@{
+    ViewBag.Title = "MaVoiture";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/Chart.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Chart.bundle.min.js")"></script>
+<script type="text/javascript">
+
+    //Constantes onglets
+    var _isInfosGCharge = 0;
+    var _isEntretienCharge = 0;
+    var _isEssenceCharge = 0;
+
+    $(document).ready(function () {
+
+        //Chargement premier onglet
+        ChangeOnglet('tab_InfosG', 'c_InfosG');
+
+        //Date picker
+        $("#chp_Ess_Date").datepicker();
+        $("#chp_Ent_Date").datepicker();
+
+        //Date picker init
+        $.datepicker.setDefaults(
+        {
+            altField: "#datepicker",
+            closeText: 'Fermer',
+            prevText: 'Précédent',
+            nextText: 'Suivant',
+            currentText: 'Aujourd\'hui',
+            monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+            monthNamesShort: ['Janv.', 'Févr.', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
+            dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+            dayNamesShort: ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'],
+            dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+            weekHeader: 'Sem.',
+            dateFormat: 'dd/mm/yy',
+            firstDay: 1 
+        });
+
+    });
+
+
+    //Chargement onglet
+    function ChangeOnglet(onglet, contenu) {
+
+        document.getElementById('c_InfosG').style.display = 'none';
+        document.getElementById('c_Entretien').style.display = 'none';
+        document.getElementById('c_Essence').style.display = 'none';
+        document.getElementById(contenu).style.display = 'block';
+
+        document.getElementById('tab_InfosG').className = '';
+        document.getElementById('tab_Entretien').className = '';
+        document.getElementById('tab_Essence').className = '';
+        document.getElementById(onglet).className = 'active';
+
+
+        if (onglet == 'tab_InfosG' && _isInfosGCharge != 1) {
+            var url = '@Url.Action("ChargementGeneral", "Voiture")';
+            _isInfosGCharge = 1;
+            $('#c_InfosG').load(url); 
+        }
+
+        if (onglet == 'tab_Entretien' && _isEntretienCharge != 1) {
+            var url = '@Url.Action("ChargementEntretien", "Voiture")';
+            _isEntretienCharge = 1;
+            $('#c_Entretien').load(url); 
+        }
+
+        if (onglet == 'tab_Essence' && _isEssenceCharge != 1) {
+            var url = '@Url.Action("ChargementEssence", "Voiture")';
+            _isEssenceCharge = 1;
+            $('#c_Essence').load(url); 
+        }
+        
+    }
+
+
+    //-------------------------------------------------------------------------------------------------------------------------
+    //ESSENCE
+
+    //Ajouter Conso Essence
+    function PopUpAjouterConsoEssence() {
+        var modal = document.getElementById('modal_addConsoEssence');
+        var span = document.getElementById("closePopUp");
+
+
+        //Maj tab Pop-up
+        InitChampsPopUpAjax();
+
+        $('#modal_addConsoEssence').show();
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    }
+
+    //AJAX - MAJ pop UP
+    function InitChampsPopUpAjax() {
+        $('#chp_addEss_km').val('');
+        $('#chp_addEss_litres').val('');
+        $('#chp_addEss_prix').val('');
+        $('#chp_addEss_type').val('');
+        $('#chp_addEss_conso').val('');
+
+        //Gestion Date Pop-Up
+        var d = new Date();
+        var month = d.getMonth()+1;
+        var day = d.getDate();
+        var dateStr = (day<10 ? '0' : '') + day + '/' +
+            (month<10 ? '0' : '') + month + '/' +
+            d.getFullYear();
+        $('#chp_Ess_Date').val(dateStr);
+
+        var data = {};
+        $.ajax({
+            type: "POST", url: '@Url.Content("~/Voiture/GetDernierPlein")',
+            data: data, dataType: "json",
+            success: function (result) {
+                if (result != null) {
+                    $('#chp_addEss_km').val(result.Km);
+                    $('#chp_addEss_conso').val(result.Conso);
+                    $('#chp_addEss_type').val(result.Type);
+                    $('#chp_addEss_conso').val(result.Km);
+                }
+            }
+        });
+    }
+
+    //AJAX - Enregistrer essence
+    function EnregistrerEssenceAjax() {
+        var data = {};
+        data['Date'] = $('#chp_Ess_Date').val();
+        data['Km'] = $('#chp_addEss_km').val();
+        data['Litres'] = $('#chp_addEss_litres').val();
+        data['Prix'] = $('#chp_addEss_prix').val();
+        data['Type'] = $('#chp_addEss_type').val();
+        data['Conso'] = $('#chp_addEss_conso').val();
+
+        $.ajax({
+            type: "POST", url: '@Url.Content("~/Voiture/EnregistrerPleinEssence")',
+            data: data, dataType: "json",
+            success: function (isEnregistrementOK) {
+
+                if (isEnregistrementOK) {
+                    $('#modal_addConsoEssence').hide();
+                    _isInfosGCharge = 0;
+                    _isEntretienCharge = 0;
+                    _isEssenceCharge = 0;
+                    ChangeOnglet('tab_InfosG', 'c_InfosG');
+                    displayMessage("Plein enregistré");
+                }
+                else {
+                    displayMessage("[Erreur]Une erreur est survenue lors de l'enregistrement");
+                }
+                
+            },
+            complete: function () {
+                
+            }
+        });
+    }
+
+
+
+
+     //Ajout entretien - Maj image type
+    function changeImgTypeEssence(imageId) {
+
+        //Parcours - on remet toutes les icones normales
+        $('.img_type_essence').each(function () {
+            var newsrc = $(this).attr('src');
+            
+            newsrc = newsrc.replace('_full', '');
+            
+            $(this).attr('src', newsrc);
+        });
+
+        //On selectionne l'icone selectionnée
+        var newsrc = $('#' + imageId).attr('src');
+        newsrc = newsrc.replace('.png', '_full.png');
+        $('#' + imageId).attr('src', newsrc);
+
+        //Maj champ input
+        if (imageId == 'essence_e10') {
+            $('#chp_addEss_type').val('e10')
+        }else if (imageId == 'essence_98') {
+            $('#chp_addEss_type').val('98')
+        }else if (imageId == 'essence_ethanol') {
+            $('#chp_addEss_type').val('ethanol')
+        }else if (imageId == 'essence_gazole') {
+            $('#chp_addEss_type').val('gazole')
+        }else if (imageId == 'essence_hydrogene') {
+            $('#chp_addEss_type').val('hydrogene')
+        }else if (imageId == 'essence_gpl') {
+            $('#chp_addEss_type').val('gpl')
+        }
+            
+    }
+
+    //-------------------------------------------------------------------------------------------------------------------------
+    //ENTRETIEN
+
+    //Ajouter Entretien
+    function PopUpAjouterEntretien() {
+        var modal = document.getElementById('modal_addEntretien');
+        var span = document.getElementById("closePopUpEntretien");
+
+
+        //Gestion Date Pop-Up
+        var d = new Date();
+        var month = d.getMonth()+1;
+        var day = d.getDate();
+        var dateStr = (day<10 ? '0' : '') + day + '/' +
+            (month<10 ? '0' : '') + month + '/' +
+            d.getFullYear();
+        $('#chp_Ent_Date').val(dateStr);
+
+        $('#modal_addEntretien').show();
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    }
+
+    //AJAX - Enregistrer entretien
+    function EnregistrerEntretienAjax() {
+        var data = {};
+        data['Date'] = $('#chp_Ent_Date').val();
+        data['Km'] = $('#chp_addEnt_km').val();
+        data['Cout'] = $('#chp_addEnt_cout').val();
+        data['Type'] = $('#chp_addEnt_type').val();
+        data['Description'] = $('#chp_addEnt_desc').val();
+        data['Effectue'] = $('#chp_Ent_Prevu').prop('checked');
+
+        $.ajax({
+            type: "POST", url: '@Url.Content("~/Voiture/EnregistrerEntretien")',
+            data: data, dataType: "json",
+            success: function (isEnregistrementOK) {
+
+                if (isEnregistrementOK) {
+                    $('#modal_addEntretien').hide();
+                    _isInfosGCharge = 0;
+                    _isEntretienCharge = 0;
+                    ChangeOnglet('tab_InfosG', 'c_InfosG');
+                    displayMessage("Entretien enregistré");
+                }
+                else {
+                    displayMessage("[Erreur]Une erreur est survenue lors de l'enregistrement");
+                }
+                
+            },
+            complete: function () {
+                
+            }
+        });
+    }
+
+    //Ajout entretien - Maj image type
+    function changeImgTypeEntretien(imageId) {
+
+        //Parcours - on remet toutes les icones normales
+        $('.img_type_entretien').each(function () {
+            var newsrc = $(this).attr('src');
+            
+            newsrc = newsrc.replace('_full', '');
+            
+            $(this).attr('src', newsrc);
+        });
+
+        //On selectionne l'icone selectionnée
+        var newsrc = $('#' + imageId).attr('src');
+        newsrc = newsrc.replace('big', 'big_full');
+        $('#' + imageId).attr('src', newsrc);
+
+        //Maj champ input
+        if (imageId == 'img_Reparation') {
+            $('#chp_addEnt_type').val('Réparations')
+        }else if (imageId == 'img_Vidange') {
+            $('#chp_addEnt_type').val('Vidange')
+        }else if (imageId == 'img_Assurance') {
+            $('#chp_addEnt_type').val('Assurance')
+        }else if (imageId == 'img_Nettoyage') {
+            $('#chp_addEnt_type').val('Nettoyage')
+        }else if (imageId == 'img_Accessoires') {
+            $('#chp_addEnt_type').val('Accessoires')
+        }
+            
+    }
+
+</script>
+
+
+
+<!--TITRE-->
+<div>
+    <h1 class="display-4">Ma voiture</h1><hr />
+</div>
+
+
+<!--CONTENU-->
+<div class="tabbed_area">
+    <ul class="tabs" style="margin-bottom:0px;">
+        <li><a href="javascript:ChangeOnglet('tab_InfosG', 'c_InfosG');" id="tab_InfosG" class="active">Général</a></li>
+        <li><a href="javascript:ChangeOnglet('tab_Entretien', 'c_Entretien');" id="tab_Entretien">Historique</a></li>
+        <li><a href="javascript:ChangeOnglet('tab_Essence', 'c_Essence');" id="tab_Essence">Essence</a></li>
+        <li><button class="mdl-button mdl-js-button mdl-button--accent" onclick="PopUpAjouterConsoEssence()">Ajouter plein essence</button></li>
+        <li><button class="mdl-button mdl-js-button mdl-button--accent" onclick="PopUpAjouterEntretien()">Ajouter historique</button></li>
+    </ul>
+
+
+    <!--INFOS GENERALES-->
+    <div id="c_InfosG" class="content">
+
+    </div>
+
+
+    <!--ENTRETIEN-->
+    <div id="c_Entretien" class="content">
+
+    </div>
+
+    <!--ESSENCE-->
+    <div id="c_Essence" class="content">
+
+    </div>
+
+</div>
+
+
+<!--POP UP AJOUTER CONSO ESSENCE-->
+<div id="modal_addConsoEssence" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <div class="col-sm-10 form-group">
+                <h2 id="modalTitle">Ajouter un plein d'essence</h2>
+            </div>
+
+            <div class="col-sm-2 form-group">
+                <span id="closePopUp" class="close">&times;</span>
+            </div>
+
+            <!--Date-->
+            <div class="col-sm-3 form-group clear">
+                <div class="souligne mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-top:0px; padding-bottom:1px">
+                    <label  class="PurpleText">Date :</label>
+                    <input id="chp_Ess_Date" class="mdl-textfield__input">
+                </div>
+            </div>
+            <div class="col-sm-3"></div>
+
+            <!--Km-->
+            <div class="col-sm-3 form-group">
+                <div class="souligne mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-top:0px; padding-bottom:1px">
+                    <label  class="PurpleText">Kilométres :</label>
+                    <input id="chp_addEss_km" placeholder="ex : 120 000" class="mdl-textfield__input" pattern="^0[1-9]|[1-9]\d$">
+                </div>
+            </div>
+
+            <!--Conso-->
+            <div class="col-sm-3 form-group">
+                <div class="souligne mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-top:0px; padding-bottom:1px">
+                    <label  class="PurpleText">Consommation :</label>
+                    <input id="chp_addEss_conso" placeholder="L/100km" class="mdl-textfield__input" >
+                </div>
+            </div>
+
+             <!--Type-->
+            <div class="col-sm-6 form-group clear">
+                <label  class="PurpleText">Essence :</label>
+                <div>
+                    <img id="essence_e10" class="img_type_essence" src="@Url.Content("~/Content/Icones/")essence_e10.png" width="45" onclick="changeImgTypeEssence('essence_e10')" style="padding-right:10px"/>
+                    <img id="essence_98" class="img_type_essence" src="@Url.Content("~/Content/Icones/")essence_98.png" width="45" onclick="changeImgTypeEssence('essence_98')" style="padding-right:10px"/>
+                    <img id="essence_ethanol" class="img_type_essence" src="@Url.Content("~/Content/Icones/")essence_ethanol.png" width="45" onclick="changeImgTypeEssence('essence_ethanol')" style="padding-right:10px"/>
+                    <img id="essence_gazole" class="img_type_essence" src="@Url.Content("~/Content/Icones/")essence_gazole.png" width="45" onclick="changeImgTypeEssence('essence_gazole')" style="padding-right:10px"/>
+                    <img id="essence_hydrogene" class="img_type_essence" src="@Url.Content("~/Content/Icones/")essence_hydrogene.png" width="45" onclick="changeImgTypeEssence('essence_hydrogene')" style="padding-right:10px"/>
+                    <img id="essence_gpl" class="img_type_essence" src="@Url.Content("~/Content/Icones/")essence_gpl.png" width="45" onclick="changeImgTypeEssence('essence_gpl')" style="padding-right:10px"/>
+                </div>
+                <input id="chp_addEss_type" placeholder="Montant" class="mdl-textfield__input" hidden>
+            </div>
+
+            <!--L-->
+            <div class="col-sm-3 form-group">
+                <div class="souligne mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-top:0px; padding-bottom:1px">
+                    <label  class="PurpleText">Litres :</label>
+                    <input id="chp_addEss_litres" placeholder="L" class="mdl-textfield__input" >
+                </div>
+            </div>
+
+            <!--Prix-->
+            <div class="col-sm-3 form-group">
+                <div class="souligne mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-top:0px; padding-bottom:1px">
+                    <label  class="PurpleText">Prix :</label>
+                    <input id="chp_addEss_prix" placeholder="€" class="mdl-textfield__input" >
+                </div>
+            </div>
+
+            <!--Btn add-->
+            <div class="col-sm-12 form-group clear">
+                <center>
+                    <button class="mdl-button mdl-js-button mdl-button--accent" onClick="EnregistrerEssenceAjax()">
+                        Ajouter
+                    </button>
+                </center>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--POP UP AJOUTER ENTRETIEN-->
+<div id="modal_addEntretien" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <div class="col-sm-10 form-group">
+                <h2 id="modalTitle">Ajouter une dépense</h2>
+            </div>
+
+            <div class="col-sm-2 form-group">
+                <span id="closePopUpEntretien" class="close">&times;</span>
+            </div>
+
+            <!--Date-->
+            <div class="col-sm-4 form-group clear">
+                <div class="souligne mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-top:0px; padding-bottom:1px">
+                    <label  class="PurpleText">Date :</label>
+                    <input id="chp_Ent_Date" class="mdl-textfield__input">
+                </div>
+            </div>
+
+             <!--Effectué-->
+            <div class="col-sm-4 form-group">
+                <label  class="PurpleText">Dépense effectuée :</label>
+                <div style="padding-top:8px;">
+                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="chp_Ent_Prevu">
+                        <input type="checkbox" id="chp_Ent_Prevu" class="mdl-switch__input" checked>
+                        <span class="mdl-switch__label"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!--Km-->
+            <div class="col-sm-4 form-group">
+                <div class="souligne mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-top:0px; padding-bottom:1px">
+                    <label  class="PurpleText">Kilométres :</label>
+                    <input id="chp_addEnt_km" placeholder="ex :120 000" class="mdl-textfield__input" pattern="^0[1-9]|[1-9]\d$">
+                </div>
+            </div>
+
+            <!--Coût-->
+            <div class="col-sm-4 form-group clear">
+                <div class="souligne mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-top:0px; padding-bottom:1px">
+                    <label  class="PurpleText">Coût :</label>
+                    <input id="chp_addEnt_cout" placeholder="ex : 520" class="mdl-textfield__input" >
+                 </div>
+            </div>
+
+            <!--Type-->
+            <div class="col-sm-4 form-group">
+                <label  class="PurpleText">Type :</label>
+                <div>
+                    <img id="img_Reparation" class="img_type_entretien" src="@Url.Content("~/Content/Icones/")voiture_Réparations_big.png" width="45" onclick="changeImgTypeEntretien('img_Reparation')" style="padding-right:10px"/>
+                    <img id="img_Vidange" class="img_type_entretien" src="@Url.Content("~/Content/Icones/")voiture_Vidange_big.png" width="45" onclick="changeImgTypeEntretien('img_Vidange')" style="padding-right:10px"/>
+                    <img id="img_Assurance" class="img_type_entretien" src="@Url.Content("~/Content/Icones/")voiture_Assurance_big.png" width="45" onclick="changeImgTypeEntretien('img_Assurance')" style="padding-right:10px"/>
+                    <img id="img_Nettoyage" class="img_type_entretien" src="@Url.Content("~/Content/Icones/")voiture_Nettoyage_big.png" width="45" onclick="changeImgTypeEntretien('img_Nettoyage')" style="padding-right:10px"/>
+                    <img id="img_Accessoires" class="img_type_entretien" src="@Url.Content("~/Content/Icones/")voiture_Accessoires_big.png" width="45" onclick="changeImgTypeEntretien('img_Accessoires')" style="padding-right:10px"/>
+                </div>
+                <input id="chp_addEnt_type" placeholder="Type" class="mdl-textfield__input" hidden>
+            </div>
+
+            <!--Description-->
+            <div class="col-sm-4 form-group">
+                <div class="souligne mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-top:0px; padding-bottom:1px">
+                    <label  class="PurpleText">Description :</label>
+                    <input id="chp_addEnt_desc" placeholder="ex : Remplcament tel piéce" class="mdl-textfield__input" >
+                 </div>
+            </div>
+
+
+            
+
+            <!--Btn add-->
+            <div class="col-sm-12 form-group clear">
+                <center>
+                    <button class="mdl-button mdl-js-button mdl-button--accent" onClick="EnregistrerEntretienAjax()">
+                        Ajouter
+                    </button>
+                </center>
+            </div>
+
+        </div>
+    </div>
+</div>

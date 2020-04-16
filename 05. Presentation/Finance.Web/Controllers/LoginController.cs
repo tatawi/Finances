@@ -6,6 +6,7 @@ using Finance.Business.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -28,7 +29,7 @@ namespace Finance.Controllers
 
         //GET - page login
         [AllowAnonymous]
-        public ActionResult Index()
+        public ActionResult Authent()
         {
             LoginVM viewModel = new LoginVM { Authentifie = HttpContext.User.Identity.IsAuthenticated };
 
@@ -43,7 +44,7 @@ namespace Finance.Controllers
 
         //POST - page login
         [HttpPost]
-        public ActionResult Index(LoginVM vm)
+        public ActionResult Authent(LoginVM vm)
         {
             if(vm.Utilisateur==null)
             {
@@ -57,7 +58,11 @@ namespace Finance.Controllers
             if (_LoginService.IsAuthentifie(vm))
                 FormsAuthentication.SetAuthCookie(vm.Utilisateur, false);
             else
+            {
                 vm.Message = "[Erreur]Impossible de se connecter";
+                return View(vm);
+            }
+                
 
             return Redirect(@Url.Content("~/"));
 
@@ -75,13 +80,20 @@ namespace Finance.Controllers
         //GET (AJAX) - Get image du jour
         public JsonResult GetImageDuJour()
         {
-            //Get données
-            ApodApiJsonGet result = _ApodApiService.GetImageDuJour();
+            ApodApiJsonGet result;
 
-            //Sauvegarde session
-            Session["ApodUrl"] = result.UrlLight;
-            Session["ApodTitre"] = result.Titre;
-            Session["ApodDescription"] = result.Description;
+            if (Session["ImageDuJour"] != null)
+            {
+                //Récupération
+                result = (ApodApiJsonGet)Session["ImageDuJour"];
+            }
+            else
+            {
+                //Get données
+                result = _ApodApiService.GetImageDuJour();
+                //Sauvegarde session
+                Session["ImageDuJour"] = result;
+            }
 
             //Affichage
             return Json(result, JsonRequestBehavior.AllowGet);

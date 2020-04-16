@@ -1,0 +1,349 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Finance.Business.Interface</name>
+    </assembly>
+    <members>
+        <member name="M:Finance.Business.Interface.Services.Consommations.IConsoChauffageService.GetAllConsosChauffageGenerales">
+            <summary>Retourne la liste de toutes les consommations de chauffage au format <ConsoChauffage/></summary>
+            <returns>Liste des consomations de chauffage</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IAdministrationService.GetVmUtilisateur">
+            <summary>Retourne les informations de l'utilisateur courant</summary>
+            <returns>ViewModel au format <LoginVm/></returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IAdministrationService.ModifierIdentiteUtilisateur(ViewModels.Login.LoginVM)">
+            <summary>Modifier les informations de l'utilisateur courant</summary>
+            <param name="vm">Données de la page au format <LoginVM/></param>
+            <returns>Message de confirmation</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IAdministrationService.ModifierMotDePasse(ViewModels.Login.LoginVM)">
+            <summary>Modifier le mot de passe de l'utilisateur courant</summary>
+            <param name="vm">Données de la page au format <LoginVM/></param>
+            <returns>Message de confirmation</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IAdministrationService.GetUtilisateursVm">
+            <summary>Retourne le view model de la page de gestion des utilisateurs</summary>
+            <returns>View Model <UtilisateursVM/> de la page</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IAdministrationService.ModifierUtilisateur(Finance.Poco.Utilisateur)">
+            <summary>Enregistrer les modifications de l'utilisateur</summary>
+            <param name="user">Utilisateur <Utilisateur/> à enregistrer</param>
+            <returns>Message d'enregistrement</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IAdministrationService.GetAllCategoriesDepenses">
+            <summary>Retourne toutes les catégories de dépenses</summary>
+            <returns>Liste</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IAdministrationService.AjouterCategorieDepense(System.String,System.String,System.String)">
+            <summary>Ajoute une catégorie dépense en base</summary>
+            <param name="libelle">Nom de la catégorie dépense</param>
+            <param name="nomCat">Catégorie concernée</param>
+            <param name="nomSsCat">Sous-catégorie concernée</param> 
+            <returns>Vrai si ajout</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IAdministrationService.GetListComptes">
+            <summary>Retourne la liste des comptes d'un utilisateur</summary>
+            <returns>Liste de comptes</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IAdministrationService.AddCompte(System.String)">
+            <summary>Ajoute un nouveau compte</summary>
+            <param name="libelleCompte">Nom du compte</param> 
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IAdministrationService.SupprimerComtpe(System.Int32)">
+            <summary>Suppression un nouveau compte</summary>
+            <param name="compteId">Id du compte à supprimer</param> 
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IAppartementService.GetListeValeurApptParAnnees">
+            <summary>Retourne la liste des valeurs de l'estimation max par année</summary>
+            <returns>Liste des valeurs</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IAppartementService.GetListeValeurApptPourAnnee(System.Int32)">
+            <summary>Retourne la derniére valeur de l'estimation pour une année</summary>
+            <param name="user">Utilisateur concerné</param>
+            <returns>Valeurs</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IAppartementService.GetAllListValeursAppartement">
+            <summary>Retourne la liste de toutes les infos de l'appartement</summary>
+            <returns>Liste des Infos Appartement</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IAppartementService.AjouterEstimationAppartement(System.String,System.Decimal)">
+            <summary>Ajoute une estimation pour l'appartement à la date actuelle</summary>
+            <param name="source">Origine de la provenance de l'estimation</param>
+            <param name="montant">Montant de l'estimation</param>
+        </member>
+        <member name="T:Finance.Business.Interface.Services.IConsoEauService">
+            <summary>Gestion de la consommation d'eau</summary>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsoEauService.GetConsommationEauAnnee(System.Int32)">
+            <summary>Retourne la consommation d'eau d'une année</summary>
+            <param name="annee">Année concernée</param>
+            <returns>Consommation d'eau annuelle au format <ConsommationEauAnnuelleVM/></returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsoEauService.GetConsommationEau">
+            <summary>Retourne toutes les consomations d'eau</summary>
+            <returns>Liste des consommations d'eau annuelles au format <ConsommationEauAnnuelleVM/></returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsoEauService.PostConsommationAnnee(ViewModels.Consommation.ConsommationEauAnnuelleVM)">
+            <summary>Retourne la liste des valeurs de l'estimation max par année</summary>
+            <param name="vm">Consommation d'une année</param>
+            <returns>true si ajout OK</returns>
+        </member>
+        <member name="T:Finance.Business.Interface.Services.IConsoElecService">
+            <summary>Gestion de la consommation d'électricité</summary>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsoElecService.GetAllConsosElec">
+            <summary>Retourne toutes les consommations électriques de l'utilisateur courant</summary>
+            <returns>Liste des consommations d'électricité annuelle au format <ConsommationElecAnnuelle/></returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsoElecService.GetConsoElecAnnee(System.Int32)">
+            <summary>Retourne la consommation électrique annuelle de l'utilisateur courant</summary>
+            <param name="annee">Année concernée</param>
+            <returns>Consommation d'electricité annuelle au format <ConsommationElecAnnuelle/></returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsoElecService.PostConsommationAnnee(ViewModels.Consommation._ConsoElec_POST)">
+            <summary>Enregistre une consommation électrique annuelle pour l'utilisateur courant</summary>
+            <param name="vm">Données au format <_ConsoElec_POST/></param>
+            <returns>True si la consomation est enregistrée</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsoEnergieService.GetConsoEnergie">
+            <summary>Retourne une liste de consommations annuelles d'énergie au format <ConsommationEnergieAnnuelleVM/></summary>
+            <returns>Liste des consommations</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.ICarboneService.AjouterBilanCarbone(ViewModels.Carbone.BilanCarboneVM)">
+            <summary>Ajoute le bilan carbone d'une année en base</summary>
+            <param name="bilan">Bilan carbone viewModel <BilanCarboneVM/> <BilanCarbone/></param>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.ICarboneService.GetAllBilans">
+            <summary>Retourne tous les bilans carbones de l'utilisateur</summary>
+            <returns>Liste de <BilanCarbone/> annuels</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.ICarboneService.GetBilan(System.Int32)">
+            <summary>Retournele bilan carbone de l'utilisateur pour une année</summary>
+            <param name="annee">Année concernée</param>
+            <returns><BilanCarbone/> de l'année pour l'utilisateur</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.ICarboneService.GetBilanDetaille(System.Int32)">
+            <summary>Retourne un bilan carbone détaillé</summary>
+            <param name="annee">Année concerné</param>
+            <returns><BilanCarboneDetails/> trouvé</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.ICarboneService.AjouterBilanCarboneDetaille(Finance.Poco.BilanCarboneDetails)">
+            <summary>Ajoute un bilan carbone détaillé en base</summary>
+            <param name="bil">Bialn carbone détaillé <BilanCarboneDetails/> à ajouter</param>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsolidationService.GetListMois">
+            <summary>Retourne la liste des mois de l'année</summary>
+            <returns>Liste SelectListItem des mois</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsolidationService.GetListConsoMensuelle(System.Int32,System.Int32,System.Boolean,System.Boolean)">
+            <summary>Retourne une liste de dépenses consolidées par catégories par mois</summary>
+            <param name="annee">Année de recherche des dépenses</param>
+            <param name="mois">Mois de recherche des dépenses</param>
+            <param name="displaySsCat">Si vrai, on effectue la consolidation des sous-catégories</param>
+            <param name="isForPerso">Affichage compte perso ou commun</param>
+            <returns>Liste de dépenses consolidées</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsolidationService.Calculer_TOTAUX(System.Int32,System.Int32,System.Boolean)">
+            <summary>Effectue la consolidation des totaux (impots / solde / dépenses)</summary>
+            <param name="annee">Année de recherche des dépenses</param>
+            <param name="mois">Mois de recherche des dépenses</param>
+            <param name="isForPerso">Affichage compte perso ou commun</param>
+            <returns>Message de retour</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsolidationService.DupliquerDepensesVersPerso(System.Int32,System.Int32)">
+            <summary>Duplique les dépenses communes vers le compte perso (montant /2)</summary>
+            <param name="annee">Année de recherche des dépenses</param>
+            <param name="mois">Mois de recherche des dépenses</param>
+            <param name="isForPerso">Affichage compte perso ou commun</param>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsolidationService.GetListConsoAnnuelle(System.Int32,System.Boolean)">
+            <summary>Retourne une liste de dépenses consolidées par catégories par années</summary>
+            <param name="annee">Année de recherche des dépenses</param>
+            <param name="isForPerso">Affichage compte perso ou commun</param>
+            <returns>Liste de dépenses consolidées</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsolidationService.GET_RecapGeneral(ViewModels.Consolidation.ConsoGeneraleVM,System.Boolean)">
+            <summary>Effectue les calculs de consolidation générale</summary>
+            <param name="vm">ViewModel à mettre à jour</param>
+            <param name="displaySsCat">Affichage des sous catégories si vrai</param>
+            <returns>ViewModel de la page</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsolidationService.GET_RecapGeneralTotal(System.Boolean)">
+            <summary>Retourne la liste des dépenses totales par catégories et sous catégories</summary>
+            <param name="isForPerso">Affichage compte perso ou commun</param>
+            <returns>Liste des montants pour chaque cat / ssCat</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsolidationService.GetMontantSsCatAnnee(System.Int32,System.String)">
+            <summary>Retourne le montant des dépenses de la sous-catégorie pour une année</summary>
+            <param name="annee">Année de recherche</param>
+            <param name="ssCat">Ssous-catégorie de recherche</param>
+            <returns>Montant</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsolidationService.GetListMontantSsCatAnnee(System.Int32,System.String)">
+            <summary>Retourne le montant des dépenses de la sous-catégorie d'une année par mois</summary>
+            <param name="annee">Année de recherche</param>
+            <param name="ssCat">Ssous-catégorie de recherche</param>
+            <returns>Liste des montants mensuels</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsolidationService.GetMontantCatAnnee(System.Int32,System.String)">
+            <summary>Retourne le montant des dépenses de la catégorie pour une année</summary>
+            <param name="annee">Année de recherche</param>
+            <param name="cat">Catégorie de recherche</param>
+            <returns>Montant</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsolidationService.GetListMontantCatAnnee(System.Int32,System.String)">
+            <summary>Retourne le montant des dépenses par mois de la catégorie pour une année</summary>
+            <param name="annee">Année de recherche</param>
+            <param name="cat">Catégorie de recherche</param>
+            <returns>Montant</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IConsolidationService.GetMontantCatMois(System.Int32,System.Int32,System.String)">
+            <summary>Retourne le montant des dépenses de la catégorie pour un mois</summary>
+            <param name="annee">Année de recherche</param>
+            <param name="mois">Mois de recherche</param>
+            <param name="cat">catégorie de recherche</param>
+            <param name="isForPerso">Affichage compte perso ou commun</param>
+            <returns>Montant</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IDepensesService.AjouterDepenseUnitaire(ViewModels.Depenses.AjouterDepenseUnitaireVM)">
+            <summary>Ajoute une dépense en base</summary>
+            <param name="d">dépense à ajouter</param>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IDepensesService.AjouterDepensesMasse(System.Collections.Generic.List{Finance.Poco.Depense},System.Boolean)">
+            <summary>Ajoute une liste de dépenses en base</summary>
+            <param name="listDepenses">Liste des dépenses à ajouter</param>
+            <param name="isForPerso">Affichage compte perso ou commun</param>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IDepensesService.SupprimerDepense(System.Int32)">
+            <summary>Supprimer une dépense en base</summary>
+            <param name="d">dépense à supprimer</param>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IDepensesService.GetListMois">
+            <summary>Retourne la liste des mois de l'année</summary>
+            <returns>liste de select list des mois</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IDepensesService.GetAllDepensesMois(System.Int32,System.Int32,System.Boolean)">
+            <summary>Retourne toutes les dépenses du mois</summary>
+            <param name="annee">Année concernée</param>
+            <param name="mois">Mois concerné</param>
+            <param name="isForPerso">Affichage compte perso ou commun</param>
+            <returns>Liste des dépenses</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IDepensesService.GetAllDepensesMoisForCat(System.Int32,System.Int32,System.String,System.Boolean)">
+            <summary>Retourne toutes les dépenses du mois de la catégorie</summary>
+            <param name="annee">Année concernée</param>
+            <param name="mois">Mois concerné</param>
+            <param name="cat">Catégorie concerné</param>
+            <param name="isForPerso">Affichage compte perso ou commun</param>
+            <returns>Liste des dépenses</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IDepensesService.GetListSsCategoriesStringFromCategorie(System.String)">
+            <summary>Retourne le nom des sous catégories de la catégorie</summary>
+            <param name="cat">Categorie concernée</param>
+            <returns>Liste des noms des sous-catégories</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IDepensesService.DupliquerDepensesCommunesVersPerso(System.Int32,System.Int32)">
+            <summary>Duplique les dépenses communes du mois en dépenses persos (/2)</summary>
+            <param name="annee">Année concernée</param>
+            <param name="mois">Mois concerné</param>
+            <returns>Message informatif</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IDepensesService.TraiterDepensesEnMasse(ViewModels.Depenses.AjouterDepensesMasseVM)">
+            <summary>Traite les données d'import en masse</summary>
+            <param name="vm">ViewModel avec les données d'import</param>
+            <returns>ViewModel avec les listes à jour</returns>
+        </member>
+        <member name="T:Finance.Business.Interface.Services.IEpargneService">
+            <summary>Gestion de la partie épargne de l'application Finance</summary>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IEpargneService.GetEpargneparMois(System.Int32)">
+            <summary>Retourne le montant total épargné pour chaque mois de l'année</summary>
+            <param name="annee">Année de recherche</param>
+            <returns>Un objet par mois de l'année avec la date et le montant épargné</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IEpargneService.GetDernierMontantComptes">
+            <summary>Retourne la liste des comptes avec les derniers montants en base</summary>
+            <returns>Liste de tous les comptes de l'utilisateur avec le montant reneigné</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IEpargneService.SauvegarderEpargne(ViewModels.Epargne.MontantsComptesVM)">
+            <summary>Sauvegarde une liste d'épargne pour une date donnée</summary>
+            <param name="vm">ViewModel contenant la date et la liste des comtpes avec leur nouveaux montants</param>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IEpargneService.GetEpargneTotaleAnnee(System.Int32,System.Boolean)">
+            <summary>Retourne la liste des derniers montants pour chaque compte sur une année</summary>
+            <param name="annee">Année concernée</param>
+            <param name="AfficherCompte">Permet de renseigner l'object Compte de chaque Epargnes dans la liste</param>
+            <returns>Liste des derniers comptes renseignés</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.ILoginService.IsAuthentifie(ViewModels.Login.LoginVM)">
+            <summary>Permet de savoir si un utilisateur est authentifié ou non</summary>
+            <param name="vm">ViewModel contenant les informations de connexion</param>
+            <returns>Vrai si authentifié</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.ILoginService.CreerUtilisateur(ViewModels.Login.LoginVM)">
+            <summary>Permet de créer un nouvel utilisateur dans l'application</summary>
+            <param name="vm">ViewModel contenant les informations de l'utilisateur à créer</param>
+            <returns>Message de création (erreur ou succés)</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.ILoginService.ReinitialiserMdp(ViewModels.Login.LoginVM)">
+            <summary>Permet de réinitialiser le mot de passe de l'utilisateur</summary>
+            <param name="vm">ViewModel contenant les informations de l'utilisateur</param>
+            <returns>Message de réinitialisation (erreur ou succés)</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IMailService.EnvoyerMail(System.String,System.String,System.String)">
+            <summary>Envoie d'un mail</summary>
+            <param name="to">Adresse mail de destination</param>
+            <param name="sujet">Sujet du mail</param>
+            <param name="corps">Contenue du mail au format html</param>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IMailService.EnvoyerNouveauMotDePasse(System.String,System.String)">
+            <summary>Envoie d'un mail de réinitialisation du mot de passe</summary>
+            <param name="to">Adresse mail de destination</param>
+            <param name="mdp">Nouveau mot de passe</param>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IMailService.MailChangementMdp(System.String)">
+            <summary>Envoie un message informatif de changement de mot de passe</summary>
+            <param name="to">Adresse mail de destination</param>
+        </member>
+        <member name="T:Finance.Business.Interface.Services.IVoitureService">
+            <summary>Accés aux fonctionnalités du module Voiture</summary>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IVoitureService.EnregistrerPleinEssence(Finance.Poco.PleinEssence)">
+            <summary>Enregistre un plein d'essence en base</summary>
+            <param name="plein">Plein d'essence à enregistrer au format <PleinEssence/></param>
+            <returns>Booléen selon le succés de l'enregistrement</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IVoitureService.EnregistrerEntretien(Finance.Poco.EntretienVoiture)">
+            <summary>Enregistre un entretien en base</summary>
+            <param name="entretien">Entretien à enregistrer au format <EntretienVoiture/></param>
+            <returns>Booléen selon le succés de l'enregistrement</returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IVoitureService.GetRecap">
+            <summary>Retourne le dernier plein d'essence en base</summary>
+            <returns>Plein d'essence au format <PleinEssence/></returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IVoitureService.GetEntretienForYear(System.Int32)">
+            <summary>Retourne les entretiens pour une année</summary>
+            <param name="annee">Année concernée</param>
+            <returns>Liste des entretiens de l'année au format <EntretienVoiture/></returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IVoitureService.GetEntretiensParAnnees">
+            <summary>Retourne la somme du coût des entretiens par année</summary>
+            <returns>Liste des sommes du coût des entretiens par année au format <EntretienVoitureVM/></returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IVoitureService.GetEntretiensParType">
+            <summary>Retourne la somme du coût des entretiens par type</summary>
+            <returns>Liste des sommes du coût des entretiens par type au format <EntretienVoitureVM/></returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IVoitureService.GetPleinsEssenceForYear(System.Int32)">
+            <summary>Retourne les pleins d'essence pour une année</summary>
+            <param name="annee">Année concernée</param>
+            <returns>Liste des pleins de l'année au format <PleinEssenceVM/></returns>
+        </member>
+        <member name="M:Finance.Business.Interface.Services.IVoitureService.GetPleinsEssenceParAnnees">
+            <summary>Retourne la somme des pleins d'année par année</summary>
+            <returns>Liste des sommes des pleins d'essence par année au format <PleinEssenceVM/></returns>
+        </member>
+    </members>
+</doc>

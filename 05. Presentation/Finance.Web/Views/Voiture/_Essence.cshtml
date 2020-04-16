@@ -1,0 +1,222 @@
+﻿
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        //Maj année
+        $("#chp_ess_annee").text((new Date).getFullYear());
+
+        //Chargement données année
+        GetDonneesEssenceAnnee();
+
+        //Chargement données générales
+        GetDonneesEssenceParAnnee();
+
+
+    });
+
+
+   //Modification année
+    function Ess_ChangerAnneeEssence(plusOuMoins) {
+        var champ = document.getElementById('chp_ess_annee');
+        var annee = parseInt(champ.innerText);
+        if (plusOuMoins == 1) {
+            champ.innerText = (annee + 1);
+        }
+        else {
+            champ.innerText = (annee - 1);
+        }
+
+        GetDonneesEssenceAnnee();
+    }
+
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------
+    // AJAX
+
+    //Get Donnees Essence ANNEE
+    function GetDonneesEssenceAnnee() {
+        var baseUrl = '@Url.Content("~/Voiture/GetPleinsEssenceAnnee/")';
+        var baseUrlImg = '@Url.Content("~/Content/Icones/")';
+        var tab_Date = new Array();
+        var tab_Montant = new Array();
+        var tab_PrixLitres = new Array();
+        var an = parseInt($("#chp_ess_annee").text());
+        $('#tb_ess_annnee > tbody').empty();
+
+        $.ajax({
+            url: baseUrl, type: "POST", async: true, dataType: "json",
+            data: { annee: an },
+            success: function (result) {
+                $.each(result, function (index, itemData) {
+                    var DateStr = itemData.DateStr;
+                    var Date = itemData.Date;
+                    var Prix = itemData.Prix;
+                    var Litres = itemData.Litres;
+                    var PrixLitres = itemData.PrixLitre;
+                    var PrixLitresStr = itemData.PrixLitreStr;
+                    var Essence = itemData.Type;
+                    var row = "<tr>";
+                    row += "<td>"+DateStr+"</td>";
+                    row += "<td>"+Prix+"</td>";
+                    row += "<td>"+Litres+"</td>";
+                    row += "<td>" + PrixLitresStr + "</td>";
+
+                    row += "<td><center><img src='" + baseUrlImg +"essence_"+ Essence + "_full.png' width='30'/></center></td>";
+                    row += "</tr>"
+                    $('#tb_ess_annnee > tbody').append(row);
+                   
+                    tab_Date.push(DateStr);
+                    tab_Montant.push(Prix);
+                    tab_PrixLitres.push(PrixLitres);
+                    
+                });
+            },
+            fail: function () {
+
+            },
+            complete: function () {
+                if ($('#tb_ess_annnee tr').length > 1) {
+                    $('#tb_ess_annnee').show();
+                    $('#lb_ess_annnee').hide();  
+                    var graph = document.getElementById("ch_ConsoEssAnnee").getContext('2d');
+                    DisplayGraphEssence(graph, tab_Date, tab_Montant, tab_PrixLitres);
+                }
+                else {
+                    $('#lb_ess_annnee').show();
+                    $('#tb_ess_annnee').hide();  
+                }
+
+                
+            }
+        });
+
+    };
+
+    //Get Donnees Essence PAR ANNEE
+    function GetDonneesEssenceParAnnee() {
+        var baseUrl = '@Url.Content("~/Voiture/GetPleinsEssenceParAnnee/")';
+        var tab_Date = new Array();
+        var tab_Montant = new Array();
+        var tab_PrixLitres = new Array();
+        var an = parseInt($("#chp_ess_annee").text());
+
+        $.ajax({
+            url: baseUrl, type: "POST", async: true, dataType: "json",
+            data: { annee: an },
+            success: function (result) {
+                $.each(result, function (index, itemData) {
+                    var Annee = itemData.Annee;
+                    var Prix = itemData.Prix;
+                    var Litres = itemData.Litres;
+                    var PrixLitres = itemData.PrixLitre;
+                    var Essence = itemData.Type;
+                    
+                    tab_Date.push(Annee);
+                    tab_Montant.push(Prix);
+                    tab_PrixLitres.push(PrixLitres);
+                    
+                });
+            },
+            fail: function () {
+
+            },
+            complete: function () {
+                var graph = document.getElementById("ch_ConsoEss").getContext('2d');
+                DisplayGraphEssence(graph, tab_Date, tab_Montant, tab_PrixLitres);
+            }
+        });
+
+    };
+
+    //DisplayGraphConsoEauTotal
+    function DisplayGraphEssence (chart, tab_Date, tab_Montant, tab_PrixLitres) {
+        var chart = new Chart(chart, {
+            type: 'line',
+            data: {
+                labels: tab_Date,
+                datasets: [
+                    { label: "Montant (€)", borderColor: '#FF5722', data: tab_Montant, yAxisID:'y-axis-1', },
+                    { label: "Prix / Litres (€/L)", borderDash: [5,5], borderColor: '#3F51B5', data: tab_PrixLitres, yAxisID:'y-axis-2' }
+                ]
+            },
+            options: {
+                responsive: true,
+                hoverMode:'index',
+                scales: {
+                    yAxes: [{
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        id:'y-axis-1',
+                    }, {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        id: 'y-axis-2',
+                        gridlines: {
+                            drawOnChartArea:false,
+                        },
+                        ticks: {
+                        min: 0,
+                        max: 2
+                        },
+                    }],
+                }
+            }
+        });
+
+    }
+
+
+</script>
+
+<br />
+
+<!--ANNEE COURANTE-->
+<h4 class="col-sm-12 titre-bloc">Année courante</h4>
+<div class="sous-partie">
+    <div class="row">
+
+        <!--tab Année-->
+        <div class="col-sm-4">
+            <center>
+                <img onClick="Ess_ChangerAnneeEssence(-1)" src='@Url.Content("~/Content/Previous_Violet_50.png")' />
+                <span id="chp_ess_annee">2020</span>
+                <img onClick="Ess_ChangerAnneeEssence(1)" src='@Url.Content("~/Content/Next_Violet_50.png")' />
+            </center>
+            <span id="lb_ess_annnee"><i>Pas de réusltats...</i></span>
+            <table id="tb_ess_annnee" class="mdl-data-table mdl-js-data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Montant</th>
+                        <th>Litres</th>
+                        <th>€/L</th>
+                        <th>Essence</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!--Graph Année-->
+        <div class="col-sm-8">
+            <canvas id="ch_ConsoEssAnnee"></canvas>
+        </div>
+    </div>
+</div><br />
+
+<!--Par années-->
+<h4 class="col-sm-12 titre-bloc">Évolution</h4>
+<div class="sous-partie">
+    <div class="row">
+        <div class="col-sm-2"> </div>
+        <!--Graph essence général-->
+        <div class="col-sm-8">
+            <canvas id="ch_ConsoEss"></canvas>
+        </div>
+        <div class="col-sm-2"> </div>
+    </div>
+</div><br />

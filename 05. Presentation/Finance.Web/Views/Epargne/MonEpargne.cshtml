@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "index";
+    ViewBag.Title = "Epargne";
 }
 
 <script type="text/javascript" src="@Url.Content("~/Scripts/Chart.min.js")"></script>
@@ -27,6 +27,25 @@
 
         //init table
         _tab_comtpes = [];
+
+        //Date picker init
+        $.datepicker.setDefaults(
+        {
+            altField: "#datepicker",
+            closeText: 'Fermer',
+            prevText: 'Précédent',
+            nextText: 'Suivant',
+            currentText: 'Aujourd\'hui',
+            monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+            monthNamesShort: ['Janv.', 'Févr.', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
+            dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+            dayNamesShort: ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'],
+            dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+            weekHeader: 'Sem.',
+            dateFormat: 'dd/mm/yy',
+            firstDay: 1 
+        });
+
     });
 
     
@@ -94,9 +113,13 @@
         document.getElementById("table_comptes").style.display = 'inline-block';
 
         //Gestion Date Pop-Up
-        var champDateModal = document.getElementById('chp_AddEP_Date');
-        var myDate = new Date();
-        champDateModal.value = "" + myDate.getUTCDate() + "/" + (myDate.getUTCMonth() + 1) + "/" + myDate.getFullYear();
+        var d = new Date();
+        var month = d.getMonth()+1;
+        var day = d.getDate();
+        var dateStr = (day<10 ? '0' : '') + day + '/' +
+            (month<10 ? '0' : '') + month + '/' +
+            d.getFullYear();
+        $('#chp_AddEP_Date').val(dateStr);
 
         //Maj tab Pop-up
         InitChampsPopUpAjax();
@@ -151,7 +174,7 @@
     }
 
     //AJAX - Enregistrer épargne
-   function EnregistrerMontantsAjax() {
+    function EnregistrerMontantsAjax() {
 
         MajListeComptes();
         var data = {};
@@ -244,11 +267,11 @@
 
             <!--Date-->
             <div class="col-sm-4 form-group">
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input id="chp_AddEP_Date" class="mdl-textfield__input" name="Date">
-                    <label class="mdl-textfield__label" for="chp_AddEP_Date">Date</label>
-                    <span class="mdl-textfield__error">Date non valide</span>
+                <div class="souligne mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-bottom:1px">
+                    <label  class="PurpleText">Date :</label>
+                    <input id="chp_AddEP_Date" class="mdl-textfield__input">
                 </div>
+
             </div>
 
 

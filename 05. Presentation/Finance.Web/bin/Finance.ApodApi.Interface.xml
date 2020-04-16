@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Finance.ApodApi.Interface</name>
+    </assembly>
+    <members>
+        <member name="T:Finance.ApodApi.Interface.Services.IApodApiService">
+            <summary>Api APOD - Image du jour</summary>
+        </member>
+        <member name="M:Finance.ApodApi.Interface.Services.IApodApiService.GetImageDuJour">
+            <summary>Appel de l'API APOD pour récupérer l'image du jour</summary>
+            <returns>Données de l'image du jour au format <ApodApiJsonGet/></returns>
+        </member>
+        <member name="T:Finance.ApodApi.Interface.ViewModel.ApodApiJsonGet">
+            <summary>Retour de l'API APOD</summary>
+        </member>
+        <member name="P:Finance.ApodApi.Interface.ViewModel.ApodApiJsonGet.Date">
+            <summary>Date</summary>
+        </member>
+        <member name="P:Finance.ApodApi.Interface.ViewModel.ApodApiJsonGet.Description">
+            <summary>Description</summary>
+        </member>
+        <member name="P:Finance.ApodApi.Interface.ViewModel.ApodApiJsonGet.Url">
+            <summary>URL principale</summary>
+        </member>
+        <member name="P:Finance.ApodApi.Interface.ViewModel.ApodApiJsonGet.UrlLight">
+            <summary>URL plus légére</summary>
+        </member>
+        <member name="P:Finance.ApodApi.Interface.ViewModel.ApodApiJsonGet.Titre">
+            <summary>Titre</summary>
+        </member>
+        <member name="P:Finance.ApodApi.Interface.ViewModel.ApodApiJsonGet.Type">
+            <summary>Type de média</summary>
+        </member>
+    </members>
+</doc>

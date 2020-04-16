@@ -1,3 +1,4 @@
+C:\Perso\Projets\Finance\FinanceGIT\10. API APOD\Finance.ApodApi.Interface\bin\Debug\Finance.ApodApi.Interface.xml
 C:\Perso\Projets\Finance\FinanceGIT\10. API APOD\Finance.ApodApi.Interface\bin\Debug\Finance.ApodApi.Interface.dll
 C:\Perso\Projets\Finance\FinanceGIT\10. API APOD\Finance.ApodApi.Interface\bin\Debug\Finance.ApodApi.Interface.pdb
 C:\Perso\Projets\Finance\FinanceGIT\10. API APOD\Finance.ApodApi.Interface\bin\Debug\Newtonsoft.Json.dll

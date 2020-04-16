@@ -194,40 +194,40 @@ namespace Finance.Business.Services
             //Fortuneo Work
             int parcours = 0;
             string[] split = vm.donneesImport.Split(';');
-            while (parcours < split.Length)
+            int nbDepenses = split.Length / 4;
+            while (parcours < nbDepenses)
             {
                 string val = "";
                 try
                 {
+                    int depense = parcours * 4;
+                    int posDate = depense + 1;
+                    int posLib = depense + 2;
+                    int posMont = depense + 3;
                     depenseAdded = false;
                     Depense dep = new Depense();
                     dep.Reconductible = "Non";
 
-                    //Non prise en compte de la premiere date
-                    parcours++;
 
                     //date
-                    val = split[parcours];
-                    string[] date = split[parcours].Split('/');
+                    val = split[posDate];
+                    string[] date = split[posDate].Split('/');
                     dep.Date = new DateTime(int.Parse(date[2]), int.Parse(date[1]), int.Parse(date[0]));
 
                     //intitulé
-                    parcours++;
-                    val += " | " + split[parcours];
-                    dep.Libelle = split[parcours];
+                    val += " | " + split[posLib];
+                    dep.Libelle = split[posLib];
 
                     //Montant
-                    parcours++;
-                    val += " | " + split[parcours];
-                    var montant = split[parcours];
+                    val += " | " + split[posMont];
+                    var montant = split[posMont];
                     montant = montant.Replace(",", ".");
                     decimal result;
                     if (Decimal.TryParse(montant, out result))
                     {
-                        // dep.Montant = System.Convert.ToDecimal(split[parcours]);
                         dep.Montant = result;
                     }
-                    else if(Decimal.TryParse(split[parcours], out result))
+                    else if(Decimal.TryParse(split[posMont], out result))
                     {
                         dep.Montant = result;
                     }
@@ -235,13 +235,11 @@ namespace Finance.Business.Services
                     {
                         dep.Montant = 0;
                     }
-                    
 
+                    //Ajout si non présente
                     if (!_DepensesManager.IsDepensePresenteByDateAndLib(dep, vm.compte))
                     {
-                        //Maj dépense
                         dep = this._CategorieDepenseManager.RenseignerCategoriesDepense(dep);
-
                         if (dep.Categorie != null)
                             vm.list_DepenseAjoutees.Add(dep);
                         else
@@ -249,11 +247,9 @@ namespace Finance.Business.Services
                         depenseAdded = true;
                     }
 
-                    //passage normalement vide
+                    //Dépense suivante
                     parcours++;
-                    val += " | " + split[parcours];
-                    if (split[parcours].Length < 5) parcours++;//passage dépense suivante
-                    val += " | " + split[parcours];
+
                 }
                 catch (Exception ex)
                 {

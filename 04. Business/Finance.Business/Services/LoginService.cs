@@ -48,19 +48,17 @@ namespace Finance.Business.Services
             newUser.Nom = vm.newNom;
             newUser.Email = vm.newMail;
             newUser.MotDePasse = this.utilisateurManager.Encrypt(vm.newMdp);
+            newUser.IsActif = false;
+            newUser.IsAdmin = false;
 
             try
             {
                 bool result = this.utilisateurManager.AddUtilisateur(newUser);
 
                 if(result)
-                {
                     return "L'utilisateur a été créé. Il devra être activé par un administrateur.";
-                }
                 else
-                {
                     return "[Erreur]Un utilisateur avec la même adresse mail existe déjà";
-                }
             }
             catch (Exception ex)
             {

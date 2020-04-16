@@ -1,0 +1,231 @@
+﻿@model ViewModels.Administration.UtilisateursVM
+
+@{
+    ViewBag.Title = "Utilisateurs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+
+    });
+
+
+    //Sauvegarde
+    function sauvegarderUtilisateur(utilisateurId) {
+        var baseUrl = '@Url.Content("~/Administration/ModifierUtilisateur/")';
+        var data = {};
+        data['UtilisateurId'] = utilisateurId;
+        data['Nom'] = $('#nom_' + utilisateurId).val();
+        data['Prenom'] = $('#prenom_' + utilisateurId).val();
+        data['Email'] = $('#mail_' + utilisateurId).text();
+        data['DoitChangerMdp'] = $('#mdp_' + utilisateurId).prop('checked');
+        data['IsAdmin'] = $('#admin_' + utilisateurId).prop('checked');
+        data['IsActif'] = $('#actif_' + utilisateurId).prop('checked');
+
+        $.ajax({
+            url: baseUrl, type: "POST", async: true, data: data, dataType: "json",
+            success: function (result) {
+                Message = result;
+            },
+            fail: function () {
+                displayMessage(Message);
+            },
+            complete: function () {
+                displayMessage(Message);
+            }
+        });
+    }
+
+
+
+
+    //Bouton rechercher
+    function rechercherUser() {
+
+        //Actif
+        FiltrerActif();
+
+        //Administrateur
+        FiltrerAdministrateur();
+
+        
+
+
+
+
+    }
+
+    //Filtre la recherche selon le bouton Actif
+    function FiltrerActif() {
+        if ($('#rechActif').prop('checked')) { //Coche Actif cochée
+            $('.actif').each(function () { //Pour toues les cases admin du résultat
+                if (!$(this).prop('checked')) { //Si je suis pas cochée
+                    var id = $(this).attr('id');
+                    var userId = id.split('_')[1];
+                    $('#tr_' + userId).hide();
+                }
+            });
+        }
+        else { // Case non cochée, on affiche tout
+            $('.user').show();
+        }
+    }
+
+    //Filtre la recherche selon le bouton Administrateur
+    function FiltrerAdministrateur() {
+        if ($('#rechAdmin').prop('checked')) { //Coche admin cochée
+            $('.admin').each(function () { //Pour toues les cases admin du résultat
+                if (!$(this).prop('checked')) { //Si je suis pas cochée
+                    var id = $(this).attr('id');
+                    var userId = id.split('_')[1]; //admin_3
+                    $('#tr_' + userId).hide();
+                }
+            });
+        }
+        else { // Case non cochée, on affiche tout
+            $('.user').show();
+        }
+    }
+
+    
+
+
+</script>
+
+
+
+<div class="row">
+
+    <!--TITRE-->
+    <div class="col-sm-12">
+        <h1 id="titre" class="display-4">Administration</h1>
+    </div>
+    <!--MENU Admin de gauche-->
+    <div class="col-sm-4">
+        @Html.Partial("_AdministrationListElements")
+    </div>
+
+
+    <!--Page-->
+    <div class="col-sm-8">
+
+        <h2 id="titre" class="display-6">Gestion des utilisateurs</h2>
+        <hr />
+
+        <!--Recherche-->
+        <h4 class="titre-bloc">Recherche</h4>
+        <div class="sous-partie">
+            <div class="row">
+                <!--Nom-->
+                <div class="souligne col-sm-5">
+                    <label  class="PurpleText">Nom / Prénom / Mail :</label>
+                    <input id="tb_nom" class="mdl-textfield__input"/>
+                </div>
+
+                <!--Actif-->
+                <div class="col-sm-2">
+                    <label  class="PurpleText">Utilisateur actif :</label>
+                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="rechActif">
+                      <input type="checkbox" id="rechActif" class="mdl-switch__input" onchange="FiltrerActif();">
+                      <span class="mdl-switch__label"></span>
+                    </label>
+                </div>
+
+                <!--Admin-->
+                <div class="col-sm-2" >
+                    <label  class="PurpleText">Administrateur :</label>
+                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="rechAdmin">
+                      <input type="checkbox" id="rechAdmin" class="mdl-switch__input" onchange="FiltrerAdministrateur();">
+                      <span class="mdl-switch__label"></span>
+                    </label>
+                </div>
+
+                <!--rechercher-->
+                <div class="col-sm-3">
+                    <input id="btnrechercher" type="button" onclick="rechercherUser();" value="Rechercher" class="mdl-button mdl-js-button mdl-button--accent" style="position:absolute; bottom:0; right:0;"/><br />
+                </div>
+
+            </div>
+        </div>
+
+        <br />
+
+
+        <table class="mdl-data-table mdl-js-data-table" style="width:100%">
+            <thead>
+                <tr>
+                    <th><center>Nom</center></th>
+                    <th><center>Prénom</center></th>
+                    <th><center>Mail</center></th>
+                    <th><center>Changer mdp</center></th>
+                    <th><center>Actif</center></th>
+                    <th><center>Admin</center></th>
+                    <th><center>Actions</center></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.listUsers)
+                {
+                    <tr class="user" id="tr_@user.UtilisateurId">
+                        <td><center>
+                            <input id="nom_@user.UtilisateurId" class="@user.UtilisateurId mdl-textfield__input" value="@user.Nom"/></center>
+                        </td>
+                        <td><center>
+                            <input id="prenom_@user.UtilisateurId" class="@user.UtilisateurId mdl-textfield__input" value="@user.Prenom"/></center>
+                        </td>
+                        <td><center>
+                            <span id="mail_@user.UtilisateurId" class="@user.UtilisateurId">@user.Email</span></center>
+                        </td>
+                        <td><center>
+                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="mdp_@user.UtilisateurId">
+                            @if(user.DoitChangerMdp)
+                            {
+                                <input type="checkbox" id="mdp_@user.UtilisateurId" class="@user.UtilisateurId mdl-switch__input" checked>
+                            }
+                            else
+                            {
+                                <input type="checkbox" id="mdp_@user.UtilisateurId" class="@user.UtilisateurId mdl-switch__input">
+                            }
+                            </label></center>
+                        </td>
+                        <td><center>
+                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="actif_@user.UtilisateurId">
+                            @if(user.IsActif)
+                            {
+                                <input type="checkbox" id="actif_@user.UtilisateurId" class="actif @user.UtilisateurId mdl-switch__input" checked>
+                            }
+                            else
+                            {
+                                <input type="checkbox" id="actif_@user.UtilisateurId" class="actif @user.UtilisateurId mdl-switch__input">
+                            }
+                            </label></center>
+                        </td>
+                        <td><center>
+                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="admin_@user.UtilisateurId">
+                            @if(user.IsAdmin)
+                            {
+                                <input type="checkbox" id="admin_@user.UtilisateurId" class="admin @user.UtilisateurId mdl-switch__input" checked>
+                            }
+                            else
+                            {
+                                <input type="checkbox" id="admin_@user.UtilisateurId" class="admin @user.UtilisateurId mdl-switch__input">
+                            }
+                            </label></center>
+                        </td>
+                        <td><center>
+                            <button type="button" id="btnSave_@user.UtilisateurId" onclick="sauvegarderUtilisateur(@user.UtilisateurId);" class="@user.UtilisateurId mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect mdl-button--accent">
+                                <i class="material-icons">save</i>
+                            </button></center>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+    </div>
+</div>

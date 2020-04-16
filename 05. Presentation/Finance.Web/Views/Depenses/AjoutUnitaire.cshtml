@@ -1,9 +1,10 @@
 ﻿@model ViewModels.Depenses.AjouterDepenseUnitaireVM
-
+@{
+    ViewBag.Title = "Dépenses unitaires";
+}
 
 
 <script type="text/javascript">
-    var CATHEGORIE = "All";
     SendSelectedCat = "Logement";
 
     SendSelectedReconductibilite = "Non";
@@ -33,7 +34,6 @@
         {
             document.getElementById('btn_DupliquerCptPerso').style.display = 'none';
         }
-        //CATHEGORIE = 'All';
         RefreshTableauDepenses(annee, mois);
         hideGif();
     }
@@ -82,23 +82,49 @@
         EffectuerRecherche();
     }
 
+    //Selection d'une cathégorie - Page principale
+    function selectionnerCategorie(object, cat) {
+        var arraySrc = object.src.split('/');
+        var changeSrc = arraySrc[arraySrc.length - 1];
+        var workingArray = changeSrc.split('_');
+        var selectedCat = workingArray[0]; //Catégorie selctionnée
+        var typeCat = workingArray[1].replace(".png", "");//Type : full / empty
 
-    //Changer l'icone lors de la semection d'une catégorie
-    function selectionnerCategorie(object, trieMainPage) {
+        //on met les images des cat a plat pour pas en avoir plusieurs selectionnées
+        var listeImgCat = document.getElementsByClassName("popUp_Cat");
+        for (x = 0; x < listeImgCat.length; x++) {
+            listeImgCat[x].src = listeImgCat[x].src.replace("full", "empty");
+        }
+
+        //Cas selection cat (empty to full)
+        if (typeCat == "empty") {
+            object.src = object.src.replace("empty", "full");
+            SendSelectedCat = selectedCat;
+            $('.depense').hide();
+            $('.' + cat).show();
+        }
+        else { //Cas déselection cat
+            object.src = object.src.replace("full", "empty");
+            $('.depense').show();
+        }
+
+    }
+
+    //Selection d'une cathégorie - Pop Up
+    function selectionnerCategoriePopUp(object) {
         var arraySrc = object.src.split('/');
         var nbSplit = arraySrc.length;
         var changeSrc = arraySrc[nbSplit - 1];
         var workingArray = changeSrc.split('_');
 
         var selectedCat = workingArray[0];
-        CATHEGORIE = selectedCat;
         var typeCat = workingArray[1].replace(".png", "");
 
         //on met les images des cat a plat pour pas en avoir plusieurs selectionnées
-            var listeImgCat = document.getElementsByClassName("popUp_Cat");
-            for (x = 0; x < listeImgCat.length; x++) {
-                listeImgCat[x].src = listeImgCat[x].src.replace("full", "empty");
-            }
+        var listeImgCat = document.getElementsByClassName("popUp_Cat");
+        for (x = 0; x < listeImgCat.length; x++) {
+            listeImgCat[x].src = listeImgCat[x].src.replace("full", "empty");
+        }
 
 
         if (typeCat == "empty") {
@@ -107,18 +133,11 @@
         }
         else {
             object.src = object.src.replace("full", "empty");
-            CATHEGORIE = 'All';
         }
 
-        if (trieMainPage)
-        {
-            EffectuerRecherche();
-        }
-        else
-        {
-            RefreshListSousCat(selectedCat);
-        }
 
+        RefreshListSousCat(selectedCat);
+     
 
     }
 
@@ -172,16 +191,16 @@
     }
 
 
-  
-
     //---------------------------------------------------------------------------------------------------------
     //-------------AJAX-----------------------
+
+    //Refresh Tableau Depenses
     function RefreshTableauDepenses(annee, mois) {
         var baseUrl = '@Url.Content("~/Depenses/GetDepensesMois/")';
         var baseUrlImg = '@Url.Content("~/Content/Icones/")';
 
             $('#tabDepenses > tbody').empty();
-            $.getJSON(baseUrl, { paramAnnee: annee, paramMois: mois, paramCat: CATHEGORIE}, function (result) {
+            $.getJSON(baseUrl, { paramAnnee: annee, paramMois: mois}, function (result) {
                 $.each(result, function (index, itemData) {
                     var DepenseId = itemData.DepenseId;
                     var Montant = itemData.Montant;
@@ -191,9 +210,7 @@
                     var SousCategorie = itemData.SousCategorie;
                     var Reconductible = itemData.Reconductible;
 
-
-
-                    var row = "<tr class='color" + Categorie +"'><td class='mdl-data - table__cell--non-numeric'>" + Date + "</td>";
+                    var row = "<tr class='depense color" + Categorie +" "+Categorie+"'><td class='mdl-data - table__cell--non-numeric'>" + Date + "</td>";
                     row += "<td class='mdl-data-table__cell--non-numeric'>" + Libelle + "</td>";
                     row += "<td>" + Montant + "</td>";
                     row += "<td class='mdl-data-table__cell--non-numeric'><center><img src='" + baseUrlImg + Categorie + "_full.png' width='50%'/></center></td>";
@@ -206,50 +223,7 @@
             });
     };
 
-    function DeleteDepenseAjax(id) {
-
-       var data = {
-           'paramId': id
-       };
-       debugger;
-         $.ajax({
-                type: "POST",
-                url: '@Url.Content("~/Depenses/DeleteDepense")',
-                data: data,
-                success: function () {
-                    EffectuerRecherche();
-                }
-            });
-    }
-
-
-
-
-    function RefreshListSousCat(categorie)
-    {
-        var baseUrl = '@Url.Content("~/Depenses/GetSousCategorie/")';
-        var nb = 1;
-
-        for (i = 1; i < 8; i++) {
-            var strLabelSousCatId = "SousCatPopUp" + i;
-            var LabelSousCatId = document.getElementById(strLabelSousCatId);
-            LabelSousCatId.style.display = 'none';
-        }
-
-
-            $.getJSON(baseUrl, { paramCat: categorie}, function (result) {
-                $.each(result, function (index, itemData) {
-
-                    var strLabelSousCatId = "SousCatPopUp" + nb;
-                    var LabelSousCatId = document.getElementById(strLabelSousCatId);
-                    LabelSousCatId.innerText = itemData.ssCat;
-                    LabelSousCatId.style.display = 'inline-block';
-                    nb++;
-                });
-            });
-    };
-
-
+    //Ajouter Depense Ajax
     function AjouterDepenseAjax() {
 
          var Montant = $('#chp_Montant').val();
@@ -288,16 +262,53 @@
                 success: function () {
                     var modal = document.getElementById('myModal');
                     modal.style.display = "none";
-                    CATHEGORIE = 'All';
                     EffectuerRecherche();
                 }
             });
         }
 
+    //Delete Depense Ajax
+    function DeleteDepenseAjax(id) {
+
+       var data = {
+           'paramId': id
+       };
+       debugger;
+         $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/Depenses/DeleteDepense")',
+                data: data,
+                success: function () {
+                    EffectuerRecherche();
+                }
+            });
+    }
 
 
+    //POP-UP - Refresh List Sous-Cat
+    function RefreshListSousCat(categorie)
+    {
+        var baseUrl = '@Url.Content("~/Depenses/GetSousCategorie/")';
+        var nb = 1;
 
+        for (i = 1; i < 8; i++) {
+            var strLabelSousCatId = "SousCatPopUp" + i;
+            var LabelSousCatId = document.getElementById(strLabelSousCatId);
+            LabelSousCatId.style.display = 'none';
+        }
 
+        $.getJSON(baseUrl, { paramCat: categorie}, function (result) {
+            $.each(result, function (index, itemData) {
+                var strLabelSousCatId = "SousCatPopUp" + nb;
+                var LabelSousCatId = document.getElementById(strLabelSousCatId);
+                LabelSousCatId.innerText = itemData.ssCat;
+                LabelSousCatId.style.display = 'inline-block';
+                nb++;
+            });
+        });
+    };
+
+    //Dupliquer Vers Comtpe Perso
     function DupliquerVersComtpePerso() {
         var annee = document.getElementById('chp_annee').value;
         var champmois = document.getElementById('chp_mois');
@@ -321,9 +332,6 @@
             }
         });
     }
-
-
-
 
 
 </script>
@@ -393,20 +401,20 @@
             <center>
                 <table style="padding-bottom:30px">
                     <tr>
-                        <td style="padding-left:0px"><img onClick="selectionnerCategorie(this, true)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Logement_empty.png")' /></td>
-                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this, true)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Alimentaire_empty.png")' /></td>
-                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this, true)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Voiture_empty.png")' /></td>
-                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this, true)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Transport_empty.png")' /></td>
-                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this, true)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Loisirs_empty.png")' /></td>
-                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this, true)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Voyages_empty.png")' /></td>
-                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this, true)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Cadeaux_empty.png")' /></td>
-                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this, true)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Achat_empty.png")' /></td>
-                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this, true)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Vetements_empty.png")' /></td>
-                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this, true)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Sante_empty.png")' /></td>
-                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this, true)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Impots_empty.png")' /></td>
-                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this, true)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/FraisBancaires_empty.png")' /></td>
-                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this, true)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Emprunt_empty.png")' /></td>
-                        <td style="padding-right:20px; padding-left:10px"><img onClick="selectionnerCategorie(this, true)" src='@Url.Content("~/Content/Icones/Revenus_empty.png")' /></td>
+                        <td style="padding-left:0px"><img onClick="selectionnerCategorie(this,'Logement')" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Logement_empty.png")' /></td>
+                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this,'Alimentaire')" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Alimentaire_empty.png")' /></td>
+                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this,'Voiture')" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Voiture_empty.png")' /></td>
+                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this,'Transport')" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Transport_empty.png")' /></td>
+                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this,'Loisirs')" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Loisirs_empty.png")' /></td>
+                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this,'Voyages')" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Voyages_empty.png")' /></td>
+                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this,'Cadeaux')" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Cadeaux_empty.png")' /></td>
+                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this,'Achat')" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Achat_empty.png")' /></td>
+                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this,'Vetements')" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Vetements_empty.png")' /></td>
+                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this,'Sante')" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Sante_empty.png")' /></td>
+                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this,'Impots')" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Impots_empty.png")' /></td>
+                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this,'FraisBancaires')" class="popUp_Cat" src='@Url.Content("~/Content/Icones/FraisBancaires_empty.png")' /></td>
+                        <td style="padding-left:10px"><img onClick="selectionnerCategorie(this,'Emprunt')" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Emprunt_empty.png")' /></td>
+                        <td style="padding-right:20px; padding-left:10px"><img onClick="selectionnerCategorie(this,'Revenus')" src='@Url.Content("~/Content/Icones/Revenus_empty.png")' /></td>
                     </tr>
                 </table>
             </center>
@@ -522,63 +530,52 @@
             <div class="col-sm-11"><span class="littleTitle">Catégorie</span></div>
 
             <div class="col-sm-2">
-                <img onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Logement_empty.png")' />
+                <img onClick="selectionnerCategoriePopUp(this)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Logement_empty.png")' />
             </div>
             <div class="col-sm-2">
-                <img onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Alimentaire_empty.png")' />
+                <img onClick="selectionnerCategoriePopUp(this)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Alimentaire_empty.png")' />
             </div>
             <div class="col-sm-2">
-                <img onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Voiture_empty.png")' />
+                <img onClick="selectionnerCategoriePopUp(this)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Voiture_empty.png")' />
             </div>
             <div class="col-sm-2">
-                <img onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Transport_empty.png")' />
+                <img onClick="selectionnerCategoriePopUp(this)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Transport_empty.png")' />
             </div>
             <div class="col-sm-2">
-                <img onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Loisirs_empty.png")' />
+                <img onClick="selectionnerCategoriePopUp(this)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Loisirs_empty.png")' />
             </div>
             <div class="col-sm-2">
-                <img onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Voyages_empty.png")' />
+                <img onClick="selectionnerCategoriePopUp(this)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Voyages_empty.png")' />
             </div>
 
 
             <div class="col-sm-2">
-                <img onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Cadeaux_empty.png")' />
+                <img onClick="selectionnerCategoriePopUp(this)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Cadeaux_empty.png")' />
             </div>
             <div class="col-sm-2">
-                <img onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Achat_empty.png")' />
+                <img onClick="selectionnerCategoriePopUp(this)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Achat_empty.png")' />
             </div>
             <div class="col-sm-2">
-                <img onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Vetements_empty.png")' />
+                <img onClick="selectionnerCategoriePopUp(this)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Vetements_empty.png")' />
             </div>
             <div class="col-sm-2">
-                <img onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Sante_empty.png")' />
+                <img onClick="selectionnerCategoriePopUp(this)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Sante_empty.png")' />
             </div>
             <div class="col-sm-2">
-                <img onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Impots_empty.png")' />
+                <img onClick="selectionnerCategoriePopUp(this)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Impots_empty.png")' />
             </div>
             <div class="col-sm-2">
-                <img onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/FraisBancaires_empty.png")' />
+                <img onClick="selectionnerCategoriePopUp(this)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/FraisBancaires_empty.png")' />
             </div>
 
             <div class="col-sm-4"></div>
             <div class="col-sm-2">
-                <img onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Emprunt_empty.png")' />
+                <img onClick="selectionnerCategoriePopUp(this)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Emprunt_empty.png")' />
             </div>
             <div class="col-sm-2">
-                <img onClick="selectionnerCategorie(this, false)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Revenus_empty.png")' />
+                <img onClick="selectionnerCategoriePopUp(this)" class="popUp_Cat" src='@Url.Content("~/Content/Icones/Revenus_empty.png")' />
             </div>
             <div class="col-sm-4"></div>
-
-
-            <!--Sous-Cat-->
-            @*<div class="col-sm-6 form-group">
-                    <span class="littleTitle">Sous-catégorie</span>
-                    <div class="mdl-selectfield">
-                        @Html.DropDownListFor(m => m.SsCat, Model.list_SsCat, new { @id = "chp_SScat" })
-                    </div>
-
-
-                </div><div class="col-sm-6 form-group"></div>*@
 
 
 

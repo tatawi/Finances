@@ -1,0 +1,330 @@
+﻿
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        //Maj année
+        $("#chp_ent_annee").text((new Date).getFullYear());
+
+        //Chargement données année
+        GetDonneesEntretienAnnee();
+
+        //Get données générales
+        GetDonneesEntretienParAnnee();
+        GetDonneesEntretienParType();
+    });
+
+
+    //Modification année
+    function Ent_ChangerAnneeEssence(plusOuMoins) {
+        var champ = document.getElementById('chp_ent_annee');
+        var annee = parseInt(champ.innerText);
+        if (plusOuMoins == 1) {
+            champ.innerText = (annee + 1);
+        }
+        else {
+            champ.innerText = (annee - 1);
+        }
+
+        GetDonneesEntretienAnnee();
+    }
+
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------
+    // AJAX - Année courante
+
+    //Get Donnees Essence ANNEE
+    function GetDonneesEntretienAnnee() {
+        var baseUrl = '@Url.Content("~/Voiture/GetEntretienAnnee/")';
+        var baseUrlImg = '@Url.Content("~/Content/Icones/")';
+        var an = parseInt($("#chp_ent_annee").text());
+        var totalReparations = 0;
+        var totalVidange = 0;
+        var totalAssurance = 0;
+        var totalNettoyage = 0;
+        var totalAccessoires = 0;
+        $('#tb_ent_annnee > tbody').empty();
+
+        $.ajax({
+            url: baseUrl, type: "POST", async: true, dataType: "json",
+            data: { annee: an },
+            success: function (result) {
+                $.each(result, function (index, itemData) {
+                    var Date = itemData.Date;
+                    var DateStr = itemData.DateStr;
+                    var Km = itemData.Km;
+                    var Cout = itemData.Cout;
+                    var Type = itemData.Type;
+                    var img = "voiture_" + Type;
+                    var Description = itemData.Description;
+                    var Effectue = itemData.Effectue;
+
+                    var row = "<tr>";
+
+                    if (Effectue) {
+                        row += "<td>" + DateStr + "</td>";
+                    } else {
+                        row += "<td>Prévu</td>";
+                    }
+
+                    row += "<td><center><img src='" + baseUrlImg + img + ".png'/></center></td>";
+                    row += "<td>"+ThousandSeparatorToString(Cout)+" €</td>";
+                    row += "<td>" + ThousandSeparatorToString(Km) + "</td>";
+                    row += "<td>" + Description + "</td>";
+                    row += "</tr>"
+                    $('#tb_ent_annnee > tbody').append(row);
+
+                    //Total année
+                    if (Type == 'Réparations') {
+                        totalReparations += Cout;
+                    } else if (Type == 'Vidange') {
+                        totalVidange += Cout;
+                    }else if (Type == 'Assurance') {
+                        totalAssurance += Cout;
+                    }else if (Type == 'Nettoyage') {
+                        totalNettoyage += Cout;
+                    }else if (Type == 'Accessoires') {
+                        totalAccessoires += Cout;
+                    }
+                    
+                });
+            },
+            fail: function () {
+
+            },
+            complete: function () {
+                if ($('#tb_ent_annnee tr').length > 1) {
+                    $('#tb_ent_annnee').show();
+                    $('#lb_ent_annnee').hide();  
+                    var graph = document.getElementById("g_entretien_repartition").getContext('2d');
+                    DisplayGraphEntretienAnnee_Bar(graph, totalReparations, totalVidange, totalAssurance, totalNettoyage, totalAccessoires);
+                }
+                else {
+                    $('#lb_ent_annnee').show();
+                    $('#tb_ent_annnee').hide();  
+                }
+            }
+        });
+
+    };
+
+     //Graphine bar bilan
+    function DisplayGraphEntretienAnnee_Bar(chart, Reparations, Vidange, Assurance, Nettoyage, Accessoires) {
+        var chart = new Chart(chart, {
+            type: 'horizontalBar',
+            data: {
+                labels: ["Réparations", "Vidange", "Assurance", "Nettoyage", "Accessoires"],
+                datasets: [{
+                    label: "Répartition des dépenses de l'année en €",
+                    data: [Reparations, Vidange, Assurance, Nettoyage, Accessoires],
+                    fill: false,
+                    borderWidth: 1,
+                    backgroundColor: ["rgba(244, 67, 54, 0.2)",
+                        "rgba(255, 152, 0, 0.2)",
+                        "rgba(76, 175, 80, 0.2)",
+                        "rgba(41, 128, 185, 0.2)",
+                        "rgba(103, 58, 183, 0.2)"],
+                    borderColor: ["rgb(244, 67, 54)",
+                        "rgb(255, 152, 0)",
+                        "rgb(76, 175, 80)",
+                        "rgb(41, 128, 185)",
+                        "rgb(103, 58, 183)"]
+                }]
+            },
+            // Configuration options go here
+            options: {
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+    }
+
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------
+    // AJAX - par années
+
+     //Get Donnees Essence PAR ANNEE
+    function GetDonneesEntretienParAnnee() {
+        var baseUrl = '@Url.Content("~/Voiture/GetEntretiensParAnnee/")';
+        var tab_Date = new Array();
+        var tab_Montant = new Array();
+
+        $.ajax({
+            url: baseUrl, type: "POST", async: true, dataType: "json",
+            success: function (result) {
+                $.each(result, function (index, itemData) {
+                    var Annee = itemData.Annee;
+                    var Cout = itemData.Cout;
+                    
+                    tab_Date.push(Annee);
+                    tab_Montant.push(Cout);
+                });
+            },
+            fail: function () {
+
+            },
+            complete: function () {
+                var graph = document.getElementById("g_Entretien").getContext('2d');
+                DisplayGraphEntretien(graph, tab_Date, tab_Montant);
+            }
+        });
+
+    };
+
+    //DisplayGraphConsoEauTotal
+    function DisplayGraphEntretien (chart, tab_Date, tab_Montant) {
+        var chart = new Chart(chart, {
+            type: 'line',
+            data: {
+                labels: tab_Date,
+                datasets: [
+                    { label: "Montant (€)", borderColor: '#FF5722', data: tab_Montant}
+                ]
+            },
+            options: {
+                responsive: true,
+                hoverMode:'index',
+            }
+        });
+
+    }
+
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------
+    // AJAX - par type
+
+     //Get Donnees Essence PAR TYPE
+    function GetDonneesEntretienParType() {
+        var baseUrl = '@Url.Content("~/Voiture/GetEntretiensParType/")';
+        var tab_Type = new Array();
+        var tab_Montant = new Array();
+
+        $.ajax({
+            url: baseUrl, type: "POST", async: true, dataType: "json",
+            success: function (result) {
+                $.each(result, function (index, itemData) {
+                    var Type = itemData.Type;
+                    var Cout = itemData.Cout;
+                    
+                    tab_Type.push(Type);
+                    tab_Montant.push(Cout);
+                });
+            },
+            fail: function () {
+
+            },
+            complete: function () {
+                var graph = document.getElementById("g_Entretien_type").getContext('2d');
+                DisplayGraphEntretienType(graph, tab_Type, tab_Montant);
+            }
+        });
+
+    };
+
+    //Affichage
+    function DisplayGraphEntretienType(chart, tab_Type, tab_Montant) {
+        var chart = new Chart(chart, {
+            type: 'doughnut',
+            data: {
+                labels: tab_Type,
+                datasets: [{
+                    label: "Répartition des dépenses par type",
+                    data: tab_Montant,
+                    backgroundColor: ["rgba(244, 67, 54, 0.2)",
+                        "rgba(255, 152, 0, 0.2)",
+                        "rgba(76, 175, 80, 0.2)",
+                        "rgba(41, 128, 185, 0.2)",
+                        "rgba(103, 58, 183, 0.2)"],
+                    borderColor: ["rgb(244, 67, 54)",
+                        "rgb(255, 152, 0)",
+                        "rgb(76, 175, 80)",
+                        "rgb(41, 128, 185)",
+                        "rgb(103, 58, 183)"]
+                }],
+                
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'top',
+                },
+
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        });
+
+
+    }
+
+
+
+</script>
+
+<br />
+
+
+
+<div class="row">
+   
+    <div class="col-sm-12 form-group">
+        <h4 class="titre-bloc">Dépenses</h4>
+        <div class="sous-partie">
+            <div class="row">
+                <div class="col-sm-12">
+                    <img onClick="Ent_ChangerAnneeEssence(-1)" src='@Url.Content("~/Content/Previous_Violet_50.png")' />
+                    <span id="chp_ent_annee">2020</span>
+                    <img onClick="Ent_ChangerAnneeEssence(1)" src='@Url.Content("~/Content/Next_Violet_50.png")' />
+                </div>
+
+                <div class="col-sm-6">
+                    <label  class="PurpleText">Liste :</label>
+                    <span id="lb_ent_annnee"><i>Pas de résultats...</i></span>
+                    <table id="tb_ent_annnee" class="mdl-data-table mdl-js-data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Coût</th>
+                                <th>Km</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+
+                    </table>
+                </div>
+
+                <div class="col-sm-6">
+                    <label  class="PurpleText">Répartition :</label>
+                    <canvas id="g_entretien_repartition"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-sm-12">
+        <h4 class="titre-bloc">Évolution</h4>
+        <div class="sous-partie">
+            <div class="row">
+                <div class="col-sm-6">
+                    <canvas id="g_Entretien"></canvas>
+                </div>
+                <div class="col-sm-6">
+                     <canvas id="g_Entretien_type"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

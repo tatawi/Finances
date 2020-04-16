@@ -10,11 +10,18 @@ namespace Finance.Data.bdd
 {
     public class bdd_ConsoChauffage : bdd
     {
+        public int utilisateurId;
+
         public bdd_ConsoChauffage()
         { 
 
         }
 
+
+        public void setUser(int user)
+        {
+            this.utilisateurId = user;
+        }
 
 
 
@@ -26,13 +33,14 @@ namespace Finance.Data.bdd
         public List<ConsoChauffage> get_All()
         {
             List<ConsoChauffage> list_infos = new List<ConsoChauffage>();
-            string sql = "SELECT ChauffageId, Annee, ConsoTotale ,ConsoPerso ,CoutTotal ,CoutPerso ,KwhTotal,KwhPerso ,CoutKwh FROM ConsoChauffage";
+            string sql = "SELECT ChauffageId, Annee, ConsoTotale ,ConsoPerso ,CoutTotal ,CoutPerso ,KwhTotal,KwhPerso ,CoutKwh FROM ConsoChauffage WHERE UtilisateurId = @paramUserId";
 
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
+                    cmd.Parameters.AddWithValue("paramUserId", this.utilisateurId);
 
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -49,7 +57,7 @@ namespace Finance.Data.bdd
                             info.KwhTotal = reader.GetInt32(6);
                             info.KwhPerso = reader.GetInt32(7);
                             info.CoutKwh = reader.GetDecimal(8);
-
+                            info.CalculerRepartition();
                             list_infos.Add(info);
                         }
                     }
@@ -68,7 +76,7 @@ namespace Finance.Data.bdd
             using (SqlConnection conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                string sql = "INSERT INTO ConsoChauffage (Annee, ConsoTotale, ConsoPerso, CoutTotal, CoutPerso, KwhTotal ,KwhPerso, CoutKwh) VALUES(@Annee, @ConsoTotale, @ConsoPerso, @CoutTotal, @CoutPerso, @KwhTotal, @KwhPerso, @CoutKwh)";
+                string sql = "INSERT INTO ConsoChauffage (Annee, ConsoTotale, ConsoPerso, CoutTotal, CoutPerso, KwhTotal ,KwhPerso, CoutKwh, UtilisateurId) VALUES(@Annee, @ConsoTotale, @ConsoPerso, @CoutTotal, @CoutPerso, @KwhTotal, @KwhPerso, @CoutKwh, @UtilisateurId)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add("@Annee", SqlDbType.Int).Value = info.Annee;
@@ -79,6 +87,7 @@ namespace Finance.Data.bdd
                 cmd.Parameters.Add("@KwhTotal", SqlDbType.Int).Value = info.KwhTotal;
                 cmd.Parameters.Add("@KwhPerso", SqlDbType.Int).Value = info.KwhPerso;
                 cmd.Parameters.Add("@CoutKwh", SqlDbType.Decimal).Value = info.CoutKwh;
+                cmd.Parameters.Add("@UtilisateurId", SqlDbType.Int).Value = this.utilisateurId;
 
                 cmd.CommandType = CommandType.Text;
                 cmd.ExecuteNonQuery();
@@ -98,7 +107,7 @@ namespace Finance.Data.bdd
                 conn.Open();
                 string sql = "UPDATE ConsoChauffage SET Annee=@Annee, ConsoTotale=@ConsoTotale, ConsoPerso=@ConsoPerso," +
                     " CoutTotal=@CoutTotal, CoutPerso=@CoutPerso, KwhTotal=@KwhTotal, KwhPerso=@KwhPerso, CoutKwh=@CoutKwh, " +
-                    " WHERE Year(Date)=@Annee AND Month(Date)=@Mois  AND UserName=@user";
+                    " WHERE Year(Date)=@Annee AND UtilisateurId=@userId";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add("@Annee", SqlDbType.Int).Value = conso.Annee;
@@ -109,8 +118,7 @@ namespace Finance.Data.bdd
                 cmd.Parameters.Add("@KwhTotal", SqlDbType.Int).Value = conso.KwhTotal;
                 cmd.Parameters.Add("@KwhPerso", SqlDbType.Int).Value = conso.KwhPerso;
                 cmd.Parameters.Add("@CoutKwh", SqlDbType.Decimal).Value = conso.CoutKwh;
-
-
+                cmd.Parameters.Add("@userId", SqlDbType.Int).Value = this.utilisateurId;
 
                 cmd.CommandType = CommandType.Text;
                 cmd.ExecuteNonQuery();
@@ -132,13 +140,13 @@ namespace Finance.Data.bdd
             using (var conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                using (var cmd = new SqlCommand("SELECT Count(*) FROM ConsoChauffage WHERE Annee=@Annee", conn))
+                using (var cmd = new SqlCommand("SELECT Count(*) FROM ConsoChauffage WHERE UtilisateurId = @UserId AND Annee=@Annee", conn))
                 {
                     cmd.Parameters.AddWithValue("Annee", c.Annee);
+                    cmd.Parameters.AddWithValue("UserId", this.utilisateurId);
 
                     Int32 count = (Int32)cmd.ExecuteScalar();
                     if (count == 0) isPresent = false;
-
                 }
                 conn.Close();
             }

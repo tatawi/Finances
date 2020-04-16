@@ -1,8 +1,13 @@
 ﻿@model ViewModels.Consolidation.ConsoGeneraleVM
 
-
+@{
+    ViewBag.Title = "Recap général";
+}
 
 <script type="text/javascript">
+
+    //Constantes onglets
+    var _isMontantTotalCharge = 0;
 
     $(document).ready(function () {
 
@@ -19,11 +24,21 @@
     function ChangeOnglet(onglet, contenu) {
         document.getElementById('content_1').style.display = 'none';
         document.getElementById('content_2').style.display = 'none';
+        document.getElementById('content_3').style.display = 'none';
         document.getElementById(contenu).style.display = 'block';
 
         document.getElementById('tab_1').className = '';
         document.getElementById('tab_2').className = '';
+        document.getElementById('tab_3').className = '';
         document.getElementById(onglet).className = 'active';
+
+
+        if (onglet == 'tab_3' && _isMontantTotalCharge!=1) {
+            var url = '@Url.Action("ChargementConsoGeneralTotal", "Consolidation")';
+            _isMontantTotalCharge = 1;
+            $('#content_3').load(url); 
+
+        }
     }
 
 </script>
@@ -38,8 +53,9 @@
 
 <div class="tabbed_area">
     <ul class="tabs">
-        <li><a href="javascript:ChangeOnglet('tab_1', 'content_1');" id="tab_1" class="active">Montants Totaux</a></li>
-        <li><a href="javascript:ChangeOnglet('tab_2', 'content_2');" id="tab_2">Montants Moyens</a></li>
+        <li><a href="javascript:ChangeOnglet('tab_1', 'content_1');" id="tab_1" class="active">Montants Totaux / années</a></li>
+        <li><a href="javascript:ChangeOnglet('tab_2', 'content_2');" id="tab_2">Montants Moyens / années</a></li>
+        <li><a href="javascript:ChangeOnglet('tab_3', 'content_3');" id="tab_3">Montants Totaux</a></li>
     </ul>
 
 
@@ -97,6 +113,11 @@
         }
             </tbody>
         </table>
+
+    </div>
+
+    <!--TABLEAU RECAP TOTAL-->
+    <div id="content_3" class="content">
 
     </div>
 </div>

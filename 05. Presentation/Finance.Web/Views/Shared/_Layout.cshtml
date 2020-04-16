@@ -15,6 +15,8 @@
     <script src="@Url.Content("~/Scripts/jquery-1.12.4.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery-ui-1.12.1.js")" type="text/javascript"></script>
 
+    <script src="@Url.Content("~/Scripts/FinanceScripts.js")" type="text/javascript"></script>
+
     <script>
         function showGif() {
             $("div#loadingWidget").show();
@@ -105,17 +107,19 @@
 
         //Affichage d'un message
         function displayMessage(message) {
+
             if (message.includes("[Erreur]")) {
-                message.replace("[Erreur]", "");
-                document.getElementById('MessageFlottantErreur').innerText = message;
+                message = message.replace("[Erreur]", "");
+                document.getElementById('MessageFlottantErreur').innerHTML = message;
                 document.getElementById('MessageFlottantErreur').style.display = 'none';
                 document.getElementById('MessageFlottantErreur').removeAttribute("hidden");
                 $('#MessageFlottantErreur').fadeIn('fast');
                 $('#MessageFlottantErreur').delay(3000).fadeOut('slow');
             } else {
-                document.getElementById('MessageFlottant').innerText = message;
+                document.getElementById('MessageFlottant').innerHTML = message;
                 document.getElementById('MessageFlottant').style.display = 'none';
                 document.getElementById('MessageFlottant').removeAttribute("hidden");
+
                 $('#MessageFlottant').fadeIn('fast');
                 $('#MessageFlottant').delay(3000).fadeOut('slow');
             }
@@ -132,43 +136,56 @@
         <header class="mdl-layout__header">
             <div class="mdl-layout__header-row" id="nav_liens">
                 <!-- Title -->
-                <a class="mdl-layout-title colorWhite" href="/Finance/">Gestion</a>
+                <a class="mdl-layout-title colorWhite hvr-hang" href="/Finance/">Gestion</a>
 
                 <!-- Navigation. We hide it in small screens. -->
                 <nav class="mdl-navigation mdl-layout--large-screen-only">
 
                     <!-- Appartement -->
-                    <a class="mdl-navigation__link" href="@Url.Content("~/Appartement/index")">Appartement</a>
+                    <a class="mdl-navigation__link hvr-hang" href="@Url.Content("~/Appartement/index")">Appartement</a>
 
                     <!-- Dépenses -->
                     <div class="dropdown">
-                        <label class="mdl-navigation__link">Dépenses</label>
+                        <label class="mdl-navigation__link hvr-hang">Dépenses</label>
                         <div class="dropdown-content">
-                            <a class="mdl-navigation__link" href="@Url.Content("~/Depenses/AjoutUnitaire")">Ajout unitaire</a>
-                            <a class="mdl-navigation__link" href="@Url.Content("~/Depenses/AjoutEnMasse")">Ajout multiple</a>
+                            <a class="mdl-navigation__link hvr-hang" href="@Url.Content("~/Depenses/AjoutUnitaire")">Ajout unitaire</a>
+                            <a class="mdl-navigation__link hvr-hang" href="@Url.Content("~/Depenses/AjoutEnMasse")">Ajout multiple</a>
                         </div>
                     </div>
 
                     <!-- Consolidation -->
                     <div class="dropdown">
-                        <label class="mdl-navigation__link">Consolidation</label>
+                        <label class="mdl-navigation__link hvr-hang">Consolidation</label>
                         <div class="dropdown-content">
-                            <a class="mdl-navigation__link" href="@Url.Content("~/Consolidation/ConsoMensuelle")">Recap Mensuel</a>
-                            <a class="mdl-navigation__link" href="@Url.Content("~/Consolidation/ConsoAnnuelle")">Recap Annuel</a>
-                            <a class="mdl-navigation__link" href="@Url.Content("~/Consolidation/ConsoGenerale")">Recap Général</a>
-                            <a class="mdl-navigation__link" href="@Url.Content("~/Consolidation/Graphiques")">Graphiques</a>
+                            <a class="mdl-navigation__link hvr-hang" href="@Url.Content("~/Consolidation/ConsoMensuelle")">Recap Mensuel</a>
+                            <a class="mdl-navigation__link hvr-hang" href="@Url.Content("~/Consolidation/ConsoAnnuelle")">Recap Annuel</a>
+                            <a class="mdl-navigation__link hvr-hang" href="@Url.Content("~/Consolidation/ConsoGenerale")">Recap Général</a>
+                            <a class="mdl-navigation__link hvr-hang" href="@Url.Content("~/Consolidation/Graphiques")">Graphiques</a>
                         </div>
                     </div>
 
                     <!-- Epargne -->
-                    <a class="mdl-navigation__link" href="@Url.Content("~/Epargne/index")">Epargne</a>
+                    <a class="mdl-navigation__link hvr-hang" href="@Url.Content("~/Epargne/MonEpargne")">Epargne</a>
 
                     <!-- Carbone -->
-                    <a class="mdl-navigation__link" href="@Url.Content("~/Carbone/index")">Carbone</a>
+                    <a class="mdl-navigation__link hvr-hang" href="@Url.Content("~/Carbone/MonCarbone")">Carbone</a>
+
+                    <!-- Voiture -->
+                    <a class="mdl-navigation__link hvr-hang" href="@Url.Content("~/Voiture/MaVoiture")">Voiture</a>
 
                     <!-- Administration -->
-                    <a class="mdl-navigation__link" href="@Url.Content("~/Administration/Index")">Administration</a><br />
+                    <a class="mdl-navigation__link hvr-hang" href="@Url.Content("~/Administration/Index")">Administration</a><br />
 
+                    <!-- selecteur comptes -->
+                    <div style="position:absolute; right:70px;">
+                        <label id="lbSelectComptes" class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="selectComptes" >
+                            <input type="checkbox" id="selectComptes" class="mdl-switch__input" onchange="ChangementComptes(this)">
+                        </label>
+                    </div>
+                    
+
+                    <!-- Log Out -->
+                    <a class="mdl-navigation__link hvr-hang" href="@Url.Content("~/Login/Authent")" style="position:absolute; right:0;"><i class="material-icons">power_settings_new</i></a><br />
 
                 </nav>
             </div>
@@ -182,31 +199,34 @@
                     <span>Informations sur l'apartement.</span>
                 </div>
                 <div class="mdl-navigation__link">
-                    <a class="mdl-button--primary" href="@Url.Content("~/Consolidation/ConsoGenerale")">Recap Général</a><br />
-                    <span>Récapitulatif général des dépenses.</span>
+                    <a class="mdl-button--primary" href="@Url.Content("~/Depenses/AjoutUnitaire")">Dépenses unitaires</a><br />
+                    <a class="mdl-button--primary" href="@Url.Content("~/Depenses/AjoutEnMasse")">Dépenses mutliples</a><br />
+                    <span>Permet d'ajouter des dépenses.</span>
                 </div>
                 <div class="mdl-navigation__link">
+                    <a class="mdl-button--primary" href="@Url.Content("~/Consolidation/ConsoMensuelle")">Récap mensuel</a><br />
                     <a class="mdl-button--primary" href="@Url.Content("~/Consolidation/ConsoAnnuelle")">Recap Annuel</a><br />
-                    <span>Récapitulatif des dépenses par années.</span>
-                </div>
-                <div class="mdl-navigation__link">
+                    <a class="mdl-button--primary" href="@Url.Content("~/Consolidation/ConsoGenerale")">Recap Général</a><br />
                     <a class="mdl-button--primary" href="@Url.Content("~/Consolidation/Graphiques")">Graphiques</a><br />
-                    <span>Représentation visuelle des dépenses.</span>
+                    <span>Récapitulatif des dépenses.</span>
                 </div>
-                
-                
                 <div class="mdl-navigation__link">
-                    <a class="mdl-button--primary" href="@Url.Content("~/Epargne/index")">Epargne</a><br />
+                    <a class="mdl-button--primary" href="@Url.Content("~/Epargne/MonEpargne")">Epargne</a><br />
                     <span>Gestion de l'épargne.</span>
                 </div>
                 <div class="mdl-navigation__link">
-                    <a class="mdl-button--primary" href="@Url.Content("~/Carbone/index")">Bilan carbone</a><br />
+                    <a class="mdl-button--primary" href="@Url.Content("~/Carbone/MonCarbone")">Bilan carbone</a><br />
                     <span>Gestion des bilans carbones.</span>
+                </div>
+                <div class="mdl-navigation__link">
+                    <a class="mdl-button--primary" href="@Url.Content("~/Voiture/Mavoiture")">Voiture</a><br />
+                    <span>Gestion de la voiture.</span>
                 </div>
                 
                 <div class="mdl-navigation__link">
                     <a class="mdl-button--primary" href="@Url.Content("~/Administration/Index")">Administration</a><br />
                 </div>
+
             </nav>
         </div>
 
@@ -214,9 +234,9 @@
         <span id="MessageFlottant" class="messageFlottant" hidden>Message</span>
         <span id="MessageFlottantErreur" class="messageFlottantErreur" hidden>Message</span>
         
-        <label id="lbSelectComptes" class="PositionRight mdl-switch mdl-js-switch mdl-js-ripple-effect" for="selectComptes">
+        @*<label id="lbSelectComptes" class="PositionRight mdl-switch mdl-js-switch mdl-js-ripple-effect" for="selectComptes">
             <input type="checkbox" id="selectComptes" class="mdl-switch__input" onchange="ChangementComptes(this)">
-        </label>
+        </label>*@
 
         <!--CONTENT-->
         <main class="mdl-layout__content">

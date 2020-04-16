@@ -16,6 +16,7 @@ namespace Finance.Business.Managers
         public ConsoChauffageManager()
         {
             this._bddChauffage = new bdd_ConsoChauffage();
+            this._bddChauffage.setUser(ApplicationManager.CurrentUser.UtilisateurId);
         }
 
 

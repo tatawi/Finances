@@ -124,12 +124,10 @@ namespace Finance.Data.bdd
                 cmd.Parameters.Add("@Consommation", SqlDbType.Int).Value = info.Consommation;
                 cmd.Parameters.Add("@PrixKwh", SqlDbType.VarChar).Value = info.PrixKwh;
 
-
                 cmd.CommandType = CommandType.Text;
                 cmd.ExecuteNonQuery();
 
                 conn.Close();
-
             }
         }
 
@@ -142,7 +140,7 @@ namespace Finance.Data.bdd
             using (SqlConnection conn = new SqlConnection(this.connectionString))
             {
                 conn.Open();
-                string sql = "UPDATE ConsoElectricite SET Consommation=@Conso, Montant=@Montant, Date=@Date, UtilisateurId=@paramUserId WHERE Year(Date)=@Annee AND Month(Date)=@Mois  AND UserName=@user";
+                string sql = "UPDATE ConsoElectricite SET Consommation=@Conso, Montant=@Montant, Date=@Date, UtilisateurId=@paramUserId WHERE Year(Date)=@Annee AND Month(Date)=@Mois";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add("@Conso", SqlDbType.Int).Value = conso.Consommation;

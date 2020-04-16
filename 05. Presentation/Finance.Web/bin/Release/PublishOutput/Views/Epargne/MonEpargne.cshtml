@@ -1,0 +1,299 @@
+﻿
+@{
+    ViewBag.Title = "Epargne";
+}
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/Chart.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Chart.bundle.min.js")"></script>
+
+
+<script>
+
+    //Constantes onglets
+    var _isEpargneAnuelleCharge = 0;
+    var _isEpargneToutesAnneesCharge = 0;
+    var _isEpargneTotaleCharge = 0;
+    var _isComptesCharge = 0;
+    var _tab_comtpes = [];
+
+
+    $(document).ready(function () {
+
+        //Chargement premier onglet
+        ChangeOnglet('t_EpAnnuelle', 'c_EpAnnuelle');
+
+        //Date picker
+        $("#chp_AddEP_Date").datepicker();
+
+        //init table
+        _tab_comtpes = [];
+
+        //Date picker init
+        $.datepicker.setDefaults(
+        {
+            altField: "#datepicker",
+            closeText: 'Fermer',
+            prevText: 'Précédent',
+            nextText: 'Suivant',
+            currentText: 'Aujourd\'hui',
+            monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+            monthNamesShort: ['Janv.', 'Févr.', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
+            dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+            dayNamesShort: ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'],
+            dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+            weekHeader: 'Sem.',
+            dateFormat: 'dd/mm/yy',
+            firstDay: 1 
+        });
+
+    });
+
+    
+
+    //Gestion du changement d'onglet
+    function ChangeOnglet(onglet, contenu) {
+        document.getElementById('c_EpAnnuelle').style.display = 'none';
+        document.getElementById('c_EpTotale').style.display = 'none';
+        document.getElementById('c_EpToutesAnnees').style.display = 'none';
+        document.getElementById('c_Comptes').style.display = 'none';
+        document.getElementById(contenu).style.display = 'block';
+
+        
+
+        document.getElementById('t_EpAnnuelle').className = '';
+        document.getElementById('t_EpTotale').className = '';
+        document.getElementById('t_EpToutesAnnees').className = '';
+        document.getElementById('t_Comptes').className = '';
+        document.getElementById(onglet).className = 'active';
+
+
+
+        if (onglet == 't_EpAnnuelle' && _isEpargneAnuelleCharge != 1) {
+            var url = '@Url.Action("ChargementEpAnnuelle", "Epargne")';
+
+            _isEpargneAnuelleCharge = 1;
+            $('#c_EpAnnuelle').load(url); 
+            //document.getElementById('EpAnnuelle').load(url);
+        }
+
+        if (onglet == 't_EpToutesAnnees' && _isEpargneToutesAnneesCharge != 1) {
+            var url = '@Url.Action("ChargementEpToutesAnnees", "Epargne")';
+
+            _isEpargneToutesAnneesCharge = 1; 
+            $('#c_EpToutesAnnees').load(url); 
+        }
+
+
+        if (onglet == 't_EpTotale' && _isEpargneTotaleCharge != 1) {
+            var url = '@Url.Action("ChargementEpTotale", "Epargne")';
+            _isEpargneTotaleCharge = 1;
+            $('#c_EpTotale').load(url); 
+        }
+
+
+        if (onglet == 't_Comptes' && _isComptesCharge != 1) {
+            var url = '@Url.Action("ChargementEpAnnuelle", "Epargne")';
+            _isEpargneAnuelleCharge = 1;
+            $('#c_Comptes').load(url); 
+        }
+
+      
+    }
+
+
+
+
+    //---------------------------------------------------------------------------------------------------------
+    //-------------POP UP-----------------------
+
+    //Ouverture pop up
+    function PopUp_AddEpargne() {
+        var modal = document.getElementById('modal_AddEpargne');
+        var span = document.getElementById("closePopUp");
+        document.getElementById("table_comptes").style.display = 'inline-block';
+
+        //Gestion Date Pop-Up
+        var d = new Date();
+        var month = d.getMonth()+1;
+        var day = d.getDate();
+        var dateStr = (day<10 ? '0' : '') + day + '/' +
+            (month<10 ? '0' : '') + month + '/' +
+            d.getFullYear();
+        $('#chp_AddEP_Date').val(dateStr);
+
+        //Maj tab Pop-up
+        InitChampsPopUpAjax();
+        //Affichage
+        modal.style.display = "block";
+
+        //Boutons
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    }
+   
+    //AJAX - MAJ pop UP
+    function InitChampsPopUpAjax() {
+        var compteIdOrigine = $('#val_origineId').val(); //document.getElementById('val_origineId').value;
+        var compteIdDestination = $('#val_destinationId').val(); //document.getElementById('val_destinationId').value;
+        var montant = $('#chp_vir_montant').val();
+        var Date = $('#chp_vir_Date').val();
+
+        $('#table_comptes > tbody').empty();
+        _tab_comtpes = [];
+        var data = {};
+        $.ajax({
+                type: "POST", url: '@Url.Content("~/Epargne/GetLastMontantEpargne")',
+                data: data, dataType: "json",
+                success: function (result) {
+                $.each(result, function (index, itemData) {
+                    var CompteId = itemData.CompteId
+                    var Compte = itemData.Compte;
+                    var Montant = itemData.Montant;
+
+                    var row = "<tr>";
+                    row += "<td>"+Compte+"</td>";
+                    row += "<td><input id="+CompteId+" placeholder="+Montant+" value="+Montant+"></input></td>";
+                    row += "</tr>";
+                    $('#table_comptes > tbody').append(row);
+
+                    var cpt = new Object();
+                    cpt.Montant = 0;
+                    cpt.Ident = CompteId;
+                    cpt.CompteId = CompteId;
+                    _tab_comtpes.push(cpt);
+                });
+            }
+        });
+    }
+
+    //AJAX - Enregistrer épargne
+    function EnregistrerMontantsAjax() {
+
+        MajListeComptes();
+        var data = {};
+            
+        data['Date'] = $('#chp_AddEP_Date').val();
+        data['ListeComptes'] = JSON.stringify({ 'ListeComptes': _tab_comtpes });
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/Epargne/SauvegarderMontantEpargne")',
+                data: data, dataType: "json",
+                success: function () {
+                    
+                },
+                complete: function () {
+                    var modal = document.getElementById('modal_AddEpargne');
+                    modal.style.display = "none";
+
+                    //reinitialisation affichage
+                    _isEpargneAnuelleCharge = 0;
+                    _isEpargneToutesAnneesCharge = 0;
+                    _isEpargneTotaleCharge = 0;
+                    _isComptesCharge = 0;
+
+                    ChangeOnglet('t_EpAnnuelle', 'c_EpAnnuelle');
+                }
+            });
+    }
+
+    //Mise à jour de la liste des comptes
+    function MajListeComptes() {
+        
+        for (var i = 0; i < _tab_comtpes.length; i++) {
+
+            var montant = $('#' + _tab_comtpes[i].CompteId).val();
+            _tab_comtpes[i].Montant = montant; 
+        }
+    }
+
+</script>
+
+
+<!--TITRE-->
+<div>
+    <h1 class="display-4">Epargne</h1><hr /><br />
+</div>
+
+
+<div id="tabs">
+
+    <!--Onglets-->
+    <ul class="tabs">
+        <li><a href="javascript:ChangeOnglet('t_EpAnnuelle', 'c_EpAnnuelle');" id="t_EpAnnuelle" class="active">Epargne annuelle</a></li>
+        <li><a href="javascript:ChangeOnglet('t_EpToutesAnnees', 'c_EpToutesAnnees');" id="t_EpToutesAnnees">Evolution épargne</a></li>
+        <li><a href="javascript:ChangeOnglet('t_EpTotale', 'c_EpTotale');" id="t_EpTotale">Epargne totale</a></li>
+        <li><a href="javascript:ChangeOnglet('t_Comptes', 'c_Comptes');" id="t_Comptes">Comptes</a></li>
+        <li><label onclick="PopUp_AddEpargne();" class="mdl-button mdl-js-button mdl-button--accent">Renseigner comptes</label></li>
+        
+    </ul><hr />
+    <br />
+
+    <!--Premier onglet - Epargne annuelle-->
+    <div id="c_EpAnnuelle"></div>
+
+    <!--Second onglet - Epargne par années-->
+    <div id="c_EpToutesAnnees"></div>
+
+    <!--Second onglet - Epargne par années-->
+    <div id="c_EpTotale"></div>
+
+    <!--Troisieme onglet - visu comptes-->
+    <div id="c_Comptes"></div>
+
+</div><!--Fin tabs-->  
+
+
+
+<!--POP UP AJOUTER EPARGNE-->
+<div id="modal_AddEpargne" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <div class="col-sm-10 form-group">
+                <h2>Renseigner l'épargne</h2>
+            </div>
+
+            <div class="col-sm-2 form-group">
+                <span id="closePopUp" class="close">&times;</span>
+            </div>
+
+
+            <!--Date-->
+            <div class="col-sm-4 form-group">
+                <div class="souligne mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding-bottom:1px">
+                    <label  class="PurpleText">Date :</label>
+                    <input id="chp_AddEP_Date" class="mdl-textfield__input">
+                </div>
+
+            </div>
+
+
+            <div class="col-sm-4 clear">
+                <table id="table_comptes" class="mdl-data-table mdl-js-data-table">
+                    <thead>
+                        <tr>
+                            <th>Comtpe</th>
+                            <th>Montant</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <!--Btn add-->
+        <center>
+            <button class="mdl-button mdl-js-button mdl-button--accent" onClick="EnregistrerMontantsAjax()">
+                Enregistrer
+            </button>
+        </center>
+    </div>
+</div>

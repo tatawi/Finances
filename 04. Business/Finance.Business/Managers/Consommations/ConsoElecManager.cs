@@ -18,7 +18,6 @@ namespace Finance.Business.Managers
             _bddConsoElec.setUser(ApplicationManager.CurrentUser.UtilisateurId);
         }
 
-
         //Retourne toutes les consommations d'électricité
         public List<Electricite> GetAllElectricite()
         {

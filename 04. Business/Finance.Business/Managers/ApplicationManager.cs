@@ -29,20 +29,6 @@ namespace Finance.Business.Managers
 
                 return user;
             }
-
-            //get
-            //{
-            //    if (HttpContext.Current != null)
-            //    {
-            //        if (HttpContext.Current.Items["ActualUser"] == null)
-            //        {
-            //            Utilisateur utilisateur = SetupUser(HttpContext.Current.User.Identity.Name);
-            //            HttpContext.Current.Items["ActualUser"] = utilisateur;
-            //        }
-            //        return HttpContext.Current.Items["ActualUser"] as Utilisateur;
-            //    }
-            //    return null;
-            //}
         }
 
 
@@ -53,11 +39,6 @@ namespace Finance.Business.Managers
                 utilisateurManager = new UtilisateurManager();
 
             user = utilisateurManager.GetUtilisateur(login);
-
-            //if (user==null)
-            //    Response.Redirect("~/Login/index");
-
-
         }
 
     }

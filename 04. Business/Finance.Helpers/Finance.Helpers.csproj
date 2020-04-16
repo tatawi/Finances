@@ -45,6 +45,7 @@
     <Compile Include="Enums\EnumEau.cs" />
     <Compile Include="Enums\EnumReconductible.cs" />
     <Compile Include="Enums\EnumSousCategorie.cs" />
+    <Compile Include="Enums\EnumTypeEntretien.cs" />
     <Compile Include="Enums\EnumTypeInfoAppartement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

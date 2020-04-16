@@ -4,7 +4,7 @@
 <script>
     $(document).ready(function () {
         $('#PopUpAjoutUser').hide();
-        //GetImageDuJour();
+        GetImageDuJour();
 
 
         //Gestion cas création
@@ -29,6 +29,12 @@
         $('#btnMdpOublie').prop('disabled', true);
 
         $('#PopUpAjoutUser').show();
+    }
+
+
+    function closeUserPopUp() {
+        $('#PopUpAjoutUser').hide();
+        $('#carte').show();
     }
 
     function ControlerChampsAjoutUser() {
@@ -159,7 +165,7 @@
 
                 $('#fullPage').fadeTo('fast', 0.3, function()
                 {
-                    $(this).css('background', 'url(' + url + ') no-repeat');
+                    $(this).css('background-image', 'url(' + url + ') ');
                 }).fadeTo('slow', 1);
 
                 $("#titre").html(titre);
@@ -219,7 +225,8 @@
 
     <div class="mdl-card__actions mdl-card--border row">
         <div class="col-sm-12"> 
-            <input type="button" value="Accéder au site" class="mdl-button mdl-js-button mdl-button--primary" onclick="goToSite();" />
+            @Html.ActionLink("Accéder au site", "Index","Home",null,new { @class = "mdl-button mdl-js-button mdl-button--primary" }) 
+            @*<input type="button" value="Accéder au site" class="mdl-button mdl-js-button mdl-button--primary" onclick="goToSite();" />*@
         </div>
     </div>
 
@@ -267,7 +274,7 @@ else
     </div>
     <div class="mdl-card__menu">
     <button type="button" onclick="AddUser();" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect mdl-button--accent">
-      <i class="material-icons">add</i>
+      <i class="material-icons">person_add</i>
     </button>
   </div>
     }
@@ -326,6 +333,12 @@ else
             <span id="addUserError" class="RedText">Vous devez renseigner tous les champs</span>
         </div>
     </div>
+
+    <div class="mdl-card__menu">
+    <button type="button" onclick="closeUserPopUp();" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect mdl-button--accent">
+      <i class="material-icons">arrow_back</i>
+    </button>
+  </div>
 
 
 }

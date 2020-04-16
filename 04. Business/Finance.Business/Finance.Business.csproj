@@ -76,6 +76,8 @@
     <Compile Include="Managers\DepensesManager.cs" />
     <Compile Include="Managers\EpargneManager.cs" />
     <Compile Include="Managers\UtilisateurManager.cs" />
+    <Compile Include="Managers\Voiture\EntretienVoitureManager.cs" />
+    <Compile Include="Managers\Voiture\PleinEssenceManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AdministrationService.cs" />
     <Compile Include="Services\AppartementService.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="Services\EpargneService.cs" />
     <Compile Include="Services\LoginService.cs" />
     <Compile Include="Services\MailService.cs" />
+    <Compile Include="Services\VoitureService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

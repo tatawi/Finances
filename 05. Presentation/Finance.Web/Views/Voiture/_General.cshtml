@@ -1,0 +1,201 @@
+﻿
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        GetDonneesDernierPlein();
+        GetDonneesProchainsEntretiens();
+        GetDonneesConsoEtKm();
+    });
+
+
+
+    //Get Donnees Conso Elec ANNEE
+    function GetDonneesDernierPlein() {
+
+        $.ajax({
+            type: "POST", url: '@Url.Content("~/Voiture/GetDernierPlein")',
+            success: function (result) {
+                if (result != null) {
+                    $('#g_km').html(result.Km+" km");
+                    $('#g_conso').html(result.Conso+" L/100km");
+                }
+            }
+        });
+
+    };
+
+
+
+
+    //Get prochains entretiens
+    function GetDonneesProchainsEntretiens() {
+        var baseUrl = '@Url.Content("~/Voiture/GetEntretiensPrevus/")';
+        var baseUrlImg = '@Url.Content("~/Content/Icones/")';
+        $('#tb_entretien_futur > tbody').empty();
+
+        $.ajax({
+            url: baseUrl, type: "POST", async: true, dataType: "json",
+            success: function (result) {
+                $.each(result, function (index, itemData) {
+                    var Date = itemData.Date;
+                    var DateStr = itemData.DateStr;
+                    var Km = itemData.Km;
+                    var Cout = itemData.Cout;
+                    var Type = itemData.Type;
+                    var img = "voiture_" + Type;
+                    var Description = itemData.Description;
+                    var Effectue = itemData.Effectue;
+
+                    var row = "<tr>";
+
+                    row += "<td>" + DateStr + "</td>";
+                    row += "<td><center><img src='" + baseUrlImg + img + ".png'/></center></td>";
+                    row += "<td>"+ThousandSeparatorToString(Cout)+" €</td>";
+                    row += "<td>" + ThousandSeparatorToString(Km) + "</td>";
+                    row += "<td>" + Description + "</td>";
+                    row += "</tr>"
+                    $('#tb_entretien_futur > tbody').append(row);
+
+                });
+            },
+            complete: function () {
+                if ($('#tb_entretien_futur tr').length > 1) {
+                    $('#tb_entretien_futur').show();
+                    $('#lb_entretien_futur').hide();  
+                }
+                else {
+                    $('#tb_entretien_futur').hide();
+                    $('#lb_entretien_futur').show();  
+                }
+            }
+        });
+
+    };
+
+    //Get Km et conso par années
+    function GetDonneesConsoEtKm() {
+        var baseUrl = '@Url.Content("~/Voiture/GetInfosGeneralesParAnnees/")';
+        var tab_Date = new Array();
+        var tab_Km = new Array();
+        var tab_Conso = new Array();
+        $.ajax({
+            url: baseUrl, type: "POST", async: true, dataType: "json",
+            success: function (result) {
+                $.each(result, function (index, itemData) {
+                    var Annee = itemData.Annee;
+                    var Km = itemData.Km;
+                    var Conso = itemData.Conso;
+
+                    tab_Date.push(Annee);
+                    tab_Km.push(Km);
+                    tab_Conso.push(Conso);
+
+                });
+            },
+            complete: function () {
+                var graph = document.getElementById("ch_kmGeneral").getContext('2d');
+                DisplayGraphKilometresGen(graph, tab_Date, tab_Km);
+                var graph = document.getElementById("ch_ConsoGeneral").getContext('2d');
+                DisplayGraphConsoGen(graph, tab_Date, tab_Conso);
+            }
+        });
+
+    };
+
+    //DisplayGraphConsoEauTotal
+    function DisplayGraphKilometresGen (chart, tab_Date, tab_Km) {
+        var chart = new Chart(chart, {
+            type: 'line',
+            data: {
+                labels: tab_Date,
+                datasets: [ { label: "Kilométres (km)", borderColor: '#673AB7', data: tab_Km, } ]
+            },
+            options: { responsive: true, hoverMode:'index', }
+        });
+    }
+
+    function DisplayGraphConsoGen (chart, tab_Date, tab_Conso) {
+        var chart = new Chart(chart, {
+            type: 'line',
+            data: {
+                labels: tab_Date,
+                datasets: [ { label: "Consommation (L/100km)", borderColor: '#4CAF50', data: tab_Conso, } ]
+            },
+            options: { responsive: true, hoverMode:'index', }
+        });
+    }
+
+
+</script>
+
+<br />
+
+<div class="row">
+   
+    <!--RECAP-->
+    <div class="col-sm-12 form-group">
+        <h4 class="titre-bloc">Récap</h4>
+        <div class="sous-partie">
+            <div class="row">
+                <div class="col-sm-6 form-group">
+                        <div class="col-sm-4 form-group">
+                            <label  class="PurpleText">Kilométres :</label>
+                            <label id="g_km"class="mdl-button mdl-js-button mdl-button--accent"></label>
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <label  class="PurpleText">Consommation :</label>
+                            <label id="g_conso"class="mdl-button mdl-js-button mdl-button--accent"></label>
+                        </div>
+                </div>
+
+                <div class="col-sm-6 form-group">
+
+                        <label  class="PurpleText">Prochaines révisions :</label>
+                            <span id="lb_entretien_futur"><i>Pas de révisions programmées</i></span>
+                            <table id="tb_entretien_futur" class="mdl-data-table mdl-js-data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Type</th>
+                                            <th>Coût</th>
+                                            <th>Km</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                
+           
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+
+
+    <!--EVOLUTIONS-->
+    <div class="col-sm-12 form-group">
+        <h4 class="titre-bloc">Évolutions</h4>
+        <div class="sous-partie">
+            <div class="row">
+                <div class="col-sm-6">
+                    <label  class="PurpleText">Kilométrages :</label>
+                    <canvas id="ch_kmGeneral"></canvas>
+                </div>
+
+                <div class="col-sm-6">
+                    <label  class="PurpleText">Consommation :</label>
+                    <canvas id="ch_ConsoGeneral"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>

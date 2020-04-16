@@ -19,7 +19,7 @@ namespace Finance.Attributes
             var user = ApplicationManager.CurrentUser;
             if (user == null)
             {
-                authorizationContext.Result = new RedirectResult("~/Login/Index");
+                authorizationContext.Result = new RedirectResult("~/Login/Authent");
                 base.OnAuthorization(authorizationContext);
                 return;
             }
@@ -30,7 +30,7 @@ namespace Finance.Attributes
             }
             else
             {
-                authorizationContext.Result = new RedirectResult("~/Login/Index");
+                authorizationContext.Result = new RedirectResult("~/Login/Authent");
             }
 
         }

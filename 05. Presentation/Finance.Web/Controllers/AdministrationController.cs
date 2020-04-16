@@ -6,6 +6,7 @@ using Finance.Poco;
 using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using ViewModels.Administration;
 using ViewModels.Login;
 
 namespace Finance.Controllers
@@ -63,6 +64,24 @@ namespace Finance.Controllers
         public JsonResult ModifierMotDePasse(LoginVM vm)
         {
             string result = _AdministrationService.ModifierMotDePasse(vm);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion
+
+        #region Utilisateur
+
+        // GET: Mon utilisateur
+        public ActionResult Utilisateurs()
+        {
+            UtilisateursVM vm = _AdministrationService.GetUtilisateursVm();
+            return View(vm);
+        }
+
+        //POST: Modification d'un utilisateur
+        public JsonResult ModifierUtilisateur(Utilisateur user)
+        {
+            string result = _AdministrationService.ModifierUtilisateur(user);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

@@ -1,4 +1,10 @@
-﻿<script type="text/javascript">
+﻿@using Finance.Business.Managers;
+
+@{
+    var isAdmin = ApplicationManager.CurrentUser.IsAdmin;
+}
+
+<script type="text/javascript">
 
 
     var _totalPret1 = 7783;
@@ -63,6 +69,10 @@
 
 </script>
 
+<div class="row">
+
+@if (isAdmin)
+{
 
         <br />
         <h4 class="col-sm-12 titre-bloc">Résidence</h4>
@@ -416,4 +426,21 @@
             </div>
         </div>
 
+}
+else
+{
+    <br />
+        <h4 class="col-sm-12 titre-bloc">Accés restreint</h4>
+        <div class="sous-partie">
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                    <span>Cette page n'est pas encore accéssible pour votre utilisateur.</span>
+                </div>
+            </div>
+        </div>
+    
+    
 
+}
+
+</div>

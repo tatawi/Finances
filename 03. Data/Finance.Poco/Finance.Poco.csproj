@@ -48,8 +48,10 @@
     <Compile Include="ConsoEau.cs" />
     <Compile Include="Depense.cs" />
     <Compile Include="Electricite.cs" />
+    <Compile Include="EntretienVoiture.cs" />
     <Compile Include="Epargne.cs" />
     <Compile Include="InfoAppartement.cs" />
+    <Compile Include="PleinEssence.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ref_Categorie.cs" />
     <Compile Include="Ref_Compte.cs" />

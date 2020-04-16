@@ -47,19 +47,34 @@ namespace Finance.Business.Interface.Services
         /// <returns>ViewModel de la page</returns>
         ConsoGeneraleVM GET_RecapGeneral(ConsoGeneraleVM vm, bool displaySsCat);
 
-        /// <summary>Retourne le montant des dépenses de la sous-catégorie pour un mois</summary>
+        /// <summary>Retourne la liste des dépenses totales par catégories et sous catégories</summary>
+        /// <param name="isForPerso">Affichage compte perso ou commun</param>
+        /// <returns>Liste des montants pour chaque cat / ssCat</returns>
+        List<ConsolidationVM> GET_RecapGeneralTotal(bool isForPerso);
+
+        /// <summary>Retourne le montant des dépenses de la sous-catégorie pour une année</summary>
         /// <param name="annee">Année de recherche</param>
-        /// <param name="mois">Mois de recherche</param>
         /// <param name="ssCat">Ssous-catégorie de recherche</param>
         /// <returns>Montant</returns>
         decimal GetMontantSsCatAnnee(int annee, string ssCat);
 
+        /// <summary>Retourne le montant des dépenses de la sous-catégorie d'une année par mois</summary>
+        /// <param name="annee">Année de recherche</param>
+        /// <param name="ssCat">Ssous-catégorie de recherche</param>
+        /// <returns>Liste des montants mensuels</returns>
+        List<decimal> GetListMontantSsCatAnnee(int annee, string ssCat);
+
         /// <summary>Retourne le montant des dépenses de la catégorie pour une année</summary>
         /// <param name="annee">Année de recherche</param>
         /// <param name="cat">Catégorie de recherche</param>
-        /// <param name="isForPerso">Affichage compte perso ou commun</param>
         /// <returns>Montant</returns>
         decimal GetMontantCatAnnee(int annee, string cat);
+
+        /// <summary>Retourne le montant des dépenses par mois de la catégorie pour une année</summary>
+        /// <param name="annee">Année de recherche</param>
+        /// <param name="cat">Catégorie de recherche</param>
+        /// <returns>Montant</returns>
+        List<decimal> GetListMontantCatAnnee(int annee, string cat);
 
         /// <summary>Retourne le montant des dépenses de la catégorie pour un mois</summary>
         /// <param name="annee">Année de recherche</param>

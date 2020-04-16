@@ -1,0 +1,92 @@
+﻿
+@{
+    ViewBag.Title = "Carbone";
+}
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/Chart.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Chart.bundle.min.js")"></script>
+<script>
+
+    //Constantes onglets
+    var _isOngletGeneralCharge = 0;
+    var _isOngletBilanCharge = 0;
+    var _isOngletAjoutCharge = 0;
+
+
+    $(document).ready(function () {
+
+        //Chargement premier onglet
+        ChangeOnglet('t_C12General', 'c_C12General');
+
+    });
+
+
+
+    //Gestion du changement d'onglet
+    function ChangeOnglet(onglet, contenu) {
+        document.getElementById('c_C12General').style.display = 'none';
+        document.getElementById('c_C12Bilan').style.display = 'none';
+        document.getElementById('c_C12AddBilan').style.display = 'none';
+        document.getElementById(contenu).style.display = 'block';
+
+        document.getElementById('t_C12General').className = '';
+        document.getElementById('t_C12Bilan').className = '';
+        document.getElementById('t_C12AddBilan').className = '';
+        document.getElementById(onglet).className = 'active';
+
+
+
+        if (onglet == 't_C12General' && _isOngletGeneralCharge != 1) {
+            var url = '@Url.Action("ChargementOngletGeneral", "Carbone")';
+            _isOngletGeneralCharge = 1;
+            $('#c_C12General').load(url); 
+        }
+
+        if (onglet == 't_C12Bilan' && _isOngletBilanCharge != 1) {
+            var url = '@Url.Action("ChargementOngletBilan", "Carbone")';
+            _isOngletBilanCharge = 1; 
+            $('#c_C12Bilan').load(url); 
+        }
+
+        if (onglet == 't_C12AddBilan' && _isOngletAjoutCharge != 1) {
+            var url = '@Url.Action("ChargementOngletAjout", "Carbone")';
+            _isOngletAjoutCharge = 1;
+            $('#c_C12AddBilan').load(url); 
+        }
+
+    }
+
+
+
+</script>
+
+
+<!--TITRE-->
+<div>
+    <h1 class="display-4">Carbone</h1><hr /><br />
+</div>
+
+
+<div id="tabs">
+
+    <!--Onglets-->
+    <ul class="tabs">
+        <li><a href="javascript:ChangeOnglet('t_C12General', 'c_C12General');" id="t_C12General" class="active">Général</a></li>
+        <li><a href="javascript:ChangeOnglet('t_C12Bilan', 'c_C12Bilan');" id="t_C12Bilan">Bilan carbone</a></li>
+        <li><a href="javascript:ChangeOnglet('t_C12AddBilan', 'c_C12AddBilan');" id="t_C12AddBilan">Ajouter</a></li>
+        
+    </ul><hr />
+    <br />
+
+    <!--Premier onglet - Général -->
+    <div id="c_C12General"></div>
+
+    <!--Second onglet - Bilan carbone-->
+    <div id="c_C12Bilan"></div>
+
+    <!--Second onglet - Ajouter bilan carbone-->
+    <div id="c_C12AddBilan"></div>
+
+
+</div><!--Fin tabs-->  
+
