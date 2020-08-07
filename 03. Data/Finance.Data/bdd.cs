@@ -12,6 +12,8 @@ namespace Finance.Data.bdd
 
         public bdd()
         {
+            //this.connectionString = @"Data Source=127.0.0.1,1433;Initial Catalog=Finance;User Id=sa;Password=1452.Pouet;MultipleActiveResultSets=True;Application Name=EntityFramework";
+            this.connectionString = @"Data Source=LT-SOD00005718\MSSQLSERVER2014;Initial Catalog=Finance2;User Id=sa;Password=N3tapsys;MultipleActiveResultSets=True;Application Name=EntityFramework";
 
         }
 
